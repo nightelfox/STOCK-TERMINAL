@@ -1,0 +1,27 @@
+.indicator-column {
+  display:flex;
+  flex-direction: column;
+  padding: 20px;
+  margin: 10px 30px;
+}
+
+p {
+  white-space: nowrap;
+  color:#262626;
+  font-family: 'Montserrat', serif;
+  font-size:1em;
+  font-weight: 300;
+}
+
+h2 {
+  color:#262626;
+  font-family: 'Montserrat', serif;
+  font-size:1em;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+section {
+  display:flex;
+  flex-direction: row;
+}

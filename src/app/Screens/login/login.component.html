@@ -1,0 +1,29 @@
+<!-- <div *ngIf="auth.user$; then auth.router.navigate(['/app']) else login">
+
+</div> -->
+
+<!-- <ng-template #login> -->
+  <div class="main">
+    <div class="login-form">
+      <div class="side-ribbon">
+        <div class="logo">
+          <h2>БИРЖЕВОЙ ТЕРМИНАЛ v. 0.3 </h2>
+        </div>
+        
+      </div>
+      <div class="terminal-login-form">
+        <h2>Вход в терминал</h2>
+        <div class="button-container">
+          <div (click)="auth.googleSignIn()" class="button">
+              <img class="icon" src="https://img.icons8.com/color/50/000000/google-logo.png">
+            <h3>Войти с помощью Google</h3>
+          </div>
+          <div (click)="auth.guestSignIn()" class="button">
+              <img class="icon" src="https://img.icons8.com/ios/50/000000/fraud-filled.png">
+              <h3>Продолжить как гость</h3>
+            </div>
+        </div>
+      </div>
+    </div>
+    </div>
+<!-- </ng-template> -->

@@ -1,0 +1,24 @@
+<!--  <ul class='list-group' *ngIf='userSymbols !== []'>
+    <li *ngFor='let sym of userSymbols' class='list-group-item' appBlackout
+    (click)="onSelect(sym)" [class.selected]="sym === selectedStock">
+      <div class="stock-name">{{sym.symbol}}</div>
+      <div class="stock-price">{{sym.latestPrice}}</div>
+      <div class="stock-percent">{{sym.changePercent}}</div>
+      <button class="btn btn-primary">Уже в портфеле</button>
+    </li>
+  </ul>-->
+
+  <div class="side-bar">
+    <ul class='list-group'>
+      <li *ngFor='let stock of stocks' class='list-group-item' appBlackout
+          (click)="onSelect(stock, $event)" [class.selected]="stock === selectedStock">
+        <div class="stock-name">{{stock.symbol}}</div>
+        <div class="stock-price">{{stock.latestPrice}}</div>
+        <div class="stock-percent">{{stock.changePercent}}</div>
+        <button class="btn btn-light btn-list" (click)="addToFavorites(stock)"
+                [class.btn-selected]="iexFetchigService.userSymbols.indexOf(stock) !== -1 ">В портфель</button>
+      </li>
+    </ul>
+  </div>
+  
+  

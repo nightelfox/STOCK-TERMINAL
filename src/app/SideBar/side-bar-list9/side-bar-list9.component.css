@@ -1,0 +1,48 @@
+.side-bar {
+  max-height: 72vh;
+  grid-area: side-bar;
+  overflow-y: scroll;
+}
+.stock-name {
+  grid-area: name;
+  font-weight: 600;
+}
+.stock-price {
+  grid-area: price;
+  justify-self: center;
+}
+.stock-percent {
+  grid-area: percent;
+}
+.list-group-item {
+  display: grid;
+  grid-template-columns: 20% 25% 25% 30%;
+  grid-template-areas: "name price percent";
+  margin: 10px;
+  border-radius: 20px;
+  background-color: #e1e1e1;
+  border: none;
+}
+.btn-list {
+  border-radius: 25px;
+  font-size: 12px;
+}
+.btn-selected {
+  background-color: #7fcfff;
+  border-color: #7fcfff;
+}
+.selected {
+  background-color: #ace7ff;
+  border-color: #ace7ff;
+}
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  margin: 5px 0;
+}
+::-webkit-scrollbar-thumb  {
+  background-color: gray;
+  border-radius: 5px;
+}

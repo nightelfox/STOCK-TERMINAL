@@ -1,0 +1,32 @@
+.button-container {
+  display: flex;
+  flex-direction: column;
+  height: 130px;
+  justify-content:space-between;
+}
+.button-select  {
+  width: 30px;
+  height:30px;
+  border-radius: 50%;
+  margin-right: 10px;
+  display:flex;
+  justify-content: center;
+  align-items: flex-end;
+  color:#262626;
+  font-family: 'Montserrat', serif;
+  background: #F1F1F1;
+}
+
+.button-select:hover {
+  cursor: pointer;
+}
+
+.button-select  h1 {
+  font-family: 'Montserrat', serif;
+  font-size: 0.8em;
+  font-weight: 200;
+}
+
+.selectedTab {
+  background: #ace7ff;
+}

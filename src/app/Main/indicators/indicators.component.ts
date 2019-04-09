@@ -17,6 +17,7 @@ export class IndicatorsComponent implements OnInit {
   ngOnInit() {
     this.iexFetchingService.symbolSource$.subscribe((symbol) => {
       this.iexFetchingService.getSymbolMonthStats(symbol).subscribe(data => this.monthIndicator = data);
-      console.log(symbol)});
+      console.log(symbol);
+    });
   }
 }

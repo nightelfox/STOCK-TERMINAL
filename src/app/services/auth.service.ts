@@ -42,7 +42,7 @@ export class AuthService {
     this.credential = await this.afAuth.auth.signInWithPopup(provider);
     this.updateUserData(this.credential.user);
     this.db.getAuthUser();
-    return this.router.navigate(['/app']);
+    return this.router.navigate(['/app/allStocks']);
   }
 
   async signOut() {
@@ -53,7 +53,7 @@ export class AuthService {
   }
 
   guestSignIn() {
-    return this.router.navigate(['/app']);
+    return this.router.navigate(['/app/allStocks']);
   }
   updateUserData({uid, email, displayName, photoURL}: User) {
     const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${uid}`);

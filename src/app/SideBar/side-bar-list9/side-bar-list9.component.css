@@ -1,8 +1,3 @@
-.side-bar {
-  max-height: 72vh;
-  grid-area: side-bar;
-  overflow-y: scroll;
-}
 .stock-name {
   grid-area: name;
   font-weight: 600;
@@ -35,14 +30,4 @@
   background-color: #ace7ff;
   border-color: #ace7ff;
 }
-::-webkit-scrollbar {
-  width: 7px;
-}
-::-webkit-scrollbar-track {
-  border-radius: 5px;
-  margin: 5px 0;
-}
-::-webkit-scrollbar-thumb  {
-  background-color: gray;
-  border-radius: 5px;
-}
+

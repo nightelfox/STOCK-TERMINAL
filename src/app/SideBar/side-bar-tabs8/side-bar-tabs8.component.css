@@ -1,9 +1,8 @@
 .side-bar {
   max-height: 72vh;
   grid-area: side-bar;
-  overflow-y:scroll; 
+  overflow-y: scroll;
 }
-
 .btn-choice {
   display: flex;
   justify-content: space-around;
@@ -28,7 +27,7 @@
   border-radius: 5px;
   margin: 5px 0;
 }
-::-webkit-scollbar-thumb {
+::-webkit-scrollbar-thumb  {
   background-color: gray;
   border-radius: 5px;
 }

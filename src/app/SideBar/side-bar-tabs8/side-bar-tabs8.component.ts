@@ -11,6 +11,7 @@ export class SideBarTabs8Component implements OnInit {
   constructor() { }
 
   ngOnInit() {
+
   }
 
 }

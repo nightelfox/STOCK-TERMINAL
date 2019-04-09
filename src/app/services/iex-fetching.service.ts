@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import { initialIndecies } from './initialConfig';
 import { map } from 'rxjs/operators';
+import {Stock} from '../stock';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IexFetchingService {
-  userSymbols = [];
+
   indecies: string[] = initialIndecies;
 
   public symbolSource$ = new BehaviorSubject<string>("GOOGL");
@@ -21,19 +22,20 @@ export class IexFetchingService {
   constructor(private http: HttpClient) {}
 
   getDataForSideBar(): Observable<any> {
-   return this.http.get(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${initialIndecies.join(',')}&types=quote&range=dynamic&last=5`)
-   .pipe(map(data => {
-    const stocks = [];
-    Object.keys(data).forEach((key, index) => {
-      stocks[index] = {
-        symbol: data[key].quote.symbol,
-        latestPrice: data[key].quote.latestPrice,
-        changePercent: data[key].quote.changePercent
-      };
-    });
-    return stocks;
-  })
-  );
+    const apiRequest = `https://api.iextrading.com/1.0/stock/market/batch?symbols=${initialIndecies.join(',')}
+    &types=quote&range=dynamic&last=5`;
+    return this.http.get(apiRequest).pipe(map(data => {
+        const stocks = [];
+        Object.keys(data).forEach((key, index) => {
+          stocks[index] = {
+            symbol: data[key].quote.symbol,
+            latestPrice: data[key].quote.latestPrice,
+            changePercent: data[key].quote.changePercent
+          };
+        });
+        return stocks;
+      })
+    );
   }
 
   getAllIndecies(): Observable<any> {

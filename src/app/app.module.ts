@@ -26,8 +26,10 @@ import { BlackoutDirective } from './blackout.directive';
 
 import { ChartsModule } from 'ng2-charts';
 import { CardInfoButtonsComponent } from './Main/card-info-buttons/card-info-buttons.component';
-import { IndicatorsComponent } from './Main/indicators/indicators.component';
 import { SideBarWatchlistComponent } from './SideBar/side-bar-watchlist/side-bar-watchlist.component';
+import {IexFetchingService} from './services/iex-fetching.service';
+import { DbUserWatchlistService} from './services/db-user-watchlist.service';
+import { IndicatorsComponent } from './Main/indicators/indicators.component';
 import { NewsComponent } from './Main/news/news.component';
 @NgModule({
   declarations: [
@@ -45,10 +47,10 @@ import { NewsComponent } from './Main/news/news.component';
     LoginComponent,
     MainAppComponent,
     CardInfoButtonsComponent,
-    IndicatorsComponent,
-    NewsComponent,
     BlackoutDirective,
-    SideBarWatchlistComponent
+    SideBarWatchlistComponent,
+    IndicatorsComponent,
+    NewsComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +62,7 @@ import { NewsComponent } from './Main/news/news.component';
     AngularFireFunctionsModule,
     ChartsModule
   ],
-  providers: [],
+  providers: [IexFetchingService, DbUserWatchlistService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

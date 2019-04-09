@@ -1,30 +1,17 @@
-<!-- <div *ngIf="auth.user$ | async; then authenticated else guest">
-     template will replace this div 
-</div>
-
- User NOT logged in 
-<ng-template #guest>
-<h3>GUEST</h3>
-<p>Login to get started...</p>
-<a routerLink="secret">Secret</a>
-<button (click)="auth.googleSignIn()">
-    <i class="fa fa-google"></i> Connect Google
-</button>
-
-</ng-template>
-
-
-User logged in 
-<ng-template #authenticated>
-<div *ngIf="auth.user$ | async as user">
-    <h3>{{ user.displayName }}</h3>
-    <img  [src]="user.photoURL">
-    <p>UID: {{ user.uid }}</p>
-    <button (click)="auth.signOut()">Logout</button>
-</div>
-<a routerLink="secret">Secret</a>
-</ng-template> -->
-
-<!-- <app-login></app-login> -->
-
 <router-outlet></router-outlet>
+<!--<div *ngIf="auth.user$">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 header"></div>
+    </div>
+    <div class="row">
+      <div class="col-3 side-bar">
+
+      </div>
+      <div class="col-9 main"></div>
+    </div>
+  </div>
+</div>-->
+
+
+

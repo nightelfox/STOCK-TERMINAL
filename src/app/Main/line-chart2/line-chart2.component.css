@@ -1,4 +1,3 @@
-
 .chart-card {
   height: 76vh;
   background: white;
@@ -39,8 +38,19 @@
   font-size:0.8em;
   font-weight: 200;
 }
-
 .company-info-block {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  /*padding: 15px;*/
+}
+
+.tabBlock {
+  display: flex;
+  flex-direction: row;
+}
+
+.tab-changing-section {
   display: flex;
   flex-direction: row;
   justify-content: space-around;

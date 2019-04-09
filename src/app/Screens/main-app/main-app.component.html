@@ -1,28 +1,27 @@
 <div class="main-content">
-    <div *ngIf="auth.user$ | async; then authenticated else guest"></div>
-    <app-side-bar-tabs8></app-side-bar-tabs8>
-      <div class="chart-block">
-        <div class="top-chart-block">
-        <app-index-card-main1></app-index-card-main1>
-        <app-scale-select3></app-scale-select3>
-        </div>
-        <app-line-chart2></app-line-chart2>
+  <div *ngIf="auth.user$ | async; then authenticated else guest"></div>
+  <app-side-bar-tabs8></app-side-bar-tabs8>
+    <div class="chart-block">
+      <div class="top-chart-block">
+      <app-index-card-main1></app-index-card-main1>
+      <app-scale-select3></app-scale-select3>
       </div>
-  </div>
-  
-    <ng-template #authenticated>
-        <div class="topbar" *ngIf="auth.user$ | async as user">
-            <h3>{{ user.displayName }}</h3>
-            <img [src]="user.photoURL">
-            <button (click)="auth.signOut()">Выйти</button>
-        </div>
-    </ng-template>
-  
-    <ng-template #guest>
-        <div class="topbar">
-            <h3>Гость</h3>
-            <img src="https://img.icons8.com/ios/50/000000/fraud-filled.png">
-            <button (click)="auth.signOut()">Войти</button>
-        </div>
-    </ng-template>
-  
+      <app-line-chart2></app-line-chart2>
+    </div>
+</div>
+
+  <ng-template #authenticated>
+      <div class="topbar" *ngIf="auth.user$ | async as user">
+          <h3>{{ user.displayName }}</h3>
+          <img [src]="user.photoURL">
+          <button (click)="auth.signOut()">Выйти</button>
+      </div>
+  </ng-template>
+
+  <ng-template #guest>
+      <div class="topbar">
+          <h3>Гость</h3>
+          <img src="https://img.icons8.com/ios/50/000000/fraud-filled.png">
+          <button (click)="auth.signOut()">Войти</button>
+      </div>
+  </ng-template>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Stock } from '../../stock';
 import { IexFetchingService} from '../../services/iex-fetching.service';
+import {DbUserWatchlistService} from '../../services/db-user-watchlist.service';
 
 @Component({
   selector: 'app-side-bar-watchlist',
@@ -9,11 +10,13 @@ import { IexFetchingService} from '../../services/iex-fetching.service';
 })
 export class SideBarWatchlistComponent implements OnInit {
 
-  constructor(private iexFetchigService: IexFetchingService) { }
+  constructor(private iexFetchingService: IexFetchingService, private userWatchlist: DbUserWatchlistService,) { }
   stocks: Stock[];
   ngOnInit() {
-    this.stocks = this.iexFetchigService.userSymbols;
-    console.log(this.iexFetchigService.userSymbols);
+    this.userWatchlist.userSymbol.subscribe(data => {
+      this.stocks = data;
+     // console.log(data);
+    });
   }
 
 }

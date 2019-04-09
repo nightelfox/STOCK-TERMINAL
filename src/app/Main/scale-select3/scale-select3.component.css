@@ -1,7 +1,7 @@
 .chart-range-buttons{
   display:flex;
   flex-direction: row;
-  width:750px;
+  /*width:750px;*/
   justify-content: flex-end;
 }
 

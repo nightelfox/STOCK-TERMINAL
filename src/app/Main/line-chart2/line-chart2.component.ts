@@ -84,6 +84,14 @@ export class LineChart2Component implements OnInit {
   ];
   constructor(private chartData: IexFetchingService) { }
 
+  // change button info (switching tab panel)
+  buttonStatus: string = 'indicators';
+
+  getButtonStatus($event): void {
+    this.buttonStatus = $event;
+  }
+  // end of this section
+
   ngOnInit() {
 
     const gradient = this.canvas.nativeElement.getContext('2d').createLinearGradient(500, 0, 100, 0);
@@ -102,7 +110,7 @@ export class LineChart2Component implements OnInit {
     ];
 
     this.chartData.getChart('GOOGL', '1d').subscribe( res => {
-      //console.log(res);
+      // console.log(res);
       res.chart.forEach(element => {
         if (element.average > 0) {
         this.barChartLabels.push(element.label);

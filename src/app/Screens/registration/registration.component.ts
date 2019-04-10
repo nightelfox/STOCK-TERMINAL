@@ -36,5 +36,6 @@ export class RegistrationComponent implements OnInit {
   registration() {
     this.submitted = true;
     this.auth.register(this.registrationForm.controls.email.value,this.registrationForm.controls.password.value,this.registrationForm.controls.name.value);
+    this.router.navigate(['/app'])
   }
 }

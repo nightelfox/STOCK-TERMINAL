@@ -49,7 +49,7 @@ export class AuthService {
     this.credential = await this.afAuth.auth.signInWithEmailAndPassword(email,password);
     console.log(this.credential);
     this.db.getAuthUser();
-    //return this.router.navigate(['/app/allStocks']);
+    return this.router.navigate(['/app/allStocks']);
   }
 
   async register(email,password,name) {

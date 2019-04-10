@@ -14,7 +14,7 @@ export class SideBarList9Component implements OnInit {
   userSymbols = [];
   stocks: Stock[];
   selectedStock: Stock;
-  constructor(private iexFetchingService: IexFetchingService, private userWatchlist: DbUserWatchlistService, private afAuth: AngularFireAuth) {}
+  constructor(private iexFetchingService: IexFetchingService, private dbUserWatchlist: DbUserWatchlistService, private afAuth: AngularFireAuth) {}
 
   newSymbolSelected(newSymbol): void {
     this.iexFetchingService.changeSymbolSource(newSymbol);
@@ -26,15 +26,16 @@ export class SideBarList9Component implements OnInit {
     }
   }
   addToFavorites(stock: Stock): void {
-    this.userWatchlist.addToFavorites(stock);
-    this.userWatchlist.userSymbol.subscribe(data => this.userSymbols = data);
+    this.dbUserWatchlist.addToFavorites(stock.symbol);
+    this.dbUserWatchlist.userSymbols.subscribe(data => this.userSymbols = data);
   }
 
   ngOnInit() {
     this.iexFetchingService.getDataForSideBar().subscribe(data => {
       this.stocks = data;
     });
-    this.userWatchlist.userSymbol.subscribe(data => this.userSymbols = data);
+
+    this.userSymbols = this.dbUserWatchlist.getLocalData();
   }
 
 }

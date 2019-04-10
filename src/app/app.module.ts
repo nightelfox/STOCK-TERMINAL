@@ -34,6 +34,7 @@ import { NewsComponent } from './Main/news/news.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrationComponent } from './Screens/registration/registration.component';
 
+import { StorageServiceModule } from 'ngx-webstorage-service';
 
 @NgModule({
   declarations: [ 
@@ -67,6 +68,7 @@ import { RegistrationComponent } from './Screens/registration/registration.compo
     AngularFireFunctionsModule,
     ChartsModule,
     ReactiveFormsModule
+    StorageServiceModule
   ],
   providers: [IexFetchingService, DbUserWatchlistService],
   bootstrap: [AppComponent]

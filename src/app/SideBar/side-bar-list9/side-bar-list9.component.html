@@ -16,7 +16,7 @@
       <div class="stock-price">{{stock.latestPrice}}</div>
       <div class="stock-percent">{{stock.changePercent}}</div>
       <button class="btn btn-light btn-list" (click)="addToFavorites(stock)"
-              [class.btn-selected]="userSymbols.indexOf(stock) !== -1 ">В портфель</button>
+              [class.btn-selected]="userSymbols.indexOf(stock.symbol) !== -1 ">{{stock.state}}</button>
     </li>
   </ul>
 

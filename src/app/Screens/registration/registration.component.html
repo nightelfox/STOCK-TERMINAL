@@ -19,6 +19,10 @@
           <div *ngIf="formControls.email.errors.required">Введите E-mail</div>
           <div *ngIf="formControls.email.errors.email">Неверный E-mail</div>
         </div>
+        <input class="input" placeholder="Имя" formControlName="name" required>
+        <div *ngIf='submitted && formControls.name.errors' class="invalid-field">
+          <div *ngIf="formControls.name.errors.required">Введите имя</div>
+        </div>
         <input class="input" type="password" placeholder="Пароль" formControlName="password" required>
         <div *ngIf='submitted && formControls.password.errors' class='invalid-field'>
           <div *ngIf="formControls.password.errors.required">Введите пароль</div>

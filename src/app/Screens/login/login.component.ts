@@ -31,8 +31,9 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
-  login() {
+  async login() {
     this.submitted = true;
+    this.auth.emailSignIn(this.loginForm.controls.email.value,this.loginForm.controls.password.value);
   }
 
   goToRegistrationScreen() {

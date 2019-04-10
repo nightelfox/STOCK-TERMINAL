@@ -34,8 +34,14 @@ export class SideBarList9Component implements OnInit {
     this.iexFetchingService.getDataForSideBar().subscribe(data => {
       this.stocks = data;
     });
-
-    this.userSymbols = this.dbUserWatchlist.getLocalData();
+    if (!this.dbUserWatchlist.getLocalData()){
+      this.dbUserWatchlist.userSymbols.subscribe(data => {
+        this.userSymbols = data;
+      });
+    } else {
+      this.userSymbols = this.dbUserWatchlist.getLocalData();
+    }
+    // this.userSymbols = this.dbUserWatchlist.getLocalData();
   }
 
 }

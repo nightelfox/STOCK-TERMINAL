@@ -45,6 +45,14 @@ export class AuthService {
     return this.router.navigate(['/app/allStocks']);
   }
 
+  async emailSignIn(email,password) {
+    this.credential = await this.afAuth.auth.signInWithEmailAndPassword(email,password);
+    console.log(this.credential);
+    this.updateUserData(this.credential.user);
+    this.db.getAuthUser();
+    //return this.router.navigate(['/app/allStocks']);
+
+  }
   async signOut() {
     await this.afAuth.auth.signOut();
     this.credential = null;
@@ -55,6 +63,7 @@ export class AuthService {
   guestSignIn() {
     return this.router.navigate(['/app/allStocks']);
   }
+
   updateUserData({uid, email, displayName, photoURL}: User) {
     const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${uid}`);
     const data = {
@@ -69,5 +78,8 @@ export class AuthService {
     };
     userRef.set(data, {merge: true});
     return userRef.collection('watchlist').doc('savedSymbols').set(watchlist, {merge: true});
+
+
+
   }
 }

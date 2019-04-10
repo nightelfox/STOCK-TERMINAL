@@ -67,7 +67,7 @@ import { StorageServiceModule } from 'ngx-webstorage-service';
     AngularFirestoreModule,
     AngularFireFunctionsModule,
     ChartsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
     StorageServiceModule
   ],
   providers: [IexFetchingService, DbUserWatchlistService],

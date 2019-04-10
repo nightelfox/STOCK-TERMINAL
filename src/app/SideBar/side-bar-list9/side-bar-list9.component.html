@@ -11,10 +11,10 @@
 
   <ul class='list-group'>
     <li *ngFor='let stock of stocks' class='list-group-item' appBlackout
-        (click)="onSelect(stock, $event)" [class.selected]="stock === selectedStock">
+        (click)="onSelect(stock, $event)" [class.selected]="stock.symbol === dbUserWatchlist.selectedStock">
       <div class="stock-name">{{stock.symbol}}</div>
       <div class="stock-price">{{stock.latestPrice}}</div>
-      <div class="stock-percent">{{stock.changePercent}}</div>
+      <div class="stock-percent" [style.color]="stock.changePercent>0?'#00cc2d':'red'">{{stock.changePercent}}</div>
       <button class="btn btn-light btn-list" (click)="addToFavorites(stock)"
               [class.btn-selected]="userSymbols.indexOf(stock.symbol) !== -1 ">{{stock.state}}</button>
     </li>

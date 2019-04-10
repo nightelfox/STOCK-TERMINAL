@@ -19,6 +19,10 @@ export class SideBarWatchlistComponent implements OnInit {
     this.dbUserWatchlist.userSymbols.subscribe(data => this.userSymbols = data);
   }
 
+  onSelect(stock: Stock, $event): void {
+    this.dbUserWatchlist.onSelect(stock.symbol, $event);
+  }
+
   ngOnInit() {
     this.iexFetchingService.getDataForSideBar().subscribe(data => {
       this.stocks = data;

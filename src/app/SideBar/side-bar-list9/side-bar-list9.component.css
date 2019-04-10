@@ -8,6 +8,7 @@
 }
 .stock-percent {
   grid-area: percent;
+  font-weight: 600;
 }
 .list-group-item {
   display: grid;

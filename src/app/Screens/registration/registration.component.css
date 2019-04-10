@@ -96,9 +96,9 @@
 .login-auth-form {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: flex-end;
-  height:250px;
+  height:400px;
   margin-top: 20px;
 
 }
@@ -107,7 +107,7 @@
   color:white;
   border-radius: 50px;
   border: 0;
-  width:100px;
+  width:200px;
   height:30px;
 }
 .login-auth-form button:hover {

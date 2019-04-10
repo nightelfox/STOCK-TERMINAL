@@ -12,8 +12,8 @@
         
       </div>
       <div class="terminal-login-form">
-        <h2>Вход в терминал</h2>
-        <form  class="login-auth-form" (ngSubmit) = "login()" [formGroup]="loginForm">
+        <h2>Регистрация</h2>
+        <form  class="login-auth-form" (ngSubmit) = "registration()" [formGroup]="registrationForm">
         <input class="input" type="email" placeholder="E-mail" formControlName="email" required>
         <div *ngIf='submitted && formControls.email.errors' class="invalid-field">
           <div *ngIf="formControls.email.errors.required">Введите E-mail</div>
@@ -22,17 +22,23 @@
         <input class="input" type="password" placeholder="Пароль" formControlName="password" required>
         <div *ngIf='submitted && formControls.password.errors' class='invalid-field'>
           <div *ngIf="formControls.password.errors.required">Введите пароль</div>
+          <div *ngIf="formControls.password.errors.minLength">Пароль должен быть длиннее 5 символов</div>
         </div>
-        <button type="submit">Войти</button>
+        <input class="input" type="password" placeholder="Подтвердите пароль" formControlName="passwordRe" required>
+        <div *ngIf='submitted && formControls.password.errors' class='invalid-field'>
+          <div *ngIf="formControls.password.errors.required">Подтвердите пароль</div>
+          <div *ngIf="formControls.password.errors.minLength">Пароль должен быть длиннее 5 символов</div>
+        </div>
+        <button type="submit">Зарегистрироваться</button>
         </form>
-        <div class="button-container">
+        <!-- <div class="button-container">
           <div (click)="auth.googleSignIn()" class="button">
               <img class="icon" src="https://img.icons8.com/color/50/000000/google-logo.png">
             <h3>Войти с помощью Google</h3>
           </div>
-          <h4 id="registration" (click)="goToRegistrationScreen()">Регистрация</h4>
+          <h4 id="registration" (click)="auth.guestSignIn()">Регистрация</h4>
           <h4 id="guest" (click)="auth.guestSignIn()">Продолжить как гость</h4>
-        </div>
+        </div> -->
       </div>
     </div>
     </div>

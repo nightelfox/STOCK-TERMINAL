@@ -13,17 +13,16 @@ import { map } from 'rxjs/operators';
 export class SideBarList9Component implements OnInit {
   userSymbols = [];
   stocks: Stock[];
-  selectedStock: Stock;
+  /*selectedStock: string;*/
   constructor(private iexFetchingService: IexFetchingService, private dbUserWatchlist: DbUserWatchlistService, private afAuth: AngularFireAuth) {}
 
-  newSymbolSelected(newSymbol): void {
+  /*newSymbolSelected(newSymbol): void {
     this.iexFetchingService.changeSymbolSource(newSymbol);
-    // this.iexFetchingService.symbolSource$.subscribe(name => this.iexFetchingService.getSymbolMonthStats(name).subscribe(data => console.log(data)));
-  }
+    // this.iexFetchingService.symbolSource$.subscribe(name => this.iexFetchingService.getSymbolMonthStats(name)
+    .subscribe(data => console.log(data)));
+  }*/
   onSelect(stock: Stock, $event): void {
-    if ($event.target.tagName !== 'BUTTON') {
-      this.selectedStock = stock;
-    }
+    this.dbUserWatchlist.onSelect(stock.symbol, $event);
   }
   addToFavorites(stock: Stock): void {
     this.dbUserWatchlist.addToFavorites(stock.symbol);

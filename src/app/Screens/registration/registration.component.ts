@@ -13,6 +13,7 @@ export class RegistrationComponent implements OnInit {
   submitted = false;
   registrationForm = this.fb.group( {
     email:['', [Validators.required, Validators.email,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+    name:['',Validators.required],
     password:['', [Validators.required, Validators.minLength(5)]],
     passwordRe:['', [Validators.required, Validators.minLength(5)]]
   })
@@ -34,5 +35,6 @@ export class RegistrationComponent implements OnInit {
 
   registration() {
     this.submitted = true;
+    this.auth.register(this.registrationForm.controls.email.value,this.registrationForm.controls.password.value,this.registrationForm.controls.name.value);
   }
 }

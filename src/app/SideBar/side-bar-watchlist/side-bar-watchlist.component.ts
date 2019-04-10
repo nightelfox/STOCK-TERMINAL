@@ -10,13 +10,20 @@ import {DbUserWatchlistService} from '../../services/db-user-watchlist.service';
 })
 export class SideBarWatchlistComponent implements OnInit {
 
-  constructor(private iexFetchingService: IexFetchingService, private userWatchlist: DbUserWatchlistService,) { }
+  constructor(private iexFetchingService: IexFetchingService, private dbUserWatchlist: DbUserWatchlistService,) { }
   stocks: Stock[];
+  userSymbols = [];
+
+  addToFavorites(stock: Stock): void {
+    this.dbUserWatchlist.addToFavorites(stock.symbol);
+    this.dbUserWatchlist.userSymbols.subscribe(data => this.userSymbols = data);
+  }
+
   ngOnInit() {
-    this.userWatchlist.userSymbol.subscribe(data => {
+    this.iexFetchingService.getDataForSideBar().subscribe(data => {
       this.stocks = data;
-     // console.log(data);
     });
+    this.dbUserWatchlist.userSymbols.subscribe(data => this.userSymbols = data);
   }
 
 }

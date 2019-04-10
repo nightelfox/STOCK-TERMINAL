@@ -34,8 +34,8 @@ export class LineChart2Component implements OnInit {
           },
           display: false,
           ticks: {
-             min: 1200,
-             max: 1230
+             min: 1190,
+             max: 1220
           }
         }
       ]

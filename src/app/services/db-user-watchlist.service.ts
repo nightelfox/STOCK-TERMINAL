@@ -9,20 +9,19 @@ import {Stock} from '../stock';
   providedIn: 'root'
 })
 export class DbUserWatchlistService {
-  userSymbols = [];
+  userWatchlist = [];
   user$: Observable<any>;
   symbols = [];
-  userSymbol: BehaviorSubject<any> = new BehaviorSubject([]);
+  userSymbols: BehaviorSubject<any> = new BehaviorSubject([]);
   constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth) { }
 
-  addToFavorites(stock: Stock): void {
-    if (this.userSymbols.indexOf(stock) === -1) {
-      this.userSymbols.push(stock);
+  addToFavorites(symbol: string): void {
+    if (this.userWatchlist.indexOf(symbol) === -1) {
+      this.userWatchlist.push(symbol);
     } else {
-      this.userSymbols.splice(this.userSymbols.indexOf(stock), 1);
+      this.userWatchlist.splice(this.userWatchlist.indexOf(symbol), 1);
     }
-    console.log(this.userSymbols);
-    this.userSymbol.next(this.userSymbols);
+    this.userSymbols.next(this.userWatchlist);
   }
 
   getAuthUser(): Observable<any> {

@@ -30,7 +30,8 @@ export class IexFetchingService {
           stocks[index] = {
             symbol: data[key].quote.symbol,
             latestPrice: data[key].quote.latestPrice,
-            changePercent: data[key].quote.changePercent
+            changePercent: parseFloat(data[key].quote.changePercent.toFixed(3)),
+            state: 'В портфель'
           };
         });
         return stocks;

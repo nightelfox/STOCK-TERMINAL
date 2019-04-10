@@ -16,7 +16,7 @@
 }
 .list-group-item {
   display: grid;
-  grid-template-columns: 20% 25% 25% 30%;
+  grid-template-columns: 20% 25% 20% 35%;
   grid-template-areas: "name price percent";
   margin: 10px;
   border-radius: 20px;

@@ -1,8 +1,8 @@
 <ul class='list-group'>
-  <li *ngFor='let stock of stocks' class='list-group-item'>
+  <li *ngFor='let stock of stocks' [hidden]="userSymbols.indexOf(stock.symbol) === -1" class='list-group-item'>
     <div class="stock-name">{{stock.symbol}}</div>
     <div class="stock-price">{{stock.latestPrice}}</div>
     <div class="stock-percent">{{stock.changePercent}}</div>
-    <button class="btn btn-light btn-list" >В портфель</button>
+    <button class="btn btn-light btn-list" (click)="addToFavorites(stock)">{{stock.state}}</button>
   </li>
 </ul>

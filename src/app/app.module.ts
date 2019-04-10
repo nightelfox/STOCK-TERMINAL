@@ -31,10 +31,13 @@ import {IexFetchingService} from './services/iex-fetching.service';
 import { DbUserWatchlistService} from './services/db-user-watchlist.service';
 import { IndicatorsComponent } from './Main/indicators/indicators.component';
 import { NewsComponent } from './Main/news/news.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RegistrationComponent } from './Screens/registration/registration.component';
+
 import { StorageServiceModule } from 'ngx-webstorage-service';
 
 @NgModule({
-  declarations: [
+  declarations: [ 
     AppComponent,
     UserInfo10Component,
     IndexCardMain1Component,
@@ -52,7 +55,8 @@ import { StorageServiceModule } from 'ngx-webstorage-service';
     BlackoutDirective,
     SideBarWatchlistComponent,
     IndicatorsComponent,
-    NewsComponent
+    NewsComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,
@@ -63,6 +67,7 @@ import { StorageServiceModule } from 'ngx-webstorage-service';
     AngularFirestoreModule,
     AngularFireFunctionsModule,
     ChartsModule,
+    ReactiveFormsModule
     StorageServiceModule
   ],
   providers: [IexFetchingService, DbUserWatchlistService],

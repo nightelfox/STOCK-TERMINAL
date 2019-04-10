@@ -4,16 +4,17 @@ import {Router} from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-registration',
+  templateUrl: './registration.component.html',
+  styleUrls: ['./registration.component.css']
 })
-export class LoginComponent implements OnInit {
+export class RegistrationComponent implements OnInit {
 
   submitted = false;
-  loginForm = this.fb.group( {
+  registrationForm = this.fb.group( {
     email:['', [Validators.required, Validators.email,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-    password:['', [Validators.required, Validators.minLength(5)]]
+    password:['', [Validators.required, Validators.minLength(5)]],
+    passwordRe:['', [Validators.required, Validators.minLength(5)]]
   })
   constructor(public auth: AuthService, private router: Router, private fb: FormBuilder ) {
   }
@@ -28,14 +29,10 @@ export class LoginComponent implements OnInit {
   }
 
   get formControls() {
-    return this.loginForm.controls;
+    return this.registrationForm.controls;
   }
 
-  login() {
+  registration() {
     this.submitted = true;
-  }
-
-  goToRegistrationScreen() {
-    this.router.navigate(['/registration'])
   }
 }

@@ -23,7 +23,7 @@ export class SideBarWatchlistComponent implements OnInit {
     this.iexFetchingService.getDataForSideBar().subscribe(data => {
       this.stocks = data;
     });
-    this.dbUserWatchlist.userSymbols.subscribe(data => this.userSymbols = data);
+    this.userSymbols = this.dbUserWatchlist.getLocalData();
   }
 
 }

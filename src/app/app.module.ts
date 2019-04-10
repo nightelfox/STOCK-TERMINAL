@@ -31,6 +31,8 @@ import {IexFetchingService} from './services/iex-fetching.service';
 import { DbUserWatchlistService} from './services/db-user-watchlist.service';
 import { IndicatorsComponent } from './Main/indicators/indicators.component';
 import { NewsComponent } from './Main/news/news.component';
+import { StorageServiceModule } from 'ngx-webstorage-service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,7 +62,8 @@ import { NewsComponent } from './Main/news/news.component';
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireFunctionsModule,
-    ChartsModule
+    ChartsModule,
+    StorageServiceModule
   ],
   providers: [IexFetchingService, DbUserWatchlistService],
   bootstrap: [AppComponent]

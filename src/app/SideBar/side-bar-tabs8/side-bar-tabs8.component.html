@@ -2,7 +2,7 @@
   <app-search7></app-search7>
   <div class="btn-choice">
     <button class="btn btn-item" routerLink="/app/allStocks" routerLinkActive="selected">Все индексы</button>
-    <button class="btn btn-item" routerLink="/app/myStocks" routerLinkActive="selected">Мой портфель</button>
+    <button *ngIf="auth.user$ | async as user" class="btn btn-item" routerLink="/app/myStocks" routerLinkActive="selected">Мой портфель</button>
   </div>
   <div class="side-bar">
     <router-outlet></router-outlet>

@@ -10,26 +10,26 @@ import {DbUserWatchlistService} from '../../services/db-user-watchlist.service';
 })
 export class SideBarWatchlistComponent implements OnInit {
 
-  constructor(private iexFetchingService: IexFetchingService, private dbUserWatchlist: DbUserWatchlistService,) { }
+  constructor(private iexFetchingService: IexFetchingService, private db: DbUserWatchlistService,) { }
   stocks: Stock[];
   userSymbols = [];
 
   addToFavorites(stock: Stock): void {
-    this.dbUserWatchlist.addToFavorites(stock.symbol);
+    this.db.addToFavorites(stock.symbol);
     /*this.dbUserWatchlist.userSymbols.subscribe(data => this.userSymbols = data);*/
   }
 
   onSelect(stock: Stock, $event): void {
-    this.dbUserWatchlist.onSelect(stock.symbol, $event);
+    this.db.onSelect(stock.symbol, $event);
   }
   lstClass(stock: Stock) {
-    return stock.symbol === this.dbUserWatchlist.selectedStock;
+    return stock.symbol === this.db.selectedStock;
   }
   percentColor(stock: Stock) {
     return stock.changePercent > 0 ? 'green' : 'red';
   }
   hiddenLst(stock: Stock) {
-    return this.dbUserWatchlist.userWatchlist.indexOf(stock.symbol) === -1
+    return this.db.userWatchlist.indexOf(stock.symbol) === -1 || (this.db.focused && stock.symbol !== this.db.searchSymbol);
   }
   ngOnInit() {
     this.iexFetchingService.getDataForSideBar().subscribe(data => {

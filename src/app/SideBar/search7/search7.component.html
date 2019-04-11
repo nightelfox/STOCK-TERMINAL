@@ -1,1 +1,2 @@
-<input type="text" placeholder="Поиск"/>
+<input (input)="searchStock(); focusState($event)" (blur)="focusState($event)" type="text" placeholder="Поиск" [formControl]="control"/>
+

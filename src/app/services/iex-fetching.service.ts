@@ -12,7 +12,8 @@ export class IexFetchingService {
 
   indecies: string[] = initialIndecies;
 
-  public symbolSource$ = new BehaviorSubject<string>("GOOGL");
+  public symbolSource$ = new BehaviorSubject<string>('GOOGL');
+  symbolInfo: BehaviorSubject<any> = new BehaviorSubject('');
   // selectedSymSource$: Observable<any> = this.symbolSource$.asObservable();
 
   changeSymbolSource(newSymbol: string): void {

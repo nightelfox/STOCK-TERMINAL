@@ -23,6 +23,9 @@ export class SideBarList9Component implements OnInit {
   }*/
   onSelect(stock: Stock, $event): void {
     this.dbUserWatchlist.onSelect(stock.symbol, $event);
+    this.iexFetchingService.getSymbolMonthStats(this.dbUserWatchlist.selectedStock).subscribe(data => {
+      this.iexFetchingService.symbolInfo.next(data);
+    });
   }
   addToFavorites(stock: Stock): void {
     this.dbUserWatchlist.addToFavorites(stock.symbol);

@@ -114,7 +114,7 @@ export class LineChart2Component implements OnInit {
         this.barChartLabels.push(element.minute);
       })
     })
-
+//АААААААААААААААААААААААААААА
     this.chartData.getChart('YPF', '1d').subscribe( res => {
       // console.log(res);
       res.chart.forEach(element => {

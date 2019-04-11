@@ -4,6 +4,7 @@ import { IexFetchingService} from '../../services/iex-fetching.service';
 import { DbUserWatchlistService } from 'src/app/services/db-user-watchlist.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { map } from 'rxjs/operators';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-side-bar-list9',
@@ -11,10 +12,9 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./side-bar-list9.component.css']
 })
 export class SideBarList9Component implements OnInit {
-  userSymbols = [];
   stocks: Stock[];
-  /*selectedStock: string;*/
-  constructor(private iexFetchingService: IexFetchingService, private dbUserWatchlist: DbUserWatchlistService, private afAuth: AngularFireAuth) {}
+  constructor(public auth: AuthService, private iexFetchingService: IexFetchingService,
+              private dbUserWatchlist: DbUserWatchlistService, private afAuth: AngularFireAuth) {}
 
   /*newSymbolSelected(newSymbol): void {
     this.iexFetchingService.changeSymbolSource(newSymbol);
@@ -26,21 +26,20 @@ export class SideBarList9Component implements OnInit {
   }
   addToFavorites(stock: Stock): void {
     this.dbUserWatchlist.addToFavorites(stock.symbol);
-    this.dbUserWatchlist.userSymbols.subscribe(data => this.userSymbols = data);
   }
-
+  lstClass(stock: Stock) {
+    return stock.symbol === this.dbUserWatchlist.selectedStock;
+  }
+  percentColor(stock: Stock) {
+   return stock.changePercent > 0 ? 'green' : 'red';
+  }
+  btnClass(stock: Stock) {
+    return this.dbUserWatchlist.userWatchlist.indexOf(stock.symbol) !== -1;
+  }
   ngOnInit() {
     this.iexFetchingService.getDataForSideBar().subscribe(data => {
       this.stocks = data;
     });
-    if (!this.dbUserWatchlist.getLocalData()){
-      this.dbUserWatchlist.userSymbols.subscribe(data => {
-        this.userSymbols = data;
-      });
-    } else {
-      this.userSymbols = this.dbUserWatchlist.getLocalData();
-    }
-    // this.userSymbols = this.dbUserWatchlist.getLocalData();
   }
 
 }

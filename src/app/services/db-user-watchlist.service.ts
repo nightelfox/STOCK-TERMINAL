@@ -19,6 +19,7 @@ export class DbUserWatchlistService {
   selectedStock: string;
   user$: Observable<any>;
   symbols = [];
+  symbolsFromDb;
   /*userSymbols: BehaviorSubject<any> = new BehaviorSubject([]);
   selected: BehaviorSubject<any> = new BehaviorSubject('');*/
   constructor(@Inject(LOCAL_STORAGE) private storage: StorageService, private afs: AngularFirestore, private afAuth: AngularFireAuth) { }
@@ -32,6 +33,20 @@ export class DbUserWatchlistService {
   addToFavorites(symbol: string): void {
     
     if (this.userWatchlist.indexOf(symbol) === -1) {
+      
+      // this.getDBWatchlist().subscribe( res => {
+      //   for(let i in res){
+      //     console.log(i);
+      //   }
+      // })
+
+      this.getDBWatchlist().subscribe (res => {
+        const userRef: AngularFirestoreDocument = this.afs.doc(`users/${res.uid}`);
+        userRef.collection('watchlist').doc('savedSymbols').get().subscribe (data => {
+         this.symbolsFromDb = data.data();
+        })
+      });
+
       this.addSymbolToDBWatchlist(symbol);
       this.userWatchlist.push(symbol);
     } else {
@@ -70,6 +85,10 @@ removeSymbolFromDBWatchlist(symbol) {
     return userRef.update({[symbol]:firestore.FieldValue.delete()});
   })
 }
+
+getDBWatchlist(): Observable<any> {
+    return this.afAuth.user.pipe( map(res => {
+    return this.afs.doc(`users/${res.uid}`);
+  }))
 }
-
-
+}

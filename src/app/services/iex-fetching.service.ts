@@ -67,6 +67,13 @@ export class IexFetchingService {
     }));
   }
 
+  getDefaultYAxis(symbol:string): Observable<any> {
+    return this.http.get(`https://api.iextrading.com/1.0/stock/${symbol}/chart/date/20190129`)
+    .pipe(map(data => {
+      return data;
+    })) 
+  }
+
   getSymbolMonthStats(selectedSymbol: string) {
     return this.http.get(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=chart&range=dynamic&last=5`)
       .pipe(map(symbolData => {

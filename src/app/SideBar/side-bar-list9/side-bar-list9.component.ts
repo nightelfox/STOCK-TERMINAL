@@ -13,6 +13,7 @@ import {AuthService} from '../../services/auth.service';
 })
 export class SideBarList9Component implements OnInit {
   stocks: Stock[];
+  symbolsFromDb;
   constructor(public auth: AuthService, private iexFetchingService: IexFetchingService,
               private dbUserWatchlist: DbUserWatchlistService, private afAuth: AngularFireAuth) {}
 
@@ -39,6 +40,11 @@ export class SideBarList9Component implements OnInit {
   ngOnInit() {
     this.iexFetchingService.getDataForSideBar().subscribe(data => {
       this.stocks = data;
+
+      this.dbUserWatchlist.getDBWatchlist().subscribe (res => {
+          //this.symbolsFromDb = res.data();
+          console.log(res);
+      })
     });
   }
 

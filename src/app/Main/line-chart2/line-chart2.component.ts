@@ -109,12 +109,17 @@ export class LineChart2Component implements OnInit {
       }
     ];
 
+    this.chartData.getDefaultYAxis('GOOGL').subscribe (res => {
+      res.forEach(element => {
+        this.barChartLabels.push(element.minute);
+      })
+    })
+
     this.chartData.getChart('GOOGL', '1d').subscribe( res => {
       // console.log(res);
       res.chart.forEach(element => {
-        if (element.average > 0) {
-        this.barChartLabels.push(element.label);
-        this.barChartData[0].data.push(element.average);
+        if (element.marketAverage > 0) {
+        this.barChartData[0].data.push(element.marketAverage);
         }
       });
     });

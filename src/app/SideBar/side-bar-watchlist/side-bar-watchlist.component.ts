@@ -16,24 +16,32 @@ export class SideBarWatchlistComponent implements OnInit {
 
   addToFavorites(stock: Stock): void {
     this.dbUserWatchlist.addToFavorites(stock.symbol);
-    this.dbUserWatchlist.userSymbols.subscribe(data => this.userSymbols = data);
+    /*this.dbUserWatchlist.userSymbols.subscribe(data => this.userSymbols = data);*/
   }
 
   onSelect(stock: Stock, $event): void {
     this.dbUserWatchlist.onSelect(stock.symbol, $event);
   }
-
+  lstClass(stock: Stock) {
+    return stock.symbol === this.dbUserWatchlist.selectedStock;
+  }
+  percentColor(stock: Stock) {
+    return stock.changePercent > 0 ? 'green' : 'red';
+  }
+  hiddenLst(stock: Stock) {
+    return this.dbUserWatchlist.userWatchlist.indexOf(stock.symbol) === -1
+  }
   ngOnInit() {
     this.iexFetchingService.getDataForSideBar().subscribe(data => {
       this.stocks = data;
     });
-    if (!this.dbUserWatchlist.getLocalData()){
+    /*if (!this.dbUserWatchlist.getLocalData()){
       this.dbUserWatchlist.userSymbols.subscribe(data => {
         this.userSymbols = data;
       });
     } else {
       this.userSymbols = this.dbUserWatchlist.getLocalData();
-    }
+    }*/
     // this.userSymbols = this.dbUserWatchlist.getLocalData();
   }
 

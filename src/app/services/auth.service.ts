@@ -61,6 +61,8 @@ export class AuthService {
     await this.afAuth.auth.signOut();
     this.credential = null;
     this.db.user$ = null;
+    this.db.userWatchlist = [];
+    this.db.clearLocal();
     return this.router.navigate(['/']);
   }
 

@@ -17,6 +17,8 @@ const STORAGE_KEY_WATCH = 'local_userWatchList';
 export class DbUserWatchlistService {
   userWatchlist = this.getLocalData() || [];
   selectedStock: string;
+  searchSymbol: string;
+  focused: boolean;
   user$: Observable<any>;
   symbols = [];
   /*userSymbols: BehaviorSubject<any> = new BehaviorSubject([]);
@@ -30,7 +32,6 @@ export class DbUserWatchlistService {
   }
 
   addToFavorites(symbol: string): void {
-    
     if (this.userWatchlist.indexOf(symbol) === -1) {
       this.addSymbolToDBWatchlist(symbol);
       this.userWatchlist.push(symbol);

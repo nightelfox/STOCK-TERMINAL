@@ -82,6 +82,5 @@ export class AuthService {
     };
     userRef.set(data, {merge: true});
     return userRef.collection('watchlist').doc('savedSymbols').set(watchlist, {merge: true});
-
   }
 }

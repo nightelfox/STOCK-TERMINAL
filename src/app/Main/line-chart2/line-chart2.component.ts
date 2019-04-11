@@ -34,8 +34,8 @@ export class LineChart2Component implements OnInit {
           },
           display: false,
           ticks: {
-             min: 14,
-             max: 16
+             min: 199,
+             max: 201
           }
         }
       ]
@@ -109,21 +109,21 @@ export class LineChart2Component implements OnInit {
       }
     ];
 
-    this.chartData.getDefaultYAxis('YPF').subscribe (res => {
+    this.chartData.getDefaultYAxis('AAPL').subscribe (res => {
       res.forEach(element => {
         this.barChartLabels.push(element.minute);
       })
     })
 //АААААААААААААААААААААААААААА
-    this.chartData.getChart('YPF', '1d').subscribe( res => {
+    this.chartData.getChart('AAPL', '1d').subscribe( res => {
       // console.log(res);
       res.chart.forEach(element => {
-        if ((element.average === -1 || element.average === null) && element.marketAverage !== -1) {
-        this.barChartData[0].data.push(element.marketAverage);
+        if ((element.average !== -1 && element.average !== null)) {
+        this.barChartData[0].data.push(element.average);
         }
-        if ((element.marketAverage === -1 || element.marketAverage === null) && element.average !== -1) {
-          this.barChartData[0].data.push(element.average);
-          }
+        // if ((element.marketAverage === -1 || element.marketAverage === null) && element.average !== -1) {
+        //   this.barChartData[0].data.push(element.average);
+        //   }
       });
     });
   }

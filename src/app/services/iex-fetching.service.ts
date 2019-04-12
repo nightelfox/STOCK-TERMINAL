@@ -80,14 +80,17 @@ export class IexFetchingService {
       .pipe(map(symbolData => {
         const newSymbolData = symbolData[selectedSymbol].chart.data;
         const indexLastElement = newSymbolData.length - 1;
-        return {open: newSymbolData[indexLastElement].open,
+        return {    symbol: selectedSymbol,
+                    open: newSymbolData[indexLastElement].open,
                     close: newSymbolData[indexLastElement].close,
                     preOpen: newSymbolData[indexLastElement - 1].open,
                     preClose: newSymbolData[indexLastElement - 1].close,
                     min: newSymbolData[indexLastElement].low,
                     max: newSymbolData[indexLastElement].high,
                     maxMonth: Math.max.apply(Math, newSymbolData.map(obj => obj.high)),
-                    minMonth: Math.min.apply(Math, newSymbolData.map(obj => obj.low))};
+                    minMonth: Math.min.apply(Math, newSymbolData.map(obj => obj.low)),
+                    changePercent: newSymbolData[indexLastElement]['changePercent'] + '%'
+               };
       }));
   }
 

@@ -8,8 +8,6 @@
 .button-range {
   width: 40px;
   height:40px;
-  background-color: #F5F5F5;  
-  border-radius: 50%;
   margin-right: 10px;
   display:flex;
   justify-content: center;
@@ -20,4 +18,49 @@
 }
 .button-range:hover {
   cursor: pointer;
+  color: #0ADBFC;
+}
+
+.indicators-select {
+  width: 130px;
+  height: 40px;
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  color:#262626;  
+  font-family: 'Montserrat';
+  font-size: 0.8em;
+}
+
+.indicators-select:hover {
+  cursor: pointer;
+  color: #0ADBFC;
+}
+
+.indicators-select button{
+ background-color: white;
+ border: 0;
+}
+.indicators-select button:hover{
+  color: #0ADBFC;
+ }
+
+.separator {
+  width:50px;
+  height:40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  color:#A2A2A2;
+  font-size: 0.8em;
+}
+
+.drop-width {
+  width:300px;
+  margin-top:10px;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+  font-size: 1em;
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IexFetchingService } from 'src/app/services/iex-fetching.service';
 
 @Component({
   selector: 'app-index-card-main1',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class IndexCardMain1Component implements OnInit {
 
-  constructor() { }
+  symbol;
+
+  constructor(private chartData: IexFetchingService) { }
 
   ngOnInit() {
+
+    this.chartData.symbolInfo.subscribe (res => {
+      this.symbol = res;
+      console.log(this.symbol);
+    })
   }
 
 }

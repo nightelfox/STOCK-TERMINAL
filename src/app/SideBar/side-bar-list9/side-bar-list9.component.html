@@ -1,13 +1,17 @@
 
   <ul class='list-group'>
     <li *ngFor='let stock of stocks' class='list-group-item' appBlackout
-        [hidden]="dbUserWatchlist.focused && stock.symbol !== dbUserWatchlist.searchSymbol"
+        [hidden]="hiddenLst(stock)"
         (click)="onSelect(stock, $event)" [class.selected]="lstClass(stock)">
       <div class="stock-name">{{stock.symbol}}</div>
       <div class="stock-price">{{stock.latestPrice}}</div>
       <div class="stock-percent" [style.color]="percentColor(stock)">{{stock.changePercent}}</div>
       <button class="btn btn-light btn-list" *ngIf="auth.user$ | async as user" (click)="addToFavorites(stock)"
-              [class.btn-selected]="btnClass(stock)">{{stock.state}}</button>
+              [class.btn-selected]="btnClass(stock)">В портфель</button>
+      <!--<svg width="25px" height="25px" (click)="addToFavorites(stock)">
+          <path class="star" d="M12.5,0 L15.5,10 L24,10 L17,15 L21,24 L12.5,17.5
+           L4,24 L8,15 L1,10 L9.5,10 z "></path>
+      </svg>-->
     </li>
   </ul>
 

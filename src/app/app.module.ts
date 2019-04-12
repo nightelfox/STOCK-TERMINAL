@@ -33,7 +33,7 @@ import { IndicatorsComponent } from './Main/indicators/indicators.component';
 import { NewsComponent } from './Main/news/news.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrationComponent } from './Screens/registration/registration.component';
-
+import { ForSideBarService } from './services/for-side-bar.service';
 import { StorageServiceModule } from 'ngx-webstorage-service';
 
 @NgModule({
@@ -70,7 +70,7 @@ import { StorageServiceModule } from 'ngx-webstorage-service';
     ReactiveFormsModule,
     StorageServiceModule
   ],
-  providers: [IexFetchingService, DbUserWatchlistService],
+  providers: [IexFetchingService, DbUserWatchlistService, ForSideBarService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

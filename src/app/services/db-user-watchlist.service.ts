@@ -8,7 +8,6 @@ import {Stock} from '../stock';
 import { firestore } from 'firebase/app';
 
 const STORAGE_KEY_WATCH = 'local_userWatchList';
-/*const STORAGE_KEY_SELECT = 'local_selected';*/
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +15,6 @@ const STORAGE_KEY_WATCH = 'local_userWatchList';
 
 export class DbUserWatchlistService {
   userWatchlist = this.getLocalData() || [];
-  selectedStock: string;
-  searchSymbol: string;
-  focused: boolean;
   user$: Observable<any>;
   symbols = [];
   symbolsFromDb;
@@ -31,10 +27,8 @@ export class DbUserWatchlistService {
   getLocalData() {
     return this.storage.get(STORAGE_KEY_WATCH);
   }
-
   addToFavorites(symbol: string): void {
     if (this.userWatchlist.indexOf(symbol) === -1) {
-      
       // this.getDBWatchlist().subscribe( res => {
       //   for(let i in res){
       //     console.log(i);
@@ -57,15 +51,6 @@ export class DbUserWatchlistService {
     /*this.userSymbols.next(this.userWatchlist);*/
     this.storage.set(STORAGE_KEY_WATCH, this.userWatchlist);
   }
-
-  onSelect(stock: string, event): void {
-    if (event.target.tagName !== 'BUTTON') {
-      this.selectedStock = stock;
-      console.log(this.selectedStock);
-    }
-    /*this.storage.set(STORAGE_KEY_SELECT, this.selectedStock);*/
-  }
-
   getAuthUser(): Observable<any> {
      return this.afAuth.user.pipe(map(data => {
       const userRef: AngularFirestoreDocument = this.afs.doc(`users/${data.uid}`);
@@ -76,20 +61,20 @@ export class DbUserWatchlistService {
 addSymbolToDBWatchlist(symbol) {
   return this.afAuth.user.subscribe( res => {
     const userRef: AngularFirestoreDocument = this.afs.doc(`users/${res.uid}`);
-      return userRef.collection('watchlist').doc('savedSymbols').set({[symbol]:Math.random()},{merge:true});
-    }); 
+    return userRef.collection('watchlist').doc('savedSymbols').set({[symbol]: Math.random()},{merge: true});
+    });
 }
 
 removeSymbolFromDBWatchlist(symbol) {
   return this.afAuth.user.subscribe (res => {
     const userRef: AngularFirestoreDocument = this.afs.doc(`users/${res.uid}/watchlist/savedSymbols`);
-    return userRef.update({[symbol]:firestore.FieldValue.delete()});
-  })
+    return userRef.update({[symbol]: firestore.FieldValue.delete()});
+  });
 }
 
 getDBWatchlist(): Observable<any> {
     return this.afAuth.user.pipe( map(res => {
     return this.afs.doc(`users/${res.uid}`);
-  }))
+  }));
 }
 }

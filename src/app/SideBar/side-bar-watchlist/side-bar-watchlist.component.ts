@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Stock } from '../../stock';
 import { IexFetchingService} from '../../services/iex-fetching.service';
 import {DbUserWatchlistService} from '../../services/db-user-watchlist.service';
+import {ForSideBarService} from '../../services/for-side-bar.service';
 
 @Component({
   selector: 'app-side-bar-watchlist',
@@ -10,7 +11,7 @@ import {DbUserWatchlistService} from '../../services/db-user-watchlist.service';
 })
 export class SideBarWatchlistComponent implements OnInit {
 
-  constructor(private iexFetchingService: IexFetchingService, private db: DbUserWatchlistService,) { }
+  constructor(private sb: ForSideBarService, private iexFetchingService: IexFetchingService, private db: DbUserWatchlistService,) { }
   stocks: Stock[];
   userSymbols = [];
 
@@ -20,20 +21,24 @@ export class SideBarWatchlistComponent implements OnInit {
   }
 
   onSelect(stock: Stock, $event): void {
-    this.db.onSelect(stock.symbol, $event);
+    this.sb.onSelect(stock.symbol, $event);
   }
   lstClass(stock: Stock) {
-    return stock.symbol === this.db.selectedStock;
+    return stock.symbol === this.sb.selectedStock;
   }
   percentColor(stock: Stock) {
     return stock.changePercent > 0 ? 'green' : 'red';
   }
   hiddenLst(stock: Stock) {
-    return this.db.userWatchlist.indexOf(stock.symbol) === -1 || (this.db.focused && stock.symbol !== this.db.searchSymbol);
+    return this.db.userWatchlist.indexOf(stock.symbol) === -1 || (this.sb.focused && stock.symbol.indexOf(this.sb.searchSymbol) === -1);
   }
   ngOnInit() {
+    if (this.sb.getLocalStocks()) {
+      this.stocks = this.sb.getLocalStocks();
+    }
     this.iexFetchingService.getDataForSideBar().subscribe(data => {
       this.stocks = data;
+      this.sb.setLocalStocks(data);
     });
     /*if (!this.dbUserWatchlist.getLocalData()){
       this.dbUserWatchlist.userSymbols.subscribe(data => {

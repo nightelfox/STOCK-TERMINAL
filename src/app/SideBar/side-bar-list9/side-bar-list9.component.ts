@@ -5,6 +5,7 @@ import { DbUserWatchlistService } from 'src/app/services/db-user-watchlist.servi
 import { AngularFireAuth } from '@angular/fire/auth';
 import { map } from 'rxjs/operators';
 import {AuthService} from '../../services/auth.service';
+import {ForSideBarService} from '../../services/for-side-bar.service';
 
 @Component({
   selector: 'app-side-bar-list9',
@@ -14,7 +15,7 @@ import {AuthService} from '../../services/auth.service';
 export class SideBarList9Component implements OnInit {
   stocks: Stock[];
   symbolsFromDb;
-  constructor(public auth: AuthService, private iexFetchingService: IexFetchingService,
+  constructor(private sb: ForSideBarService, public auth: AuthService, private iexFetchingService: IexFetchingService,
               private dbUserWatchlist: DbUserWatchlistService, private afAuth: AngularFireAuth) {}
 
   /*newSymbolSelected(newSymbol): void {
@@ -23,8 +24,8 @@ export class SideBarList9Component implements OnInit {
     .subscribe(data => console.log(data)));
   }*/
   onSelect(stock: Stock, $event): void {
-    this.dbUserWatchlist.onSelect(stock.symbol, $event);
-    this.iexFetchingService.getSymbolMonthStats(this.dbUserWatchlist.selectedStock).subscribe(data => {
+    this.sb.onSelect(stock.symbol, $event);
+    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe(data => {
       this.iexFetchingService.symbolInfo.next(data);
     });
   }
@@ -32,7 +33,7 @@ export class SideBarList9Component implements OnInit {
     this.dbUserWatchlist.addToFavorites(stock.symbol);
   }
   lstClass(stock: Stock) {
-    return stock.symbol === this.dbUserWatchlist.selectedStock;
+    return stock.symbol === this.sb.selectedStock;
   }
   percentColor(stock: Stock) {
    return stock.changePercent > 0 ? 'green' : 'red';
@@ -40,14 +41,20 @@ export class SideBarList9Component implements OnInit {
   btnClass(stock: Stock) {
     return this.dbUserWatchlist.userWatchlist.indexOf(stock.symbol) !== -1;
   }
+  hiddenLst(stock) {
+    return this.sb.focused && stock.symbol.indexOf(this.sb.searchSymbol) === -1;
+  }
   ngOnInit() {
+    if (this.sb.getLocalStocks()) {
+      this.stocks = this.sb.getLocalStocks();
+    }
     this.iexFetchingService.getDataForSideBar().subscribe(data => {
-      this.stocks = data;
-
-      this.dbUserWatchlist.getDBWatchlist().subscribe (res => {
-          //this.symbolsFromDb = res.data();
+        this.stocks = data;
+        this.sb.setLocalStocks(data);
+    });
+    this.dbUserWatchlist.getDBWatchlist().subscribe (res => {
+          // this.symbolsFromDb = res.data();
           console.log(res);
-      })
     });
   }
 

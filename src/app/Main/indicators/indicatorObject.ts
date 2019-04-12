@@ -1,4 +1,5 @@
 export class Indicators {
+  symbol?:string;
   open?: number;
   close?: number;
   max?: number;
@@ -7,4 +8,5 @@ export class Indicators {
   preClose?: number;
   maxMonth?: number;
   minMonth?: number;
+  changePercent?: string;
 }

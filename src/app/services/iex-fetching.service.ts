@@ -68,30 +68,29 @@ export class IexFetchingService {
     }));
   }
 
-  getDefaultYAxis(symbol:string): Observable<any> {
+  getDefaultYAxis(symbol: string): Observable<any> {
     return this.http.get(`https://api.iextrading.com/1.0/stock/${symbol}/chart/date/20190129`)
     .pipe(map(data => {
       return data;
-    })) 
+    }));
   }
 
   getSymbolMonthStats(selectedSymbol: string) {
     return this.http.get(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=chart&range=dynamic&last=5`)
       .pipe(map(symbolData => {
-        let newSymbolData = symbolData[selectedSymbol]['chart']['data'];
-        let indexLastElement = newSymbolData.length - 1;
-        return {    symbol:selectedSymbol,
-                    open: newSymbolData[indexLastElement]['open'],
-                    close: newSymbolData[indexLastElement]['close'],
-                    preOpen: newSymbolData[indexLastElement - 1]['open'],
-                    preClose: newSymbolData[indexLastElement - 1]['close'],
-                    min: newSymbolData[indexLastElement]['low'],
-                    max: newSymbolData[indexLastElement]['high'],
+        const newSymbolData = symbolData[selectedSymbol].chart.data;
+        const indexLastElement = newSymbolData.length - 1;
+        return {    symbol: selectedSymbol,
+                    open: newSymbolData[indexLastElement].open,
+                    close: newSymbolData[indexLastElement].close,
+                    preOpen: newSymbolData[indexLastElement - 1].open,
+                    preClose: newSymbolData[indexLastElement - 1].close,
+                    min: newSymbolData[indexLastElement].low,
+                    max: newSymbolData[indexLastElement].high,
                     maxMonth: Math.max.apply(Math, newSymbolData.map(obj => obj.high)),
                     minMonth: Math.min.apply(Math, newSymbolData.map(obj => obj.low)),
                     changePercent: newSymbolData[indexLastElement]['changePercent'] + '%'
-                  }
-                  
+               };
       }));
   }
 

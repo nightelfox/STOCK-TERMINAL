@@ -33,7 +33,7 @@ import { IndicatorsComponent } from './Main/indicators/indicators.component';
 import { NewsComponent } from './Main/news/news.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrationComponent } from './Screens/registration/registration.component';
-
+import { ForSideBarService } from './services/for-side-bar.service';
 import { StorageServiceModule } from 'ngx-webstorage-service';
 import { IndicatorsListComponent } from './Main/indicators-list/indicators-list.component';
 import { IndeciesListComponent } from './Main/indecies-list/indecies-list.component';
@@ -76,7 +76,7 @@ import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
     ReactiveFormsModule,
     StorageServiceModule
   ],
-  providers: [IexFetchingService, DbUserWatchlistService],
+  providers: [IexFetchingService, DbUserWatchlistService, ForSideBarService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

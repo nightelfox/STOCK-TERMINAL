@@ -5,6 +5,6 @@
     <div class="stock-name">{{stock.symbol}}</div>
     <div class="stock-price">{{stock.latestPrice}}</div>
     <div class="stock-percent" [style.color]="percentColor(stock)">{{stock.changePercent}}</div>
-    <button class="btn btn-light btn-list" (click)="addToFavorites(stock)">{{stock.state}}</button>
+    <button class="btn btn-light btn-list" (click)="addToFavorites(stock)">В портфель</button>
   </li>
 </ul>

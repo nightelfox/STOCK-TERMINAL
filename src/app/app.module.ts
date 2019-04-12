@@ -35,6 +35,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrationComponent } from './Screens/registration/registration.component';
 
 import { StorageServiceModule } from 'ngx-webstorage-service';
+import { IndicatorsListComponent } from './Main/indicators-list/indicators-list.component';
+import { IndeciesListComponent } from './Main/indecies-list/indecies-list.component';
+import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
 
 @NgModule({
   declarations: [ 
@@ -56,7 +59,10 @@ import { StorageServiceModule } from 'ngx-webstorage-service';
     SideBarWatchlistComponent,
     IndicatorsComponent,
     NewsComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    IndicatorsListComponent,
+    IndeciesListComponent,
+    ChartTypeComponent
   ],
   imports: [
     BrowserModule,

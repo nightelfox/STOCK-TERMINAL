@@ -26,16 +26,16 @@ export class LineChart2Component implements OnInit {
     scales: {
       xAxes: [{
         gridLines: {
-          display: false
+          display: true
       },
       display: false
       }],
       yAxes: [
         {
           gridLines: {
-            display: false
+            display: true
           },
-          display: false,
+          display: true,
           ticks: {
              min: this.minChart,
              max: this.maxChart

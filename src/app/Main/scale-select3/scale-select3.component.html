@@ -3,10 +3,37 @@
 <div class = "button-range">2г</div>
 <div class = "button-range">1г</div>
 <div class = "button-range">НГ</div>-->
-<div class = "indicators-select">Вид графика</div>
+<div class = "indicators-select">
+    <div class="dropdown">
+        <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Вид графика
+        </button>
+        <div class="dropdown-menu drop-width" aria-labelledby="dropdownMenuButton">
+         <app-chart-type></app-chart-type>
+        </div>
+      </div>
+</div>
 <div class = "separator">|</div>
-<div class = "indicators-select">Сравнение</div>
-<div class = "indicators-select">Индикаторы</div>
+<div class = "indicators-select">
+    <div class="dropdown">
+        <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Сравнение
+        </button>
+        <div class="dropdown-menu drop-width" aria-labelledby="dropdownMenuButton">
+         <app-indecies-list></app-indecies-list>
+        </div>
+      </div>
+</div>
+<div class = "indicators-select">
+  <div class="dropdown">
+    <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Индикаторы
+    </button>
+    <div class="dropdown-menu drop-width" aria-labelledby="dropdownMenuButton">
+     <app-indicators-list></app-indicators-list>
+    </div>
+  </div>
+</div>
 <div class = "separator">|</div>
 <div class = "button-range">6м</div>
 <div class = "button-range">3м</div>

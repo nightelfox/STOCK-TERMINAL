@@ -23,10 +23,8 @@ export class ForSideBarService {
   }
   setLocalStocks(stocks: Stock[]) {
     this.storage.set(STORAGE_KEY_STOCKS, stocks);
-    console.log(stocks);
   }
   onSelect(stock: string, event): void {
-    console.log(event.target.tagName);
     if (event.target.tagName !== 'BUTTON') {
       this.selectedStock = stock;
     }

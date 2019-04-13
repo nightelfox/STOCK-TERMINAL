@@ -2,7 +2,7 @@
   <li
     *ngFor="let stock of stocks"
     class="list-group-item"
-    appBlackout
+    app-blackout
     [hidden]="hiddenLst(stock)"
     (click)="onSelect(stock, $event)"
     [class.selected]="lstClass(stock)"

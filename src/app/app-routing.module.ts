@@ -13,11 +13,11 @@ const routes: Routes = [
     component: MainAppComponent,
     children: [
       {
-        path: 'allStocks',
+        path: 'all-stocks',
         component: SideBarList9Component,
       },
       {
-        path: 'myStocks',
+        path: 'my-stocks',
         component: SideBarWatchlistComponent,
       },
     ],

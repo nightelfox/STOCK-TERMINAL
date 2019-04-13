@@ -42,7 +42,7 @@ export class SideBarWatchlistComponent implements OnInit {
     if (this.sb.getLocalStocks()) {
       this.stocks = this.sb.getLocalStocks();
     }
-    this.iexFetchingService.getDataForSideBar().subscribe(data => {
+    this.iexFetchingService.getDataForSideBar().subscribe((data) => {
       this.stocks = data;
       this.sb.setLocalStocks(data);
     });

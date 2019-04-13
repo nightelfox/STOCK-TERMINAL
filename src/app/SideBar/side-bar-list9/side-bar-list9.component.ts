@@ -25,7 +25,8 @@ export class SideBarList9Component implements OnInit {
 
   /*newSymbolSelected(newSymbol): void {
     this.iexFetchingService.changeSymbolSource(newSymbol);
-    // this.iexFetchingService.symbolSource$.subscribe(name => this.iexFetchingService.getSymbolMonthStats(name)
+    // this.iexFetchingService.symbolSource$.subscribe(name =>
+    this.iexFetchingService.getSymbolMonthStats(name)
     .subscribe(data => console.log(data)));
   }*/
   onSelect(stock: Stock, $event): void {

@@ -90,26 +90,26 @@ export class LineChart2Component implements OnInit {
 
   ngOnInit() {
     this.fillLabels();
-    const gradient = this.canvas.nativeElement
+    const GRADIENT = this.canvas.nativeElement
       .getContext('2d')
       .createLinearGradient(500, 0, 100, 0);
-    gradient.addColorStop(0, '#3EECE0');
-    gradient.addColorStop(1, '#3E95EC');
+    GRADIENT.addColorStop(0, '#3EECE0');
+    GRADIENT.addColorStop(1, '#3E95EC');
 
     // const gradientFill = this.canvas.nativeElement.getContext('2d').createLinearGradient(0, 0, 0, 300);
     // gradientFill.addColorStop(0, 'rgba(251, 158,29, 0.5)');
     // gradientFill.addColorStop(0.2, 'rgba(177, 255, 250, 0.25)');
     // gradientFill.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    const gradientFill = this.canvas.nativeElement
+    const GRADIENT_FILL = this.canvas.nativeElement
       .getContext('2d')
       .createLinearGradient(0, 0, 0, 300);
-    gradientFill.addColorStop(0, 'rgba(251, 158,29, 0)');
-    gradientFill.addColorStop(0.2, 'rgba(177, 255, 250, 0)');
-    gradientFill.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    GRADIENT_FILL.addColorStop(0, 'rgba(251, 158,29, 0)');
+    GRADIENT_FILL.addColorStop(0.2, 'rgba(177, 255, 250, 0)');
+    GRADIENT_FILL.addColorStop(1, 'rgba(255, 255, 255, 0)');
     this.lineChartColors = [
       {
-        borderColor: gradient,
-        backgroundColor: gradientFill,
+        borderColor: GRADIENT,
+        backgroundColor: GRADIENT_FILL,
       },
     ];
 
@@ -143,18 +143,18 @@ export class LineChart2Component implements OnInit {
   }
 
   setChartMinMax() {
-    const min = Math.min(
+    const MIN = Math.min(
       ...this.barChartData[0].data.filter(el => {
         return el > 0;
       })
     );
-    const max = Math.max(...this.barChartData[0].data);
+    const MAX = Math.max(...this.barChartData[0].data);
 
     // if (min === 0) {
     //   this.minChart
     // }
-    this.minChart = min;
-    this.maxChart = max;
+    this.minChart = MIN;
+    this.maxChart = MAX;
     console.log({ min: this.minChart, max: this.maxChart });
   }
 

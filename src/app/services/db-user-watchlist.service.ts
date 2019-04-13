@@ -39,8 +39,8 @@ export class DbUserWatchlistService {
       // })
 
       this.getDBWatchlist().subscribe(res => {
-        const userRef: AngularFirestoreDocument = this.afs.doc(`users/${res.uid}`);
-        userRef
+        const USER_REF: AngularFirestoreDocument = this.afs.doc(`users/${res.uid}`);
+        USER_REF
           .collection('watchlist')
           .doc('savedSymbols')
           .get()
@@ -61,16 +61,16 @@ export class DbUserWatchlistService {
   getAuthUser(): Observable<any> {
     return this.afAuth.user.pipe(
       map(data => {
-        const userRef: AngularFirestoreDocument = this.afs.doc(`users/${data.uid}`);
-        return userRef;
+        const USER_REF: AngularFirestoreDocument = this.afs.doc(`users/${data.uid}`);
+        return USER_REF;
       })
     );
   }
 
   addSymbolToDBWatchlist(symbol) {
     return this.afAuth.user.subscribe(res => {
-      const userRef: AngularFirestoreDocument = this.afs.doc(`users/${res.uid}`);
-      return userRef
+      const USER_REF: AngularFirestoreDocument = this.afs.doc(`users/${res.uid}`);
+      return USER_REF
         .collection('watchlist')
         .doc('savedSymbols')
         .set({ [symbol]: Math.random() }, { merge: true });
@@ -79,10 +79,10 @@ export class DbUserWatchlistService {
 
   removeSymbolFromDBWatchlist(symbol) {
     return this.afAuth.user.subscribe(res => {
-      const userRef: AngularFirestoreDocument = this.afs.doc(
+      const USER_REF: AngularFirestoreDocument = this.afs.doc(
         `users/${res.uid}/watchlist/savedSymbols`
       );
-      return userRef.update({ [symbol]: firestore.FieldValue.delete() });
+      return USER_REF.update({ [symbol]: firestore.FieldValue.delete() });
     });
   }
 

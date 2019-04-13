@@ -27,7 +27,8 @@
     "ngx-webstorage-service": "^4.0.1",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
-    "zone.js": "~0.8.26"
+    "zone.js": "~0.8.26",
+    "bootstrap": "^4.2.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",

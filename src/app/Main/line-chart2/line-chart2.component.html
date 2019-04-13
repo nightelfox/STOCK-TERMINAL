@@ -1,58 +1,64 @@
 <div>
-    <div class="chart-card">
-      <div class="white-block">
-        <!-- <div class="stock-closed">
+  <div class="chart-card">
+    <div class="white-block">
+      <!-- <div class="stock-closed">
           <h1>Биржа закрыта 😓</h1>
           <h2>Открытие  - 06.04 в 16:00 МСК</h2>
         </div> -->
-        <canvas #chart baseChart
-                [colors]="lineChartColors"
-                [datasets]="barChartData"
-                [labels]="barChartLabels"
-                [options]="barChartOptions"
-                [legend]="barChartLegend"
-                [chartType]="barChartType"></canvas>
-      </div>
+      <canvas
+        #chart
+        baseChart
+        [colors]="lineChartColors"
+        [datasets]="barChartData"
+        [labels]="barChartLabels"
+        [options]="barChartOptions"
+        [legend]="barChartLegend"
+        [chartType]="barChartType"
+      ></canvas>
+    </div>
 
-    <div class='company-info-block'>
-      <section *ngIf = 'buttonStatus === "indicators" ' class="tab-changing-section">
+    <div class="company-info-block">
+      <section *ngIf="buttonStatus === 'indicators'" class="tab-changing-section">
         <app-indicators></app-indicators>
       </section>
-      <section *ngIf = 'buttonStatus === "company-info" ' class="tab-changing-section">
-      <div class='about-company'>
-      <h1>О компании</h1>
-      <p>Alphabet Inc is a provider of internet content
-          products and portals. Its suite of brands includes 
-          Search, Android, YouTube, Apps, Maps & Ads.</p>
+      <section *ngIf="buttonStatus === 'company-info'" class="tab-changing-section">
+        <div class="about-company">
+          <h1>О компании</h1>
+          <p>
+            Alphabet Inc is a provider of internet content products and portals. Its suite of brands
+            includes Search, Android, YouTube, Apps, Maps & Ads.
+          </p>
           <a href="abc.xyz">abc.xyz</a>
-      </div>
-        <div class='company-info-column'>
-          <div class='company-info-column-item'>
+        </div>
+        <div class="company-info-column">
+          <div class="company-info-column-item">
             <h1>Биржа</h1>
             <h2>Nasdaq Global Select</h2>
           </div>
-          <div class='company-info-column-item'>
-              <h1>Капитализация</h1>
-              <h2>$ 928,46 млрд</h2>
-            </div>
+          <div class="company-info-column-item">
+            <h1>Капитализация</h1>
+            <h2>$ 928,46 млрд</h2>
+          </div>
         </div>
-        <div class='company-info-column'>
-            <div class='company-info-column-item'>
-              <h1>Сектор</h1>
-              <h2>Technology</h2>
-            </div>
-            <div class='company-info-column-item'>
-                <h1>Индустрия</h1>
-                <h2>Online media</h2>
-              </div>
+        <div class="company-info-column">
+          <div class="company-info-column-item">
+            <h1>Сектор</h1>
+            <h2>Technology</h2>
+          </div>
+          <div class="company-info-column-item">
+            <h1>Индустрия</h1>
+            <h2>Online media</h2>
+          </div>
         </div>
       </section>
-      <section *ngIf = 'buttonStatus === "news" ' class="tab-changing-section">
+      <section *ngIf="buttonStatus === 'news'" class="tab-changing-section">
         <app-news></app-news>
       </section>
-        <div class='buttons-container'>
-            <app-card-info-buttons (buttonStatusEvent)="getButtonStatus($event)"></app-card-info-buttons>
-        </div>
+      <div class="buttons-container">
+        <app-card-info-buttons
+          (buttonStatusEvent)="getButtonStatus($event)"
+        ></app-card-info-buttons>
+      </div>
     </div>
   </div>
 </div>

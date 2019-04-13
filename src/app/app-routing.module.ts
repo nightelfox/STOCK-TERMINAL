@@ -7,26 +7,28 @@ import { MainAppComponent } from './Screens/main-app/main-app.component';
 import { SideBarList9Component } from './SideBar/side-bar-list9/side-bar-list9.component';
 import { SideBarWatchlistComponent } from './SideBar/side-bar-watchlist/side-bar-watchlist.component';
 
-
 const routes: Routes = [
-  { path: 'app', component: MainAppComponent,
+  {
+    path: 'app',
+    component: MainAppComponent,
     children: [
       {
         path: 'allStocks',
-        component: SideBarList9Component
+        component: SideBarList9Component,
       },
       {
         path: 'myStocks',
-        component: SideBarWatchlistComponent
-      }
-    ]},
+        component: SideBarWatchlistComponent,
+      },
+    ],
+  },
   { path: 'login', component: LoginComponent },
-  { path:'registration', component: RegistrationComponent },
-  { path: '', redirectTo: '/login', pathMatch: 'full' }
+  { path: 'registration', component: RegistrationComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

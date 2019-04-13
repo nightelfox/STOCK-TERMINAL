@@ -1,22 +1,27 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Stock } from '../../stock';
-import { IexFetchingService} from '../../services/iex-fetching.service';
+import { IexFetchingService } from '../../services/iex-fetching.service';
 import { DbUserWatchlistService } from 'src/app/services/db-user-watchlist.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { map } from 'rxjs/operators';
-import {AuthService} from '../../services/auth.service';
-import {ForSideBarService} from '../../services/for-side-bar.service';
+import { AuthService } from '../../services/auth.service';
+import { ForSideBarService } from '../../services/for-side-bar.service';
 
 @Component({
   selector: 'app-side-bar-list9',
   templateUrl: './side-bar-list9.component.html',
-  styleUrls: ['./side-bar-list9.component.css']
+  styleUrls: ['./side-bar-list9.component.css'],
 })
 export class SideBarList9Component implements OnInit {
   stocks: Stock[];
   symbolsFromDb;
-  constructor(private sb: ForSideBarService, public auth: AuthService, private iexFetchingService: IexFetchingService,
-              private dbUserWatchlist: DbUserWatchlistService, private afAuth: AngularFireAuth) {}
+  constructor(
+    private sb: ForSideBarService,
+    public auth: AuthService,
+    private iexFetchingService: IexFetchingService,
+    private dbUserWatchlist: DbUserWatchlistService,
+    private afAuth: AngularFireAuth
+  ) {}
 
   /*newSymbolSelected(newSymbol): void {
     this.iexFetchingService.changeSymbolSource(newSymbol);
@@ -36,7 +41,7 @@ export class SideBarList9Component implements OnInit {
     return stock.symbol === this.sb.selectedStock;
   }
   percentColor(stock: Stock) {
-   return stock.changePercent > 0 ? 'green' : 'red';
+    return stock.changePercent > 0 ? 'green' : 'red';
   }
   btnClass(stock: Stock) {
     return this.dbUserWatchlist.userWatchlist.indexOf(stock.symbol) !== -1;
@@ -49,22 +54,20 @@ export class SideBarList9Component implements OnInit {
       this.stocks = this.sb.getLocalStocks();
     }
     this.iexFetchingService.getDataForSideBar().subscribe(data => {
-        this.stocks = data;
-        this.sb.setLocalStocks(data);
+      this.stocks = data;
+      this.sb.setLocalStocks(data);
     });
-    this.dbUserWatchlist.getDBWatchlist().subscribe (res => {
-          // this.symbolsFromDb = res.data();
-          console.log(res);
+    this.dbUserWatchlist.getDBWatchlist().subscribe(res => {
+      // this.symbolsFromDb = res.data();
+      console.log(res);
     });
   }
-
 }
 
 /*this.iexFetchigService.userSymbol.subscribe(data => {
       this.userSymbols = data;
     });*/
 /*this.iexFetchigService.getDataForSideBar().subscribe(data => {
-
 
   this.userWatchlist.getAuthUser().subscribe (res => {
     res.collection('watchlist').doc('savedSymbols').valueChanges().subscribe( res => {

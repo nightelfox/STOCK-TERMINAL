@@ -29,7 +29,7 @@
   border-radius: 5px;
   margin: 5px 0;
 }
-::-webkit-scrollbar-thumb  {
+::-webkit-scrollbar-thumb {
   background-color: gray;
   border-radius: 5px;
 }

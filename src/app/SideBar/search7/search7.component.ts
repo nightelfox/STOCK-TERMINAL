@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {DbUserWatchlistService} from '../../services/db-user-watchlist.service';
-import {BehaviorSubject} from 'rxjs';
-import {ForSideBarService} from '../../services/for-side-bar.service';
+import { FormControl } from '@angular/forms';
+import { DbUserWatchlistService } from '../../services/db-user-watchlist.service';
+import { BehaviorSubject } from 'rxjs';
+import { ForSideBarService } from '../../services/for-side-bar.service';
 
 @Component({
   selector: 'app-search7',
   templateUrl: './search7.component.html',
-  styleUrls: ['./search7.component.css']
+  styleUrls: ['./search7.component.css'],
 })
 export class Search7Component implements OnInit {
   control: FormControl = new FormControl('');
-  constructor(private sb: ForSideBarService) { }
+  constructor(private sb: ForSideBarService) {}
   searchStock() {
     this.sb.searchSymbol = this.control.value.toString().toUpperCase();
   }
@@ -23,7 +23,5 @@ export class Search7Component implements OnInit {
     }
     console.log(this.sb.focused);
   }
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

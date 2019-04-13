@@ -1,21 +1,21 @@
 .indicators {
   padding-left: 30px;
-  padding-top:10px;
+  padding-top: 10px;
 }
 
 .indicators h1 {
   font-family: 'Montserrat';
   font-size: 1.2em;
-  color:#262626;
+  color: #262626;
 }
 
 .indicators h2 {
   font-family: 'Montserrat';
   font-size: 1em;
   margin-top: 5px;
-  color:#262626;
+  color: #262626;
 }
 
 .indicators h2:hover {
-  color:#0ADBFC;
+  color: #0adbfc;
 }

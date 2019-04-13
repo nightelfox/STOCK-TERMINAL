@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
-import {Router} from '@angular/router';
-import {auth} from 'firebase/app';
+import { Router } from '@angular/router';
+import { auth } from 'firebase/app';
 
-import {AngularFireAuth} from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
-import {Observable, of} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
-import {User} from './user.model';
-import {DbUserWatchlistService} from './db-user-watchlist.service';
-
+import { User } from './user.model';
+import { DbUserWatchlistService } from './db-user-watchlist.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   user$: Observable<User>;
   credential;
 
@@ -30,9 +28,8 @@ export class AuthService {
       switchMap(user => {
         if (user) {
           return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
-        } else {
-          return of(null);
         }
+        return of(null);
       })
     );
   }
@@ -45,16 +42,22 @@ export class AuthService {
     return this.router.navigate(['/app/allStocks']);
   }
 
-  async emailSignIn(email,password) {
-    this.credential = await this.afAuth.auth.signInWithEmailAndPassword(email,password);
+  async emailSignIn(email, password) {
+    this.credential = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
     console.log(this.credential);
     this.db.getAuthUser();
     return this.router.navigate(['/app/allStocks']);
   }
 
-  async register(email,password,name) {
-    const newUser = await this.afAuth.auth.createUserWithEmailAndPassword(email,password);
-    this.updateUserData({uid:newUser.user.uid,email:email,displayName:name,photoURL:'https://m.media-amazon.com/images/M/MV5BMjIzOTI4MDAzNV5BMl5BanBnXkFtZTcwNDk4MzYxNw@@._V1_UY256_CR4,0,172,256_AL_.jpg'})
+  async register(email, password, name) {
+    const newUser = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+    this.updateUserData({
+      uid: newUser.user.uid,
+      email,
+      displayName: name,
+      photoURL:
+        'https://m.media-amazon.com/images/M/MV5BMjIzOTI4MDAzNV5BMl5BanBnXkFtZTcwNDk4MzYxNw@@._V1_UY256_CR4,0,172,256_AL_.jpg',
+    });
     console.log(newUser);
   }
   async signOut() {
@@ -70,19 +73,22 @@ export class AuthService {
     return this.router.navigate(['/app/allStocks']);
   }
 
-  updateUserData({uid, email, displayName, photoURL}:User) {
+  updateUserData({ uid, email, displayName, photoURL }: User) {
     const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${uid}`);
     const data = {
       uid,
       email,
       displayName,
-      photoURL
+      photoURL,
     };
     const watchlist = {
       AAPL: 14,
-      GOOGL: 15
+      GOOGL: 15,
     };
-    userRef.set(data, {merge: true});
-    return userRef.collection('watchlist').doc('savedSymbols').set(watchlist, {merge: true});
+    userRef.set(data, { merge: true });
+    return userRef
+      .collection('watchlist')
+      .doc('savedSymbols')
+      .set(watchlist, { merge: true });
   }
 }

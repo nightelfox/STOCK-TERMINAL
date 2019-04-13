@@ -1,11 +1,10 @@
-import {Directive, ElementRef, Renderer2, HostListener, Input} from '@angular/core';
+import { Directive, ElementRef, Renderer2, HostListener, Input } from '@angular/core';
 
 @Directive({
-  selector: '[appBlackout]'
+  selector: '[appBlackout]',
 })
-
 export class BlackoutDirective {
-  @Input ('appBlackout') blackoutColor: string;
+  @Input('appBlackout') blackoutColor: string;
 
   constructor(private element: ElementRef, private renderer: Renderer2) {
     this.renderer.setStyle(this.element.nativeElement, 'cursor', 'pointer');
@@ -26,11 +25,10 @@ export class BlackoutDirective {
   }
 
   private setBgColor(val: string) {
-      if (!this.element.nativeElement.classList.contains('selected')) {
-        this.element.nativeElement.style.backgroundColor = val;
-      } else {
-        this.element.nativeElement.style.backgroundColor = null;
-      }
+    if (!this.element.nativeElement.classList.contains('selected')) {
+      this.element.nativeElement.style.backgroundColor = val;
+    } else {
+      this.element.nativeElement.style.backgroundColor = null;
+    }
   }
-
 }

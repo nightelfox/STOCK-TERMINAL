@@ -3,32 +3,34 @@ export const chartConfig = {
   responsive: true,
   maintainAspectRatio: false,
   scales: {
-    xAxes: [{
-      gridLines: {
-        display: false
-    },
-    display: false
-    }],
+    xAxes: [
+      {
+        gridLines: {
+          display: false,
+        },
+        display: false,
+      },
+    ],
     yAxes: [
       {
         gridLines: {
-          display: false
+          display: false,
         },
         display: false,
         ticks: {
-           min: 1190,
-           max: 1220
-        }
-      }
-    ]
+          min: 1190,
+          max: 1220,
+        },
+      },
+    ],
   },
   hover: {
     mode: 'index',
-    intersect: false
+    intersect: false,
   },
   animation: {
-    duration: 0
-},
+    duration: 0,
+  },
   tooltips: {
     enabled: true,
     intersect: false,
@@ -40,10 +42,10 @@ export const chartConfig = {
     xAlign: 'center',
     yAlign: 'center',
     callbacks: {
-        label(t) {
-          // console.log(t);
-          return `${t.value}`;
-      }
+      label(t) {
+        // console.log(t);
+        return `${t.value}`;
+      },
     },
     cornerRadius: 10,
     titleFontSize: 10,
@@ -53,6 +55,6 @@ export const chartConfig = {
     bodyFontColor: '#262626',
     bodyFontStyle: 'bold',
     bodyFontSize: 12,
-    displayColors: false
-}
+    displayColors: false,
+  },
 };

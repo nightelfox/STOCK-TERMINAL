@@ -9,16 +9,16 @@
 
 p {
   white-space: nowrap;
-  color:#262626;
+  color: #262626;
   font-family: 'Montserrat', serif;
-  font-size:1em;
+  font-size: 1em;
   font-weight: 300;
 }
 
 h2 {
-  color:#262626;
+  color: #262626;
   font-family: 'Montserrat', serif;
-  font-size:1em;
+  font-size: 1em;
   font-weight: 600;
   margin-bottom: 30px;
 }

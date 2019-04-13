@@ -1,11 +1,23 @@
-<div class='button-container'>
-  <div class='button-select' (click) = 'sendButtonStatus("indicators"); selectedTabStatus = "indicators"' [class.selectedTab] = 'selectedTabStatus === "indicators"'>
+<div class="button-container">
+  <div
+    class="button-select"
+    (click)="sendButtonStatus('indicators'); selectedTabStatus = 'indicators'"
+    [class.selectedTab]="selectedTabStatus === 'indicators'"
+  >
     <h1>$</h1>
   </div>
-  <div class='button-select' (click) = 'sendButtonStatus("company-info"); selectedTabStatus = "company-info";' [class.selectedTab] = 'selectedTabStatus === "company-info"'>
-      <h1>i</h1>
+  <div
+    class="button-select"
+    (click)="sendButtonStatus('company-info'); selectedTabStatus = 'company-info'"
+    [class.selectedTab]="selectedTabStatus === 'company-info'"
+  >
+    <h1>i</h1>
   </div>
-  <div class='button-select' (click) = 'sendButtonStatus("news"); selectedTabStatus = "news";' [class.selectedTab] = 'selectedTabStatus === "news"'>
-      <h1>📰</h1>
+  <div
+    class="button-select"
+    (click)="sendButtonStatus('news'); selectedTabStatus = 'news'"
+    [class.selectedTab]="selectedTabStatus === 'news'"
+  >
+    <h1>📰</h1>
   </div>
 </div>

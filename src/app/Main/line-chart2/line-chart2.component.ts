@@ -1,18 +1,12 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { IexFetchingService } from 'src/app/services/iex-fetching.service';
 
-
-
 @Component({
   selector: 'app-line-chart2',
   templateUrl: './line-chart2.component.html',
-  styleUrls: ['./line-chart2.component.css']
+  styleUrls: ['./line-chart2.component.css'],
 })
-
-
-
 export class LineChart2Component implements OnInit {
-
   @ViewChild('chart') canvas: ElementRef;
   lineChartColors;
   maxChart;
@@ -24,32 +18,34 @@ export class LineChart2Component implements OnInit {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      xAxes: [{
-        gridLines: {
-          display: true
-      },
-      display: false
-      }],
+      xAxes: [
+        {
+          gridLines: {
+            display: true,
+          },
+          display: false,
+        },
+      ],
       yAxes: [
         {
           gridLines: {
-            display: true
+            display: true,
           },
           display: true,
           ticks: {
-             min: this.minChart,
-             max: this.maxChart
-          }
-        }
-      ]
+            min: this.minChart,
+            max: this.maxChart,
+          },
+        },
+      ],
     },
     hover: {
       mode: 'index',
-      intersect: false
+      intersect: false,
     },
     animation: {
-      duration: 0
-  },
+      duration: 0,
+    },
     tooltips: {
       enabled: true,
       intersect: false,
@@ -61,10 +57,10 @@ export class LineChart2Component implements OnInit {
       xAlign: 'center',
       yAlign: 'center',
       callbacks: {
-          label(t) {
-            // console.log(t);
-            return `${t.value}`;
-        }
+        label(t) {
+          // console.log(t);
+          return `${t.value}`;
+        },
       },
       cornerRadius: 10,
       titleFontSize: 10,
@@ -74,21 +70,18 @@ export class LineChart2Component implements OnInit {
       bodyFontColor: '#262626',
       bodyFontStyle: 'bold',
       bodyFontSize: 12,
-      displayColors: false
-  }
+      displayColors: false,
+    },
   };
 
   public barChartLabels = [];
   public barChartType = 'line';
   public barChartLegend = false;
-  public barChartData = [
-    {pointRadius: 0, data: [], label: 'Series A'},
-
-  ];
-  constructor(private chartData: IexFetchingService) { }
+  public barChartData = [{ pointRadius: 0, data: [], label: 'Series A' }];
+  constructor(private chartData: IexFetchingService) {}
 
   // change button info (switching tab panel)
-  buttonStatus: string = 'indicators';
+  buttonStatus = 'indicators';
 
   getButtonStatus($event): void {
     this.buttonStatus = $event;
@@ -96,9 +89,10 @@ export class LineChart2Component implements OnInit {
   // end of this section
 
   ngOnInit() {
-
-    this.fillLabels()
-    const gradient = this.canvas.nativeElement.getContext('2d').createLinearGradient(500, 0, 100, 0);
+    this.fillLabels();
+    const gradient = this.canvas.nativeElement
+      .getContext('2d')
+      .createLinearGradient(500, 0, 100, 0);
     gradient.addColorStop(0, '#3EECE0');
     gradient.addColorStop(1, '#3E95EC');
 
@@ -106,19 +100,18 @@ export class LineChart2Component implements OnInit {
     // gradientFill.addColorStop(0, 'rgba(251, 158,29, 0.5)');
     // gradientFill.addColorStop(0.2, 'rgba(177, 255, 250, 0.25)');
     // gradientFill.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    const gradientFill = this.canvas.nativeElement.getContext('2d').createLinearGradient(0, 0, 0, 300);
+    const gradientFill = this.canvas.nativeElement
+      .getContext('2d')
+      .createLinearGradient(0, 0, 0, 300);
     gradientFill.addColorStop(0, 'rgba(251, 158,29, 0)');
     gradientFill.addColorStop(0.2, 'rgba(177, 255, 250, 0)');
     gradientFill.addColorStop(1, 'rgba(255, 255, 255, 0)');
     this.lineChartColors = [
       {
         borderColor: gradient,
-        backgroundColor: gradientFill
-      }
+        backgroundColor: gradientFill,
+      },
     ];
-
-
-    
 
     this.chartData.symbolInfo.subscribe(data => {
       console.log(data);
@@ -129,32 +122,32 @@ export class LineChart2Component implements OnInit {
       //   })
       // })
 
-    this.chartData.getChart( this.symbol, '1d').subscribe( res => {
-      // console.log(res);
-      let lastValidValue;
-      this.barChartData[0].data = [];
-      res.chart.forEach(element => {
-        if ((element.average !== -1 && element.average !== null)) {
-        this.barChartData[0].data.push(element.average);
-        lastValidValue = element.average;
-        }
-        else {
-          this.barChartData[0].data.push(lastValidValue);
-        }
-        // if ((element.marketAverage === -1 || element.marketAverage === null) && element.average !== -1) {
-        //   this.barChartData[0].data.push(element.average);
-        //   }
+      this.chartData.getChart(this.symbol, '1d').subscribe(res => {
+        // console.log(res);
+        let lastValidValue;
+        this.barChartData[0].data = [];
+        res.chart.forEach(element => {
+          if (element.average !== -1 && element.average !== null) {
+            this.barChartData[0].data.push(element.average);
+            lastValidValue = element.average;
+          } else {
+            this.barChartData[0].data.push(lastValidValue);
+          }
+          // if ((element.marketAverage === -1 || element.marketAverage === null) && element.average !== -1) {
+          //   this.barChartData[0].data.push(element.average);
+          //   }
+        });
+        this.setChartMinMax();
       });
-      this.setChartMinMax();
     });
-  
-});
   }
 
   setChartMinMax() {
-    const min = Math.min(...this.barChartData[0].data.filter(el => {
-      return el > 0;
-    }));
+    const min = Math.min(
+      ...this.barChartData[0].data.filter(el => {
+        return el > 0;
+      })
+    );
     const max = Math.max(...this.barChartData[0].data);
 
     // if (min === 0) {
@@ -162,29 +155,27 @@ export class LineChart2Component implements OnInit {
     // }
     this.minChart = min;
     this.maxChart = max;
-    console.log({min:this.minChart,max:this.maxChart});
+    console.log({ min: this.minChart, max: this.maxChart });
   }
 
   fillLabels() {
-    for(let i = 31; i < 60; i++) {
+    for (let i = 31; i < 60; i++) {
       this.barChartLabels.push(`9:${i}`);
     }
-    for( let i = 10; i < 16; i++) {
-      this.barChartLabels.push(`${i}:00`)
-      for(let j = 1; j < 60; j++) {
-        if(j < 10) {
+    for (let i = 10; i < 16; i++) {
+      this.barChartLabels.push(`${i}:00`);
+      for (let j = 1; j < 60; j++) {
+        if (j < 10) {
           this.barChartLabels.push(`${i}:0${j}`);
-        }
-        else {
+        } else {
           this.barChartLabels.push(`${i}:${j}`);
         }
       }
     }
-    for(let i = 0; i <= 30; i++) {
-      if ( i < 10) {
-      this.barChartLabels.push(`16:0${i}`);
-      }
-      else {
+    for (let i = 0; i <= 30; i++) {
+      if (i < 10) {
+        this.barChartLabels.push(`16:0${i}`);
+      } else {
         this.barChartLabels.push(`16:${i}`);
       }
     }

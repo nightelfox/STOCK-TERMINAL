@@ -27,8 +27,8 @@ import { BlackoutDirective } from './blackout.directive';
 import { ChartsModule } from 'ng2-charts';
 import { CardInfoButtonsComponent } from './Main/card-info-buttons/card-info-buttons.component';
 import { SideBarWatchlistComponent } from './SideBar/side-bar-watchlist/side-bar-watchlist.component';
-import {IexFetchingService} from './services/iex-fetching.service';
-import { DbUserWatchlistService} from './services/db-user-watchlist.service';
+import { IexFetchingService } from './services/iex-fetching.service';
+import { DbUserWatchlistService } from './services/db-user-watchlist.service';
 import { IndicatorsComponent } from './Main/indicators/indicators.component';
 import { NewsComponent } from './Main/news/news.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -40,7 +40,7 @@ import { IndeciesListComponent } from './Main/indecies-list/indecies-list.compon
 import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
 
 @NgModule({
-  declarations: [ 
+  declarations: [
     AppComponent,
     UserInfo10Component,
     IndexCardMain1Component,
@@ -62,7 +62,7 @@ import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
     RegistrationComponent,
     IndicatorsListComponent,
     IndeciesListComponent,
-    ChartTypeComponent
+    ChartTypeComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,9 +74,9 @@ import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
     AngularFireFunctionsModule,
     ChartsModule,
     ReactiveFormsModule,
-    StorageServiceModule
+    StorageServiceModule,
   ],
   providers: [IexFetchingService, DbUserWatchlistService, ForSideBarService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

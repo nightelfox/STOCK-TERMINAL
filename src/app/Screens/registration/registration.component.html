@@ -3,39 +3,54 @@
 </div> -->
 
 <!-- <ng-template #login> -->
-  <div class="main">
-    <div class="login-form">
-      <div class="side-ribbon">
-        <div class="logo">
-          <h2>БИРЖЕВОЙ ТЕРМИНАЛ v. 0.3 </h2>
-        </div>
-        
+<div class="main">
+  <div class="login-form">
+    <div class="side-ribbon">
+      <div class="logo">
+        <h2>БИРЖЕВОЙ ТЕРМИНАЛ v. 0.3</h2>
       </div>
-      <div class="terminal-login-form">
-        <h2>Регистрация</h2>
-        <form  class="login-auth-form" (ngSubmit) = "registration()" [formGroup]="registrationForm">
-        <input class="input" type="email" placeholder="E-mail" formControlName="email" required>
-        <div *ngIf='submitted && formControls.email.errors' class="invalid-field">
+    </div>
+    <div class="terminal-login-form">
+      <h2>Регистрация</h2>
+      <form class="login-auth-form" (ngSubmit)="registration()" [formGroup]="registrationForm">
+        <input class="input" type="email" placeholder="E-mail" formControlName="email" required />
+        <div *ngIf="submitted && formControls.email.errors" class="invalid-field">
           <div *ngIf="formControls.email.errors.required">Введите E-mail</div>
           <div *ngIf="formControls.email.errors.email">Неверный E-mail</div>
         </div>
-        <input class="input" placeholder="Имя" formControlName="name" required>
-        <div *ngIf='submitted && formControls.name.errors' class="invalid-field">
+        <input class="input" placeholder="Имя" formControlName="name" required />
+        <div *ngIf="submitted && formControls.name.errors" class="invalid-field">
           <div *ngIf="formControls.name.errors.required">Введите имя</div>
         </div>
-        <input class="input" type="password" placeholder="Пароль" formControlName="password" required>
-        <div *ngIf='submitted && formControls.password.errors' class='invalid-field'>
+        <input
+          class="input"
+          type="password"
+          placeholder="Пароль"
+          formControlName="password"
+          required
+        />
+        <div *ngIf="submitted && formControls.password.errors" class="invalid-field">
           <div *ngIf="formControls.password.errors.required">Введите пароль</div>
-          <div *ngIf="formControls.password.errors.minLength">Пароль должен быть длиннее 5 символов</div>
+          <div *ngIf="formControls.password.errors.minLength">
+            Пароль должен быть длиннее 5 символов
+          </div>
         </div>
-        <input class="input" type="password" placeholder="Подтвердите пароль" formControlName="passwordRe" required>
-        <div *ngIf='submitted && formControls.password.errors' class='invalid-field'>
+        <input
+          class="input"
+          type="password"
+          placeholder="Подтвердите пароль"
+          formControlName="passwordRe"
+          required
+        />
+        <div *ngIf="submitted && formControls.password.errors" class="invalid-field">
           <div *ngIf="formControls.password.errors.required">Подтвердите пароль</div>
-          <div *ngIf="formControls.password.errors.minLength">Пароль должен быть длиннее 5 символов</div>
+          <div *ngIf="formControls.password.errors.minLength">
+            Пароль должен быть длиннее 5 символов
+          </div>
         </div>
         <button type="submit">Зарегистрироваться</button>
-        </form>
-        <!-- <div class="button-container">
+      </form>
+      <!-- <div class="button-container">
           <div (click)="auth.googleSignIn()" class="button">
               <img class="icon" src="https://img.icons8.com/color/50/000000/google-logo.png">
             <h3>Войти с помощью Google</h3>
@@ -43,7 +58,7 @@
           <h4 id="registration" (click)="auth.guestSignIn()">Регистрация</h4>
           <h4 id="guest" (click)="auth.guestSignIn()">Продолжить как гость</h4>
         </div> -->
-      </div>
     </div>
-    </div>
+  </div>
+</div>
 <!-- </ng-template> -->

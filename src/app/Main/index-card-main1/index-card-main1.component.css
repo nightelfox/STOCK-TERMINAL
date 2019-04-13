@@ -3,23 +3,23 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width:400px;
+  width: 400px;
 }
 
 .symbolCard h1 {
-  color:#262626;
+  color: #262626;
   font-family: 'Montserrat';
   font-weight: 600;
   font-size: 2em;
 }
 .symbolCard h2 {
-  color:#262626;
+  color: #262626;
   font-family: 'Montserrat';
   font-weight: 600;
   font-size: 1.6em;
 }
 .symbolCard h3 {
-  color: #08C41B;
+  color: #08c41b;
   font-family: 'Montserrat';
   font-weight: 600;
   font-size: 1.6em;

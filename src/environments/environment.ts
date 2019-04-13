@@ -10,8 +10,8 @@ export const environment = {
     databaseURL: 'https://stockterminal-fintech.firebaseio.com',
     projectId: 'stockterminal-fintech',
     storageBucket: 'stockterminal-fintech.appspot.com',
-    messagingSenderId: '293659355539'
-  }
+    messagingSenderId: '293659355539',
+  },
 };
 
 /*

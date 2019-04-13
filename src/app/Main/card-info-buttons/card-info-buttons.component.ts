@@ -1,21 +1,18 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-card-info-buttons',
   templateUrl: './card-info-buttons.component.html',
-  styleUrls: ['./card-info-buttons.component.css']
+  styleUrls: ['./card-info-buttons.component.css'],
 })
 export class CardInfoButtonsComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  selectedTabStatus: string = 'indicators';
+  selectedTabStatus = 'indicators';
   @Output() buttonStatusEvent = new EventEmitter<string>();
   sendButtonStatus(status: string): void {
     this.buttonStatusEvent.emit(status);
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

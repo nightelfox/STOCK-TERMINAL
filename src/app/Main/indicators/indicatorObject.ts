@@ -1,5 +1,5 @@
 export class Indicators {
-  symbol?:string;
+  symbol?: string;
   open?: number;
   close?: number;
   max?: number;

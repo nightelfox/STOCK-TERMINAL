@@ -1,24 +1,24 @@
-.symbolCard {
+.symbol-card {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 400px;
+  width: 25vw;
 }
 
-.symbolCard h1 {
+.symbol-card h1 {
   color: #262626;
   font-family: 'Montserrat';
   font-weight: 600;
   font-size: 2em;
 }
-.symbolCard h2 {
+.symbol-card h2 {
   color: #262626;
   font-family: 'Montserrat';
   font-weight: 600;
   font-size: 1.6em;
 }
-.symbolCard h3 {
+.symbol-card h3 {
   color: #08c41b;
   font-family: 'Montserrat';
   font-weight: 600;

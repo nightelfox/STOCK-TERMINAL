@@ -1,0 +1,14 @@
+.btn-list {
+  border-radius: 25px;
+  font-size: 12px;
+}
+.btn-selected {
+  fill: #79c1f1;
+  /*background-color: #7fcfff;*/
+  /*border-color: #7fcfff;*/
+}
+svg {
+  fill: none;
+  stroke-width: 2;
+  stroke: #79c1f1;
+}

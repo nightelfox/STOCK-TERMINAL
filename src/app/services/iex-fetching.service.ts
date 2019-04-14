@@ -13,6 +13,8 @@ export class IexFetchingService {
 
   public symbolSource$ = new BehaviorSubject<string>('GOOGL');
   symbolMonthStats: BehaviorSubject<any> = new BehaviorSubject('');
+  symbolInfo: BehaviorSubject<any> = new BehaviorSubject('');
+
   // selectedSymSource$: Observable<any> = this.symbolSource$.asObservable();
 
   changeSymbolSource(newSymbol: string): void {
@@ -22,26 +24,26 @@ export class IexFetchingService {
   constructor(private http: HttpClient) {}
 
   getDataForSideBar(): Observable<any> {
-    const apiRequest = `https://api.iextrading.com/1.0/stock/market/batch?symbols=${initialIndecies.join(
+    const API_REQUEST = `https://api.iextrading.com/1.0/stock/market/batch?symbols=${initialIndecies.join(
       ','
     )}
     &types=quote&range=dynamic&last=5`;
-    return this.http.get(apiRequest).pipe(
+    return this.http.get(API_REQUEST).pipe(
       map(data => {
-        const stocks = [];
+        const STOCKS = [];
         Object.keys(data).forEach((key, index) => {
-          stocks[index] = {
+          STOCKS[index] = {
             symbol: data[key].quote.symbol,
             latestPrice: data[key].quote.latestPrice,
-            changePercent: (
+            changePercent: (data[key].quote.changePercent * 100).toFixed(3),
+            /*(
               ((data[key].quote.latestPrice - data[key].quote.previousClose) /
                 data[key].quote.latestPrice) *
               100
-            ).toFixed(2),
-            state: 'В портфель',
+            ).toFixed(2)*/
           };
         });
-        return stocks;
+        return STOCKS;
       })
     );
   }
@@ -49,12 +51,12 @@ export class IexFetchingService {
   getAllIndecies(): Observable<any> {
     return this.http.get('https://api.iextrading.com/1.0/ref-data/symbols').pipe(
       map(data => {
-        const indecies = {};
+        const INDECIES = {};
         Object.keys(data).forEach(key => {
-          indecies[data[key].symbol] = data[key].name;
+          INDECIES[data[key].symbol] = data[key].name;
         });
-        return indecies;
-      })
+        return INDECIES;
+      }),
     );
   }
 
@@ -91,21 +93,42 @@ export class IexFetchingService {
       )
       .pipe(
         map(symbolData => {
-          const newSymbolData = symbolData[selectedSymbol].chart.data;
-          const indexLastElement = newSymbolData.length - 1;
+          const NEW_SYMBOL_DATA = symbolData[selectedSymbol].chart.data;
+          const INDEX_LAST_ELEMENT = NEW_SYMBOL_DATA.length - 1;
           return {
             symbol: selectedSymbol,
-            open: newSymbolData[indexLastElement].open,
-            close: newSymbolData[indexLastElement].close,
-            preOpen: newSymbolData[indexLastElement - 1].open,
-            preClose: newSymbolData[indexLastElement - 1].close,
-            min: newSymbolData[indexLastElement].low,
-            max: newSymbolData[indexLastElement].high,
-            maxMonth: Math.max.apply(Math, newSymbolData.map(obj => obj.high)),
-            minMonth: Math.min.apply(Math, newSymbolData.map(obj => obj.low)),
-            changePercent: newSymbolData[indexLastElement].changePercent + '%',
+            open: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT].open,
+            close: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT].close,
+            preOpen: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT - 1].open,
+            preClose: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT - 1].close,
+            min: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT].low,
+            max: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT].high,
+            maxMonth: Math.max.apply(Math, NEW_SYMBOL_DATA.map(obj => obj.high)),
+            minMonth: Math.min.apply(Math, NEW_SYMBOL_DATA.map(obj => obj.low)),
+            changePercent: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT].changePercent + '%',
           };
         })
       );
   }
+
+  getSymbolInfo(selectedSymbol: string) {
+    return this.http
+      .get(
+        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=company,quote,news&range=dynamic&last=5`
+      )
+      .pipe(
+        map(data => {
+          const NEW_SYMBOL_DATA = data[selectedSymbol].company;
+          return {
+            description: NEW_SYMBOL_DATA.description,
+            website: NEW_SYMBOL_DATA.website,
+            exchange: NEW_SYMBOL_DATA.exchange,
+            marketCap: (data[selectedSymbol].quote.marketCap / 1000000000).toFixed(2),
+            sector: NEW_SYMBOL_DATA.sector,
+            industry: NEW_SYMBOL_DATA.industry,
+          };
+        })
+      );
+  }
+  
 }

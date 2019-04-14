@@ -27,6 +27,7 @@ export class LineChart2Component implements OnInit {
   // end of this section
 
   ngOnInit() {
+
     // this.fillLabels();
     // const gradient = this.canvas.nativeElement
     //   .getContext('2d')
@@ -92,7 +93,6 @@ export class LineChart2Component implements OnInit {
   //   this.maxChart = max;
   //   console.log({ min: this.minChart, max: this.maxChart });
   // }
-
   // fillLabels() {
   //   for (let i = 31; i < 60; i++) {
   //     this.barChartLabels.push(`9:${i}`);

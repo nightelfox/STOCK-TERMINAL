@@ -14,7 +14,7 @@ const STORAGE_KEY_STOCKS = 'local_stocks';
   providedIn: 'root',
 })
 export class ForSideBarService {
-  selectedStock: string;
+  selectedStock: string = 'GOOGL';
   searchSymbol: string;
   focused: boolean;
   constructor(@Inject(LOCAL_STORAGE) private storage: StorageService) {}
@@ -23,11 +23,10 @@ export class ForSideBarService {
   }
   setLocalStocks(stocks: Stock[]) {
     this.storage.set(STORAGE_KEY_STOCKS, stocks);
-    console.log(stocks);
   }
   onSelect(stock: string, event): void {
     console.log(event.target.tagName);
-    if (event.target.tagName !== 'BUTTON') {
+    if (event.target.tagName !== 'path' && event.target.tagName !== 'svg') {
       this.selectedStock = stock;
     }
     this.storage.set(STORAGE_KEY_SELECT, this.selectedStock);

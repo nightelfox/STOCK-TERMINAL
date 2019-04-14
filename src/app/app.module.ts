@@ -23,7 +23,7 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { LoginComponent } from './Screens/login/login.component';
 import { MainAppComponent } from './Screens/main-app/main-app.component';
 import { BlackoutDirective } from './blackout.directive';
-
+import { PercentColorDirective } from './percent-color.directive';
 import { ChartsModule } from 'ng2-charts';
 import { CardInfoButtonsComponent } from './Main/card-info-buttons/card-info-buttons.component';
 import { SideBarWatchlistComponent } from './SideBar/side-bar-watchlist/side-bar-watchlist.component';
@@ -39,6 +39,12 @@ import { IndicatorsListComponent } from './Main/indicators-list/indicators-list.
 import { IndeciesListComponent } from './Main/indecies-list/indecies-list.component';
 import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
 import { D3ChartComponent } from './d3-chart/d3-chart.component';
+
+import { SideBarListItemComponent } from './SideBar/side-bar-list-item/side-bar-list-item.component';
+import { SideBarListBtnComponent } from './SideBar/side-bar-list-item/side-bar-list-btn/side-bar-list-btn.component';
+import { CompanyInfoBlockComponent } from './Main/company-info-block/company-info-block.component';
+import { AboutCompanyComponent } from './Main/about-company/about-company.component';
+
 
 @NgModule({
   declarations: [
@@ -57,6 +63,7 @@ import { D3ChartComponent } from './d3-chart/d3-chart.component';
     MainAppComponent,
     CardInfoButtonsComponent,
     BlackoutDirective,
+    PercentColorDirective,
     SideBarWatchlistComponent,
     IndicatorsComponent,
     NewsComponent,
@@ -65,6 +72,10 @@ import { D3ChartComponent } from './d3-chart/d3-chart.component';
     IndeciesListComponent,
     ChartTypeComponent,
     D3ChartComponent,
+    SideBarListItemComponent,
+    SideBarListBtnComponent,
+    CompanyInfoBlockComponent,
+    AboutCompanyComponent,
   ],
   imports: [
     BrowserModule,

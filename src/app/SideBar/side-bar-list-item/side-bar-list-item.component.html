@@ -1,0 +1,13 @@
+<li
+  *ngFor="let stock of stocks"
+  class="list-group-item"
+  app-blackout
+  [hidden]="hiddenLst(stock)"
+  (click)="onSelect(stock, $event)"
+  [class.selected]="lstClass(stock)"
+>
+  <div class="stock-name">{{ stock.symbol }}</div>
+  <div class="stock-price">{{ stock.latestPrice }}</div>
+  <div class="stock-percent" [app-percent-color]="stock.changePercent">{{ stock.changePercent }}</div>
+  <app-side-bar-list-btn [stock]="stock"></app-side-bar-list-btn>
+</li>

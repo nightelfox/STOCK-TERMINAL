@@ -22,8 +22,8 @@
 }
 
 .indicators-select {
-  width: 130px;
-  height: 40px;
+  /*width: 130px;
+  height: 40px;*/
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -48,8 +48,8 @@
 }
 
 .separator {
-  width: 50px;
-  height: 40px;
+  /*width: 50px;
+  height: 40px;*/
   display: flex;
   flex-direction: row;
   align-items: center;

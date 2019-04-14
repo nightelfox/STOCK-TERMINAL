@@ -1,5 +1,4 @@
 .stock-name {
-  /*grid-area: name;*/
   min-width: 20%;
   font-weight: 600;
 }
@@ -10,12 +9,11 @@
 .stock-percent {
   min-width: 20%;
   font-weight: 600;
+  text-align: center;
 }
 .list-group-item {
   display: flex;
   justify-content: space-between;
-  /*grid-template-columns: 20% 25% 20% 35%;
-  grid-template-areas: "name price percent";*/
   font-size: 18px;
   margin: 10px;
   border-radius: 20px;
@@ -27,8 +25,4 @@
   background-color: #ace7ff;
   border-color: #ace7ff;
 }
-.star {
-  fill: none;
-  stroke-width: 2;
-  stroke: #262626;
-}
+

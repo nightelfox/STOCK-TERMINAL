@@ -1,0 +1,11 @@
+<div class="company-info-block">
+    <app-indicators *ngIf="buttonStatus === 'indicators'" ></app-indicators>
+    <app-about-company *ngIf="buttonStatus === 'company-info'"></app-about-company>
+    <app-news *ngIf="buttonStatus === 'news'"></app-news>
+
+  <div class="buttons-container">
+    <app-card-info-buttons
+      (buttonStatusEvent)="getButtonStatus($event)"
+    ></app-card-info-buttons>
+  </div>
+</div>

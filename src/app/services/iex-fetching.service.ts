@@ -12,6 +12,7 @@ export class IexFetchingService {
   indecies: string[] = initialIndecies;
 
   public symbolSource$ = new BehaviorSubject<string>('GOOGL');
+  symbolMonthStats: BehaviorSubject<any> = new BehaviorSubject('');
   symbolInfo: BehaviorSubject<any> = new BehaviorSubject('');
   // selectedSymSource$: Observable<any> = this.symbolSource$.asObservable();
 
@@ -33,12 +34,12 @@ export class IexFetchingService {
           STOCKS[index] = {
             symbol: data[key].quote.symbol,
             latestPrice: data[key].quote.latestPrice,
-            changePercent: (
+            changePercent: (data[key].quote.changePercent * 100).toFixed(3),
+            /*(
               ((data[key].quote.latestPrice - data[key].quote.previousClose) /
                 data[key].quote.latestPrice) *
               100
-            ).toFixed(2),
-            state: 'В портфель',
+            ).toFixed(2)*/
           };
         });
         return STOCKS;
@@ -54,7 +55,7 @@ export class IexFetchingService {
           INDECIES[data[key].symbol] = data[key].name;
         });
         return INDECIES;
-      })
+      }),
     );
   }
 
@@ -108,4 +109,25 @@ export class IexFetchingService {
         })
       );
   }
+
+  getSymbolInfo(selectedSymbol: string) {
+    return this.http
+      .get(
+        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=company,quote,news&range=dynamic&last=5`
+      )
+      .pipe(
+        map(data => {
+          const NEW_SYMBOL_DATA = data[selectedSymbol].company;
+          return {
+            description: NEW_SYMBOL_DATA.description,
+            website: NEW_SYMBOL_DATA.website,
+            exchange: NEW_SYMBOL_DATA.exchange,
+            marketCap: (data[selectedSymbol].quote.marketCap / 1000000000).toFixed(2),
+            sector: NEW_SYMBOL_DATA.sector,
+            industry: NEW_SYMBOL_DATA.industry,
+          };
+        })
+      );
+  }
+  
 }

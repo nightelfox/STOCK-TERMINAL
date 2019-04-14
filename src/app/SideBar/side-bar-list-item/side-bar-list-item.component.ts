@@ -22,6 +22,9 @@ export class SideBarListItemComponent implements OnInit {
   onSelect(stock: Stock, $event): void {
     this.sb.onSelect(stock.symbol, $event);
     this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe(data => {
+      this.iexFetchingService.symbolMonthStats.next(data);
+    });
+    this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe(data => {
       this.iexFetchingService.symbolInfo.next(data);
     });
   }
@@ -44,6 +47,9 @@ export class SideBarListItemComponent implements OnInit {
       this.sb.setLocalStocks(data);
     });
     this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe(data => {
+      this.iexFetchingService.symbolMonthStats.next(data);
+    });
+    this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe(data => {
       this.iexFetchingService.symbolInfo.next(data);
     });
   }

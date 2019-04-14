@@ -11,7 +11,7 @@ export class BlackoutDirective {
   }
 
   @HostListener('click', ['$event']) onMouseClick(event) {
-    if (event.target.tagName !== 'BUTTON') {
+    if (event.target.tagName !== 'path' && event.target.tagName !== 'svg') {
       this.setBgColor('#ace7ff');
     }
   }

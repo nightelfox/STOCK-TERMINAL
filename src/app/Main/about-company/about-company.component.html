@@ -1,0 +1,30 @@
+<div class="tab-changing-section">
+  <div class="about-company">
+    <h1>О компании</h1>
+    <p>
+      {{info.description}}
+    </p>
+    <a [href]="info.website">{{info.website}}</a>
+  </div>
+  <div class="company-info-column">
+    <div class="company-info-column-item">
+      <h1>Биржа</h1>
+      <h2>{{info.exchange}}</h2>
+    </div>
+    <div class="company-info-column-item">
+      <h1>Капитализация</h1>
+      <h2>$ {{info.marketCap}} млрд</h2>
+    </div>
+  </div>
+  <div class="company-info-column">
+    <div class="company-info-column-item">
+      <h1>Сектор</h1>
+      <h2>{{info.sector}}</h2>
+    </div>
+    <div class="company-info-column-item">
+      <h1>Индустрия</h1>
+      <h2>{{info.industry}}</h2>
+    </div>
+  </div>
+</div>
+

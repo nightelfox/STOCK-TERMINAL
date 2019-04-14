@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+.tab-changing-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  /*padding: 15px;*/
+}
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  margin: 5px 0;
+}
+::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 5px;
+}

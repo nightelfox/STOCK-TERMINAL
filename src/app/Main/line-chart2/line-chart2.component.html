@@ -5,16 +5,7 @@
           <h1>Биржа закрыта 😓</h1>
           <h2>Открытие  - 06.04 в 16:00 МСК</h2>
         </div> -->
-      <canvas
-        #chart
-        baseChart
-        [colors]="lineChartColors"
-        [datasets]="barChartData"
-        [labels]="barChartLabels"
-        [options]="barChartOptions"
-        [legend]="barChartLegend"
-        [chartType]="barChartType"
-      ></canvas>
+      <app-d3-chart></app-d3-chart>
     </div>
     <app-company-info-block></app-company-info-block>
   </div>

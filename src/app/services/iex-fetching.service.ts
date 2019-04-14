@@ -14,6 +14,7 @@ export class IexFetchingService {
   public symbolSource$ = new BehaviorSubject<string>('GOOGL');
   symbolMonthStats: BehaviorSubject<any> = new BehaviorSubject('');
   symbolInfo: BehaviorSubject<any> = new BehaviorSubject('');
+
   // selectedSymSource$: Observable<any> = this.symbolSource$.asObservable();
 
   changeSymbolSource(newSymbol: string): void {
@@ -59,7 +60,7 @@ export class IexFetchingService {
     );
   }
 
-  getAllSymbolInfo(symbol: string, field: string): Observable<any> {
+  getAllsymbolMonthStats(symbol: string, field: string): Observable<any> {
     return this.http.get(`https://api.iextrading.com/1.0/stock/${symbol}/initial-load?last=3`).pipe(
       map(data => {
         return data[field];

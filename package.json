@@ -22,6 +22,7 @@
     "@angular/router": "~7.2.0",
     "chart.js": "^2.8.0",
     "core-js": "^2.5.4",
+    "d3": "^4.11.0",
     "firebase": "^5.9.2",
     "ng2-charts": "^2.2.2",
     "ngx-webstorage-service": "^4.0.1",

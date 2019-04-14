@@ -38,10 +38,13 @@ import { StorageServiceModule } from 'ngx-webstorage-service';
 import { IndicatorsListComponent } from './Main/indicators-list/indicators-list.component';
 import { IndeciesListComponent } from './Main/indecies-list/indecies-list.component';
 import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
+import { D3ChartComponent } from './d3-chart/d3-chart.component';
+
 import { SideBarListItemComponent } from './SideBar/side-bar-list-item/side-bar-list-item.component';
 import { SideBarListBtnComponent } from './SideBar/side-bar-list-item/side-bar-list-btn/side-bar-list-btn.component';
 import { CompanyInfoBlockComponent } from './Main/company-info-block/company-info-block.component';
 import { AboutCompanyComponent } from './Main/about-company/about-company.component';
+
 
 @NgModule({
   declarations: [
@@ -68,6 +71,7 @@ import { AboutCompanyComponent } from './Main/about-company/about-company.compon
     IndicatorsListComponent,
     IndeciesListComponent,
     ChartTypeComponent,
+    D3ChartComponent,
     SideBarListItemComponent,
     SideBarListBtnComponent,
     CompanyInfoBlockComponent,

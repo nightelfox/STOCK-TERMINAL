@@ -14,7 +14,7 @@ const STORAGE_KEY_STOCKS = 'local_stocks';
   providedIn: 'root',
 })
 export class ForSideBarService {
-  selectedStock: string;
+  selectedStock: string = 'GOOGL';
   searchSymbol: string;
   focused: boolean;
   constructor(@Inject(LOCAL_STORAGE) private storage: StorageService) {}

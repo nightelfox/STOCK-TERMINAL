@@ -1,0 +1,8 @@
+.btn-list {
+  border-radius: 25px;
+  font-size: 12px;
+}
+.btn-selected {
+  background-color: #7fcfff;
+  border-color: #7fcfff;
+}

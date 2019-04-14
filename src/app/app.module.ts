@@ -23,7 +23,7 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { LoginComponent } from './Screens/login/login.component';
 import { MainAppComponent } from './Screens/main-app/main-app.component';
 import { BlackoutDirective } from './blackout.directive';
-
+import { PercentColorDirective } from './percent-color.directive';
 import { ChartsModule } from 'ng2-charts';
 import { CardInfoButtonsComponent } from './Main/card-info-buttons/card-info-buttons.component';
 import { SideBarWatchlistComponent } from './SideBar/side-bar-watchlist/side-bar-watchlist.component';
@@ -38,6 +38,8 @@ import { StorageServiceModule } from 'ngx-webstorage-service';
 import { IndicatorsListComponent } from './Main/indicators-list/indicators-list.component';
 import { IndeciesListComponent } from './Main/indecies-list/indecies-list.component';
 import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
+import { SideBarListItemComponent } from './SideBar/side-bar-list-item/side-bar-list-item.component';
+import { SideBarListBtnComponent } from './SideBar/side-bar-list-item/side-bar-list-btn/side-bar-list-btn.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,7 @@ import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
     MainAppComponent,
     CardInfoButtonsComponent,
     BlackoutDirective,
+    PercentColorDirective,
     SideBarWatchlistComponent,
     IndicatorsComponent,
     NewsComponent,
@@ -63,6 +66,8 @@ import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
     IndicatorsListComponent,
     IndeciesListComponent,
     ChartTypeComponent,
+    SideBarListItemComponent,
+    SideBarListBtnComponent,
   ],
   imports: [
     BrowserModule,

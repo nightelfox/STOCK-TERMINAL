@@ -1,5 +1,6 @@
 <ul class="list-group">
-  <li
+  <app-side-bar-list-item [listState]="state"></app-side-bar-list-item>
+  <!--<li
     *ngFor="let stock of stocks"
     (click)="onSelect(stock, $event)"
     app-blackout
@@ -11,5 +12,5 @@
     <div class="stock-price">{{ stock.latestPrice }}</div>
     <div class="stock-percent" [style.color]="percentColor(stock)">{{ stock.changePercent }}</div>
     <button class="btn btn-light btn-list" (click)="addToFavorites(stock)">В портфель</button>
-  </li>
+  </li>-->
 </ul>

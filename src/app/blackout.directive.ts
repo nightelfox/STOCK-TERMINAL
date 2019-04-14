@@ -4,7 +4,7 @@ import { Directive, ElementRef, Renderer2, HostListener, Input } from '@angular/
   selector: '[app-blackout]',
 })
 export class BlackoutDirective {
-  @Input('appBlackout') blackoutColor: string;
+ // @Input('appBlackout') blackoutColor: string;
 
   constructor(private element: ElementRef, private renderer: Renderer2) {
     this.renderer.setStyle(this.element.nativeElement, 'cursor', 'pointer');

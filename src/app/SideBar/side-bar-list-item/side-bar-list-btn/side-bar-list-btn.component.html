@@ -1,0 +1,8 @@
+<button
+  class="btn btn-light btn-list"
+  *ngIf="(auth.user$ | async) as user"
+  (click)="addToFavorites(stock)"
+  [class.btn-selected]="btnClass(stock)"
+>
+  В портфель
+</button>

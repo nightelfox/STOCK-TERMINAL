@@ -49,7 +49,7 @@ export class LineChart2Component implements OnInit {
     //     backgroundColor: gradientFill,
     //   },
     // ];
-    // this.chartData.symbolInfo.subscribe(data => {
+    // this.chartData.symbolMonthStats.subscribe(data => {
     //   console.log(data);
     //   this.symbol = data.symbol;
     //   // this.chartData.getDefaultYAxis('GOOGL').subscribe (res => {

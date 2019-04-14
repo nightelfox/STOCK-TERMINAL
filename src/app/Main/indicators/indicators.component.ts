@@ -22,7 +22,7 @@ export class IndicatorsComponent implements OnInit {
       this.iexFetchingService.getSymbolMonthStats(symbol).subscribe(data => this.monthIndicator = data);
       console.log(symbol);
     });*/
-    this.iexFetchingService.symbolInfo.subscribe(data => {
+    this.iexFetchingService.symbolMonthStats.subscribe(data => {
       this.monthIndicator = data;
     });
   }

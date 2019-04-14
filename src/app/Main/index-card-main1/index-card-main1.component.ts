@@ -12,7 +12,7 @@ export class IndexCardMain1Component implements OnInit {
   constructor(private chartData: IexFetchingService) {}
 
   ngOnInit() {
-    this.chartData.symbolInfo.subscribe(res => {
+    this.chartData.symbolMonthStats.subscribe(res => {
       this.symbol = res;
       console.log(this.symbol);
     });

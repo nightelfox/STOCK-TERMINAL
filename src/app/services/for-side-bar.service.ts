@@ -25,7 +25,8 @@ export class ForSideBarService {
     this.storage.set(STORAGE_KEY_STOCKS, stocks);
   }
   onSelect(stock: string, event): void {
-    if (event.target.tagName !== 'BUTTON') {
+    console.log(event.target.tagName);
+    if (event.target.tagName !== 'path' && event.target.tagName !== 'svg') {
       this.selectedStock = stock;
     }
     this.storage.set(STORAGE_KEY_SELECT, this.selectedStock);

@@ -40,6 +40,8 @@ import { IndeciesListComponent } from './Main/indecies-list/indecies-list.compon
 import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
 import { SideBarListItemComponent } from './SideBar/side-bar-list-item/side-bar-list-item.component';
 import { SideBarListBtnComponent } from './SideBar/side-bar-list-item/side-bar-list-btn/side-bar-list-btn.component';
+import { CompanyInfoBlockComponent } from './Main/company-info-block/company-info-block.component';
+import { AboutCompanyComponent } from './Main/about-company/about-company.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +70,8 @@ import { SideBarListBtnComponent } from './SideBar/side-bar-list-item/side-bar-l
     ChartTypeComponent,
     SideBarListItemComponent,
     SideBarListBtnComponent,
+    CompanyInfoBlockComponent,
+    AboutCompanyComponent,
   ],
   imports: [
     BrowserModule,

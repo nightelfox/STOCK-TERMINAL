@@ -22,7 +22,7 @@
   background-color: #7fcfff;
   border-color: #7fcfff;
 }
-::-webkit-scrollbar {
+/*::-webkit-scrollbar {
   width: 7px;
 }
 ::-webkit-scrollbar-track {
@@ -32,4 +32,4 @@
 ::-webkit-scrollbar-thumb {
   background-color: gray;
   border-radius: 5px;
-}
+}*/

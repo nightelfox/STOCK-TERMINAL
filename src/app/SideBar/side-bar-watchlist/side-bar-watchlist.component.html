@@ -1,16 +1,3 @@
 <ul class="list-group">
   <app-side-bar-list-item [listState]="state"></app-side-bar-list-item>
-  <!--<li
-    *ngFor="let stock of stocks"
-    (click)="onSelect(stock, $event)"
-    app-blackout
-    [class.selected]="lstClass(stock)"
-    [hidden]="hiddenLst(stock)"
-    class="list-group-item"
-  >
-    <div class="stock-name">{{ stock.symbol }}</div>
-    <div class="stock-price">{{ stock.latestPrice }}</div>
-    <div class="stock-percent" [style.color]="percentColor(stock)">{{ stock.changePercent }}</div>
-    <button class="btn btn-light btn-list" (click)="addToFavorites(stock)">В портфель</button>
-  </li>-->
 </ul>

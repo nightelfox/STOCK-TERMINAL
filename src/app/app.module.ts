@@ -38,6 +38,7 @@ import { StorageServiceModule } from 'ngx-webstorage-service';
 import { IndicatorsListComponent } from './Main/indicators-list/indicators-list.component';
 import { IndeciesListComponent } from './Main/indecies-list/indecies-list.component';
 import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
+import { D3ChartComponent } from './d3-chart/d3-chart.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { ChartTypeComponent } from './Main/chart-type/chart-type.component';
     IndicatorsListComponent,
     IndeciesListComponent,
     ChartTypeComponent,
+    D3ChartComponent,
   ],
   imports: [
     BrowserModule,

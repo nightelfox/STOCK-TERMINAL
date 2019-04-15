@@ -1,0 +1,19 @@
+.wrap-news {
+  max-height: 30vh;
+  overflow-y: scroll;
+  margin: 0 25px 0 15px;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+p, a {
+  margin: 0;
+  font-size: 14px;
+  text-decoration-color: #000;
+  color: #000;
+}
+h4 {
+  font-size: 18px;
+}

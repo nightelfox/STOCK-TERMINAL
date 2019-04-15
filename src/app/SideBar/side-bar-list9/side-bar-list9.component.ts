@@ -19,7 +19,7 @@ export class SideBarList9Component implements OnInit {
     // this.iexFetchingService.symbolSource$.subscribe(name => this.iexFetchingService.getSymbolMonthStats(name)
     .subscribe(data => console.log(data)));
   }*/
-  onSelect(stock: Stock, $event): void {
+ /* onSelect(stock: Stock, $event): void {
     this.sb.onSelect(stock.symbol, $event);
     this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe(data => {
       this.iexFetchingService.symbolMonthStats.next(data);
@@ -40,7 +40,7 @@ export class SideBarList9Component implements OnInit {
   hiddenLst(stock) {
     return this.sb.focused && stock.symbol.indexOf(this.sb.searchSymbol) === -1;
   }
-
+*/
   ngOnInit() {
   }
 }

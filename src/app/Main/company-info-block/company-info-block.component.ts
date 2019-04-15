@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Indicators } from '../indicators/indicatorObject';
+import { Indicators } from './indicators/indicatorObject';
 import { IexFetchingService } from '../../services/iex-fetching.service';
 
 @Component({

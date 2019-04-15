@@ -1,0 +1,15 @@
+<div class="tab-changing-section">
+  <div class="wrap-news">
+    <ul>
+      <li *ngFor="let item of news">
+        <img [src]="item.image" alt="">
+        <div>
+          <p>{{item.datetime}} | {{item.source}}</p>
+          <h4>{{item.headline}}</h4>
+          <a [href]="item.url">{{item.summary}}</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+

@@ -26,9 +26,20 @@ export class SideBarListItemComponent implements OnInit {
       .subscribe(data => {
         this.iexFetchingService.symbolMonthStats.next(data);
       });
+  getCompanyInfo() {
+    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe(data => {
+      this.iexFetchingService.symbolMonthStats.next(data);
+    });
     this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe(data => {
       this.iexFetchingService.symbolInfo.next(data);
     });
+    this.iexFetchingService.getSymbolNews(this.sb.selectedStock).subscribe(data => {
+      this.iexFetchingService.symbolNews.next(data);
+    });
+  }
+  onSelect(stock: Stock, $event): void {
+    this.sb.onSelect(stock.symbol, $event);
+    this.getCompanyInfo();
   }
   lstClass(stock: Stock) {
     return stock.symbol === this.sb.selectedStock;
@@ -48,11 +59,6 @@ export class SideBarListItemComponent implements OnInit {
       this.stocks = data;
       this.sb.setLocalStocks(data);
     });
-    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock, '1m').subscribe(data => {
-      this.iexFetchingService.symbolMonthStats.next(data);
-    });
-    this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe(data => {
-      this.iexFetchingService.symbolInfo.next(data);
-    });
+    this.getCompanyInfo();
   }
 }

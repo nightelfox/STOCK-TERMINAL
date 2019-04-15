@@ -29,8 +29,8 @@ import { CardInfoButtonsComponent } from './Main/card-info-buttons/card-info-but
 import { SideBarWatchlistComponent } from './SideBar/side-bar-watchlist/side-bar-watchlist.component';
 import { IexFetchingService } from './services/iex-fetching.service';
 import { DbUserWatchlistService } from './services/db-user-watchlist.service';
-import { IndicatorsComponent } from './Main/indicators/indicators.component';
-import { NewsComponent } from './Main/news/news.component';
+import { IndicatorsComponent } from './Main/company-info-block/indicators/indicators.component';
+import { NewsComponent } from './Main/company-info-block/news/news.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrationComponent } from './Screens/registration/registration.component';
 import { ForSideBarService } from './services/for-side-bar.service';
@@ -43,7 +43,7 @@ import { D3ChartComponent } from './d3-chart/d3-chart.component';
 import { SideBarListItemComponent } from './SideBar/side-bar-list-item/side-bar-list-item.component';
 import { SideBarListBtnComponent } from './SideBar/side-bar-list-item/side-bar-list-btn/side-bar-list-btn.component';
 import { CompanyInfoBlockComponent } from './Main/company-info-block/company-info-block.component';
-import { AboutCompanyComponent } from './Main/about-company/about-company.component';
+import { AboutCompanyComponent } from './Main/company-info-block/about-company/about-company.component';
 
 
 @NgModule({

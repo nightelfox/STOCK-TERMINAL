@@ -15,6 +15,7 @@ export class IexFetchingService {
   symbolMonthStats: BehaviorSubject<any> = new BehaviorSubject('');
   monthScale: BehaviorSubject<any> = new BehaviorSubject('');
   symbolInfo: BehaviorSubject<any> = new BehaviorSubject('');
+  symbolNews: BehaviorSubject<any> = new BehaviorSubject('');
 
   // selectedSymSource$: Observable<any> = this.symbolSource$.asObservable();
 
@@ -130,5 +131,26 @@ export class IexFetchingService {
           };
         })
       );
+  }
+  getSymbolNews(selectedSymbol: string) {
+    return this.http
+      .get(
+        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=news&range=dynamic&last=5`
+      )
+      .pipe(
+        map(data => {
+          const NEWS = [];
+          data[selectedSymbol].news.forEach((item, index) => {
+            NEWS[index] = {
+              datetime: item.datetime,
+              headline: item.headline,
+              url: item.url,
+              summary: item.summary,
+              image: item.image,
+              source: item.source,
+            };
+          });
+          return NEWS;
+        }));
   }
 }

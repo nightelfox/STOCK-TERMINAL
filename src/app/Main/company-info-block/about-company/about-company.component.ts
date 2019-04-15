@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CompanyInfo } from './company-info';
-import { IexFetchingService } from '../../services/iex-fetching.service';
+import { IexFetchingService } from '../../../services/iex-fetching.service';
 
 @Component({
   selector: 'app-about-company',

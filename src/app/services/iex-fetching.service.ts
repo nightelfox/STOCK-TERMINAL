@@ -13,6 +13,7 @@ export class IexFetchingService {
 
   public symbolSource$ = new BehaviorSubject<string>('GOOGL');
   symbolMonthStats: BehaviorSubject<any> = new BehaviorSubject('');
+  monthScale: BehaviorSubject<any> = new BehaviorSubject('');
   symbolInfo: BehaviorSubject<any> = new BehaviorSubject('');
   symbolNews: BehaviorSubject<any> = new BehaviorSubject('');
 
@@ -57,7 +58,7 @@ export class IexFetchingService {
           INDECIES[data[key].symbol] = data[key].name;
         });
         return INDECIES;
-      }),
+      })
     );
   }
 
@@ -87,7 +88,7 @@ export class IexFetchingService {
     );
   }
 
-  getSymbolMonthStats(selectedSymbol: string) {
+  getSymbolMonthStats(selectedSymbol: string, range: string) {
     return this.http
       .get(
         `https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=chart&range=dynamic&last=5`

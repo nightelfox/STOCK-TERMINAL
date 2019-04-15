@@ -8,6 +8,8 @@
 >
   <div class="stock-name">{{ stock.symbol }}</div>
   <div class="stock-price">{{ stock.latestPrice }}</div>
-  <div class="stock-percent" [app-percent-color]="stock.changePercent">{{ stock.changePercent }}</div>
+  <div class="stock-percent" [app-percent-color]="stock.changePercent">
+    {{ stock.changePercent }}
+  </div>
   <app-side-bar-list-btn [stock]="stock"></app-side-bar-list-btn>
 </li>

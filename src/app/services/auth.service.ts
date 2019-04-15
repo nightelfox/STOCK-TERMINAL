@@ -25,7 +25,7 @@ export class AuthService {
     private db: DbUserWatchlistService
   ) {
     this.user$ = this.afAuth.authState.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (user) {
           return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
         }
@@ -86,8 +86,7 @@ export class AuthService {
       GOOGL: 15,
     };
     USER_REF.set(DATA, { merge: true });
-    return USER_REF
-      .collection('watchlist')
+    return USER_REF.collection('watchlist')
       .doc('savedSymbols')
       .set(WATCHLIST, { merge: true });
   }

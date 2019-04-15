@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
-
 @Component({
   selector: 'app-side-bar-list9',
   templateUrl: './side-bar-list9.component.html',
@@ -9,16 +8,14 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SideBarList9Component implements OnInit {
   state: string = 'all';
-  constructor(
-    public auth: AuthService
-  ) {}
-
+  constructor(public auth: AuthService) {}
 
   /*newSymbolSelected(newSymbol): void {
     this.iexFetchingService.changeSymbolSource(newSymbol);
     // this.iexFetchingService.symbolSource$.subscribe(name => this.iexFetchingService.getSymbolMonthStats(name)
     .subscribe(data => console.log(data)));
   }*/
+
  /* onSelect(stock: Stock, $event): void {
     this.sb.onSelect(stock.symbol, $event);
     this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe(data => {

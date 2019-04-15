@@ -1,26 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
-import { dataAsString } from './dataAsStringRu';
 import * as d3 from 'd3';
-import { chartLocale } from './chart-config';
-import { IexFetchingService } from '../services/iex-fetching.service';
 import { chunkHelper } from './utils/d3-chart-utils';
+import { chartLocale } from './chart-config';
 
-@Component({
-  selector: 'app-d3-chart',
-  encapsulation: ViewEncapsulation.None,
-  templateUrl: './d3-chart.component.html',
-  styleUrls: ['./d3-chart.component.css'],
-})
-export class D3ChartComponent implements OnInit {
-  //DOM-элемент графика
-  @ViewChild('chart')
-  chartElement: ElementRef;
-  //DOM-элемент легенды
-  @ViewChild('legend')
-  legendElement: ElementRef;
-  //DOM-элемент доп.опций
-  @ViewChild('extraOptions')
-  extraElement: ElementRef;
+export class Chart {
   //Отступ
   margin = { top: 0, right: 20, bottom: 50, left: 50 };
   //Размеры холста
@@ -28,15 +10,12 @@ export class D3ChartComponent implements OnInit {
   height = 390 - this.margin.top - this.margin.bottom;
   //Цветовая гамма
   colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-  //Данные
-  data;
   //Размер оси Х
   x = d3.scaleTime().range([0, this.width]);
   //Размер оси Y
   y = d3.scaleLinear().range([this.height, 0]);
   //Форматирует время
   timeFormatter = d3.timeFormat('%d-%m-%Y');
-
   //Названия графиков
   regionsNamesById = {};
   //Сами графики
@@ -52,7 +31,10 @@ export class D3ChartComponent implements OnInit {
   legendContainer;
   //SVG c линиями
   linesContainer;
-
+  //Доп опции
+  extraElement;
+  //Данные
+  data;
   //Флаг выбрана ли линия
   singleLineSelected = false;
 
@@ -86,76 +68,101 @@ export class D3ChartComponent implements OnInit {
   //Сама ось Y
   yAxisElement;
 
-  symbol;
-  timeScale;
-  rectData = [{ id: 1, x: -75, y: -75, width: 150, height: 150 }];
+  constructor(data, chartSvg, legendContainer, extraElement) {
+    this.chartSvg = chartSvg;
+    this.legendContainer = legendContainer;
+    this.extraElement = extraElement;
+    this.data = data;
+  }
 
-  newRects;
-  constructor(private chartData: IexFetchingService) {}
-
-  ngOnInit() {
-    //Выделяет график
+  buildAll() {
     this.chartSvg = d3
-      .select(this.chartElement.nativeElement)
+      .select(this.chartSvg)
       .append('svg')
       .attr('width', this.width + this.margin.left + this.margin.right)
       .attr('height', this.height + this.margin.top + this.margin.bottom)
       .append('g')
       .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
 
-    this.legendContainer = d3.select(this.legendElement.nativeElement);
+    this.buildAxis();
+    this.divideByRegions();
+    this.buildLegendTest();
+    this.buildChart();
+    this.buildExtraOption();
+    this.handleZoom();
+    this.handleVoronoi();
+  }
 
-    this.chartData.monthScale.subscribe(res => {
-      if (res) {
-        this.timeScale = res;
-      } else {
-        this.timeScale = '1m';
-      }
-      this.chartData.symbolMonthStats.subscribe(res => {
-        this.chartSvg.selectAll('*').remove();
-        this.legendContainer.selectAll('*').remove();
+  //Разделяет на регионы
+  divideByRegions() {
+    const nestByRegionId = d3
+      .nest()
+      .key(d => d.regionId)
+      .sortKeys((v1, v2) => (parseInt(v1, 10) > parseInt(v2, 10) ? 1 : -1))
+      .entries(this.data);
 
-        this.symbol = res.symbol;
-        this.chartData.getChart(this.symbol, this.timeScale).subscribe(res => {
-          res.chart.forEach(element => {
-            element.regionId = '1';
-            element.date = new Date(element.date);
-          });
-          this.data = res.chart;
-          this.cleanAll();
-          this.buildAxis();
-          this.divideByRegions();
-          this.buildChart();
-          this.buildLegend();
-          this.handleZoom();
-          this.handleVoronoi();
-          //this.drawRectangle();
-        });
+    nestByRegionId.forEach(item => {
+      this.regionsNamesById[item.key] = item.values[0].regionName;
+    });
+
+    d3.map(this.data, d => d.regionId)
+      .keys()
+      .forEach((d, i) => {
+        this.regions[d] = { data: nestByRegionId[i].values, enabled: true };
+      });
+
+    this.regionsIds = Object.keys(this.regions);
+  }
+
+  buildChart(showingRegionsIds?) {
+    //Ищет включенные графики
+
+    this.enabledRegionsIds =
+      showingRegionsIds || this.regionsIds.filter(regionId => this.regions[regionId].enabled);
+
+    //Выбирает все включенные графики
+    const paths = this.linesContainer.selectAll('.line').data(this.enabledRegionsIds);
+
+    //Удаляет страые графики
+    paths.exit().remove();
+
+    //Функция для отрисовки одной единицы графика
+    const lineGenerator = d3
+      .line()
+      .x(d => this.rescaledX(d.date))
+      .y(d => this.rescaledY(d.percent))
+      .curve(d3.curveCardinal);
+
+    const nestByDate = d3
+      .nest()
+      .key(d => d.date)
+      .entries(this.data);
+
+    nestByDate.forEach(dateItem => {
+      this.percentsByDate[dateItem.key] = {};
+
+      dateItem.values.forEach(item => {
+        this.percentsByDate[dateItem.key][item.regionId] = item.percent;
       });
     });
-    this.buildExtraOption();
-  }
 
-  //Обрабатывает данные
-  processData() {
-    // this.data = d3.csvParse(dataAsString, d => d);
-    // this.data.forEach(function(d) {
-    //   d.date = new Date(d.date);
-    //   d.percent = +d.percent;
-    // });
-    //console.log(this.data);
-  }
+    //Рисует все включенные графики
+    paths
+      .enter()
+      .append('path')
+      .merge(paths)
+      .attr('class', 'line')
+      .attr('id', regionId => `region-${regionId}`)
+      .attr('d', regionId => lineGenerator(this.regions[regionId].data))
+      .style('stroke', regionId => this.colorScale(regionId));
 
-  cleanAll() {
-    //this.x = null;
-    //this.y = null;
-    //this.rescaledX = this.x;
-    //this.rescaledY = this.y;
+    let _this = this;
+    //Управляет отображением на легенде
+    this.legendContainer.each(function(regionId) {
+      const isEnabledRegion = _this.enabledRegionsIds.indexOf(regionId) >= 0;
 
-    this.xAxis = null;
-    this.yAxis = null;
-    this.xAxisElement = null;
-    this.yAxisElement = null;
+      d3.select(this).classed('disabled', !isEnabledRegion);
+    });
   }
 
   buildAxis() {
@@ -165,7 +172,7 @@ export class D3ChartComponent implements OnInit {
     // console.log(d3.extent(this.time, d => d));
 
     this.x.domain(d3.extent(this.data, d => d.date));
-    this.y.domain([d3.min(this.data, d => d.close) - 50, d3.max(this.data, d => d.close) + 10]);
+    this.y.domain([0, d3.max(this.data, d => d.percent)]);
     this.colorScale.domain(d3.map(this.data, d => d.regionId).keys());
 
     //Ось х
@@ -180,7 +187,7 @@ export class D3ChartComponent implements OnInit {
       .ticks(5)
       .tickSize(7 + this.width)
       .tickPadding(-15 - this.width)
-      .tickFormat(d => d);
+      .tickFormat(d => d + '%');
 
     //Рисует значения оси X
     this.xAxisElement = this.chartSvg
@@ -217,81 +224,9 @@ export class D3ChartComponent implements OnInit {
     this.linesContainer = this.chartSvg.append('g').attr('clip-path', 'url(#clip)');
   }
 
-  //Разделяет на регионы
-  divideByRegions() {
-    const nestByRegionId = d3
-      .nest()
-      .key(d => d.regionId)
-      .sortKeys((v1, v2) => (parseInt(v1, 10) > parseInt(v2, 10) ? 1 : -1))
-      .entries(this.data);
-
-    nestByRegionId.forEach(item => {
-      this.regionsNamesById[item.key] = item.values[0].regionName;
-    });
-
-    d3.map(this.data, d => d.regionId)
-      .keys()
-      .forEach((d, i) => {
-        this.regions[d] = { data: nestByRegionId[i].values, enabled: true };
-      });
-
-    this.regionsIds = Object.keys(this.regions);
-  }
-
-  //Строит графики
-  buildChart(showingRegionsIds?) {
-    //Ищет включенные графики
-    this.enabledRegionsIds =
-      showingRegionsIds || this.regionsIds.filter(regionId => this.regions[regionId].enabled);
-
-    //Выбирает все включенные графики
-    const paths = this.linesContainer.selectAll('.line').data(this.enabledRegionsIds);
-
-    //Удаляет страые графики
-    paths.exit().remove();
-
-    //Функция для отрисовки одной единицы графика
-    const lineGenerator = d3
-      .line()
-      .x(d => this.rescaledX(d.date))
-      .y(d => this.rescaledY(d.close))
-      .curve(d3.curveCardinal);
-
-    const nestByDate = d3
-      .nest()
-      .key(d => d.date)
-      .entries(this.data);
-
-    nestByDate.forEach(dateItem => {
-      this.percentsByDate[dateItem.key] = {};
-
-      dateItem.values.forEach(item => {
-        this.percentsByDate[dateItem.key][item.regionId] = item.close;
-      });
-    });
-
-    //Рисует все включенные графики
-    paths
-      .enter()
-      .append('path')
-      .merge(paths)
-      .attr('class', 'line')
-      .attr('id', regionId => `region-${regionId}`)
-      .attr('d', regionId => lineGenerator(this.regions[regionId].data))
-      .style('stroke', regionId => this.colorScale(regionId));
-
-    let _this = this;
-    //Управляет отображением на легенде
-    this.legendContainer.each(function(regionId) {
-      const isEnabledRegion = _this.enabledRegionsIds.indexOf(regionId) >= 0;
-
-      d3.select(this).classed('disabled', !isEnabledRegion);
-    });
-  }
-
-  buildLegend() {
+  buildLegendTest() {
     //Разбивает легенду на 3 наиболее полные части
-    const chunkedRegionsIds = chunkHelper(this.regionsIds, 1);
+    const chunkedRegionsIds = chunkHelper(this.regionsIds, 3);
 
     //Строит легенду и вешает обработчик
     const legends = this.legendContainer
@@ -334,10 +269,10 @@ export class D3ChartComponent implements OnInit {
     //Добавляет у элемента в легенде информацию
     this.legendsValues = legends.append('div').attr('class', 'legend-value');
 
-    // this.legendsDate = d3
-    //   .selectAll('.legend-column')
-    //   .append('div')
-    //   .attr('class', 'legend-date');
+    this.legendsDate = d3
+      .selectAll('.legend-column')
+      .append('div')
+      .attr('class', 'legend-date');
   }
 
   //Функция для доп.опций (Показать все, Скрыть все)
@@ -375,7 +310,7 @@ export class D3ChartComponent implements OnInit {
     const voronoi = d3
       .voronoi()
       .x(d => this.x(d.date))
-      .y(d => this.y(d.close))
+      .y(d => this.y(d.percent))
       .extent([[0, 0], [this.width, this.height]]);
 
     //Индикатор на графике
@@ -399,12 +334,12 @@ export class D3ChartComponent implements OnInit {
       .append('g')
       .attr('class', 'voronoi')
       .on('mouseover', () => {
-        //this.legendsDate.style('visibility', 'visible');
+        this.legendsDate.style('visibility', 'visible');
         this.hoverDot.style('visibility', 'visible');
       })
       .on('mouseout', () => {
         this.legendsValues.text('');
-        //this.legendsDate.style('visibility', 'hidden');
+        this.legendsDate.style('visibility', 'hidden');
         this.hoverDot.style('visibility', 'hidden');
       });
 
@@ -431,7 +366,7 @@ export class D3ChartComponent implements OnInit {
       .merge(voronoiPaths)
       .attr('d', d => (d ? `M${d.join('L')}Z` : null))
       .on('mouseover', d => {
-        //this.legendsDate.text(this.timeFormatter(d.data.date));
+        this.legendsDate.text(this.timeFormatter(d.data.date));
 
         this.legendsValues.text(dataItem => {
           const value = this.percentsByDate[d.data.date][dataItem];
@@ -443,7 +378,7 @@ export class D3ChartComponent implements OnInit {
 
         this.hoverDot
           .attr('cx', () => this.rescaledX(d.data.date))
-          .attr('cy', () => this.rescaledY(d.data.close));
+          .attr('cy', () => this.rescaledY(d.data.percent));
       })
       .on('mouseout', d => {
         if (d) {
@@ -469,7 +404,7 @@ export class D3ChartComponent implements OnInit {
   handleZoom() {
     this.zoom = d3
       .zoom()
-      .scaleExtent([1, 10])
+      .scaleExtent([0.95, 10])
       .translateExtent([[-100000, -100000], [100000, 100000]])
       .on('start', () => {
         this.hoverDot.attr('cx', -5).attr('cy', 0);
@@ -486,71 +421,13 @@ export class D3ChartComponent implements OnInit {
         this.linesContainer.selectAll('path').attr('d', regionId => {
           return d3
             .line()
-            .defined(d => d.close !== 0)
+            .defined(d => d.percent !== 0)
             .x(d => this.rescaledX(d.date))
-            .y(d => this.rescaledY(d.close))
+            .y(d => this.rescaledY(d.percent))
             .curve(d3.curveCardinal)(this.regions[regionId].data);
         });
 
-        // this.newRects.selectAll('path').attr('d', regionId => {
-        //   return d3
-        //     .line()
-        //     .defined(d => d.close !== 0)
-        //     .x(d => this.rescaledX(d.date))
-        //     .y(d => this.rescaledY(d.close));
-        // });
         this.voronoiGroup.attr('transform', transformation);
-      });
-  }
-
-  drawRectangle() {
-    const rects = this.chartSvg.selectAll('g.rectangle').data(this.rectData, d => {
-      return d;
-    });
-    rects.exit().remove();
-    this.newRects = rects
-      .enter()
-      .append('g')
-      .classed('rectangle', true);
-
-    this.newRects
-      .append('rect')
-      .classed('bg', true)
-      .attr('clip-path', 'url(#clip)')
-      .attr('fill', 'red')
-      .attr('stroke', 'black')
-      .attr('stroke-width', 2)
-      .call(
-        d3
-          .drag()
-          .container(this.chartSvg.node())
-          .on('start end', () => {
-            d3.select(this).classed('moving', d3.event.type === 'start');
-          })
-          .on('drag', d => {
-            var dragX = Math.max(Math.min(d3.event.x, 1400 - d.width), -1400);
-
-            var dragY = Math.max(Math.min(d3.event.y, 1200 - d.height), -1200);
-
-            d.x = dragX;
-            d.y = dragY;
-
-            this.drawRectangle();
-          })
-      );
-
-    var allRects = this.newRects.merge(rects);
-    allRects.attr('transform', function(d) {
-      return 'translate(' + d.x + ',' + d.y + ')';
-    });
-
-    allRects
-      .select('rect.bg')
-      .attr('height', function(d) {
-        return d.height;
-      })
-      .attr('width', function(d) {
-        return d.width;
       });
   }
 }

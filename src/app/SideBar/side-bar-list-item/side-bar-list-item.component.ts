@@ -8,7 +8,7 @@ import { DbUserWatchlistService } from '../../services/db-user-watchlist.service
 @Component({
   selector: 'app-side-bar-list-item',
   templateUrl: './side-bar-list-item.component.html',
-  styleUrls: ['./side-bar-list-item.component.css']
+  styleUrls: ['./side-bar-list-item.component.css'],
 })
 export class SideBarListItemComponent implements OnInit {
   @Input() listState: string;
@@ -17,13 +17,15 @@ export class SideBarListItemComponent implements OnInit {
     private sb: ForSideBarService,
     public auth: AuthService,
     private iexFetchingService: IexFetchingService,
-    private dbUserWatchlist: DbUserWatchlistService,
-  ) { }
+    private dbUserWatchlist: DbUserWatchlistService
+  ) {}
   onSelect(stock: Stock, $event): void {
     this.sb.onSelect(stock.symbol, $event);
-    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe(data => {
-      this.iexFetchingService.symbolMonthStats.next(data);
-    });
+    this.iexFetchingService
+      .getSymbolMonthStats(this.sb.selectedStock, 'dynamic')
+      .subscribe(data => {
+        this.iexFetchingService.symbolMonthStats.next(data);
+      });
     this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe(data => {
       this.iexFetchingService.symbolInfo.next(data);
     });
@@ -46,12 +48,11 @@ export class SideBarListItemComponent implements OnInit {
       this.stocks = data;
       this.sb.setLocalStocks(data);
     });
-    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe(data => {
+    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock, '1m').subscribe(data => {
       this.iexFetchingService.symbolMonthStats.next(data);
     });
     this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe(data => {
       this.iexFetchingService.symbolInfo.next(data);
     });
   }
-
 }

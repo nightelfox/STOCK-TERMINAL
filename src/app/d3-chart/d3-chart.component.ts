@@ -24,8 +24,8 @@ export class D3ChartComponent implements OnInit {
   //Отступ
   margin = { top: 0, right: 20, bottom: 50, left: 50 };
   //Размеры холста
-  width = 1200 - this.margin.left - this.margin.right;
-  height = 390 - this.margin.top - this.margin.bottom;
+  width = window.innerWidth * 0.7 - this.margin.left - this.margin.right;
+  height = window.innerHeight * 0.5 - this.margin.top - this.margin.bottom;
   //Цветовая гамма
   colorScale = d3.scaleOrdinal(d3.schemeCategory10);
   //Данные

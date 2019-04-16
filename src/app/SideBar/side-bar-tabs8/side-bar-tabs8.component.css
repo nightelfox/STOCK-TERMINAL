@@ -1,5 +1,5 @@
 .side-bar {
-  max-height: 72vh;
+  max-height: 78vh;
   grid-area: side-bar;
   overflow-y: scroll;
 }

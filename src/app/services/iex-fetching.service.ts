@@ -13,7 +13,8 @@ export class IexFetchingService {
 
   public symbolSource$ = new BehaviorSubject<string>('GOOGL');
   symbolMonthStats: BehaviorSubject<any> = new BehaviorSubject('');
-  monthScale: BehaviorSubject<any> = new BehaviorSubject('');
+  monthScale: BehaviorSubject<any> = new BehaviorSubject('1m');
+  compare: BehaviorSubject<any> = new BehaviorSubject('');
   symbolInfo: BehaviorSubject<any> = new BehaviorSubject('');
   symbolNews: BehaviorSubject<any> = new BehaviorSubject('');
 
@@ -26,15 +27,15 @@ export class IexFetchingService {
   constructor(private http: HttpClient) {}
 
   getDataForSideBar(): Observable<any> {
-    const API_REQUEST = `https://api.iextrading.com/1.0/stock/market/batch?symbols=${initialIndecies.join(
+    const apiRequest = `https://api.iextrading.com/1.0/stock/market/batch?symbols=${initialIndecies.join(
       ','
     )}
     &types=quote&range=dynamic&last=5`;
-    return this.http.get(API_REQUEST).pipe(
+    return this.http.get(apiRequest).pipe(
       map(data => {
-        const STOCKS = [];
+        const stocks = [];
         Object.keys(data).forEach((key, index) => {
-          STOCKS[index] = {
+          stocks[index] = {
             symbol: data[key].quote.symbol,
             latestPrice: data[key].quote.latestPrice,
             changePercent: (data[key].quote.changePercent * 100).toFixed(3),
@@ -45,7 +46,7 @@ export class IexFetchingService {
             ).toFixed(2)*/
           };
         });
-        return STOCKS;
+        return stocks;
       })
     );
   }
@@ -53,11 +54,11 @@ export class IexFetchingService {
   getAllIndecies(): Observable<any> {
     return this.http.get('https://api.iextrading.com/1.0/ref-data/symbols').pipe(
       map(data => {
-        const INDECIES = {};
+        const indecies = {};
         Object.keys(data).forEach(key => {
-          INDECIES[data[key].symbol] = data[key].name;
+          indecies[data[key].symbol] = data[key].name;
         });
-        return INDECIES;
+        return indecies;
       })
     );
   }
@@ -95,19 +96,19 @@ export class IexFetchingService {
       )
       .pipe(
         map(symbolData => {
-          const NEW_SYMBOL_DATA = symbolData[selectedSymbol].chart.data;
-          const INDEX_LAST_ELEMENT = NEW_SYMBOL_DATA.length - 1;
+          const newSymbolData = symbolData[selectedSymbol].chart.data;
+          const indexLastElement = newSymbolData.length - 1;
           return {
             symbol: selectedSymbol,
-            open: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT].open,
-            close: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT].close,
-            preOpen: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT - 1].open,
-            preClose: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT - 1].close,
-            min: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT].low,
-            max: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT].high,
-            maxMonth: Math.max.apply(Math, NEW_SYMBOL_DATA.map(obj => obj.high)),
-            minMonth: Math.min.apply(Math, NEW_SYMBOL_DATA.map(obj => obj.low)),
-            changePercent: NEW_SYMBOL_DATA[INDEX_LAST_ELEMENT].changePercent + '%',
+            open: newSymbolData[indexLastElement].open,
+            close: newSymbolData[indexLastElement].close,
+            preOpen: newSymbolData[indexLastElement - 1].open,
+            preClose: newSymbolData[indexLastElement - 1].close,
+            min: newSymbolData[indexLastElement].low,
+            max: newSymbolData[indexLastElement].high,
+            maxMonth: Math.max.apply(Math, newSymbolData.map(obj => obj.high)),
+            minMonth: Math.min.apply(Math, newSymbolData.map(obj => obj.low)),
+            changePercent: newSymbolData[indexLastElement].changePercent + '%',
           };
         })
       );
@@ -151,6 +152,7 @@ export class IexFetchingService {
             };
           });
           return NEWS;
-        }));
+        })
+      );
   }
 }

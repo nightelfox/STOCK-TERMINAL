@@ -8,9 +8,7 @@ import { UserInfo10Component } from './TopBar/user-info10/user-info10.component'
 import { IndexCardMain1Component } from './Main/index-card-main1/index-card-main1.component';
 import { LineChart2Component } from './Main/line-chart2/line-chart2.component';
 import { ScaleSelect3Component } from './Main/scale-select3/scale-select3.component';
-import { IndexInfo4Component } from './Main/index-info4/index-info4.component';
 import { MonthValues5Component } from './Main/month-values5/month-values5.component';
-import { AddToComparison6Component } from './Main/add-to-comparison6/add-to-comparison6.component';
 import { Search7Component } from './SideBar/search7/search7.component';
 import { SideBarTabs8Component } from './SideBar/side-bar-tabs8/side-bar-tabs8.component';
 import { SideBarList9Component } from './SideBar/side-bar-list9/side-bar-list9.component';
@@ -45,7 +43,6 @@ import { SideBarListBtnComponent } from './SideBar/side-bar-list-item/side-bar-l
 import { CompanyInfoBlockComponent } from './Main/company-info-block/company-info-block.component';
 import { AboutCompanyComponent } from './Main/company-info-block/about-company/about-company.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,9 +50,7 @@ import { AboutCompanyComponent } from './Main/company-info-block/about-company/a
     IndexCardMain1Component,
     LineChart2Component,
     ScaleSelect3Component,
-    IndexInfo4Component,
     MonthValues5Component,
-    AddToComparison6Component,
     Search7Component,
     SideBarTabs8Component,
     SideBarList9Component,

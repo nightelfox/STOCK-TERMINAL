@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IexFetchingService } from 'src/app/services/iex-fetching.service';
 
 @Component({
   selector: 'app-indecies-list',
@@ -6,7 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./indecies-list.component.css'],
 })
 export class IndeciesListComponent implements OnInit {
-  constructor() {}
+  constructor(private chartData: IexFetchingService) {}
 
   ngOnInit() {}
+
+  sendToCompare() {
+    this.chartData.monthScale.subscribe(res => {
+      this.chartData.getChart('aapl', res).subscribe(res => {
+        this.chartData.compare.next(res);
+      });
+    });
+  }
 }

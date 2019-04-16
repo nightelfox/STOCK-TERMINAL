@@ -1,4 +1,4 @@
-export class Indicators {
+export interface Indicators {
   symbol: string;
   open: number;
   close: number;

@@ -88,9 +88,14 @@ export class D3ChartComponent implements OnInit {
 
   symbol;
   timeScale;
+
   rectData = [{ id: 1, x: -75, y: -75, width: 150, height: 150 }];
 
   newRects;
+  w = window;
+  d = document;
+  e = this.d.documentElement;
+  g = this.d.getElementsByTagName('body')[0];
   constructor(private chartData: IexFetchingService) {}
 
   ngOnInit() {
@@ -114,48 +119,43 @@ export class D3ChartComponent implements OnInit {
       this.chartData.symbolMonthStats.subscribe(res => {
         this.chartSvg.selectAll('*').remove();
         this.legendContainer.selectAll('*').remove();
-
+        console.log('1');
         this.symbol = res.symbol;
         this.chartData.getChart(this.symbol, this.timeScale).subscribe(res => {
+          console.log('2');
           res.chart.forEach(element => {
             element.regionId = '1';
             element.date = new Date(element.date);
           });
+          //console.log(res.chart);
+          //console.log(this.regionsIds);
           this.data = res.chart;
-          this.cleanAll();
-          this.buildAxis();
-          this.divideByRegions();
-          this.buildChart();
-          this.buildLegend();
-          this.handleZoom();
-          this.handleVoronoi();
-          //this.drawRectangle();
+          //console.log(this.data);
+          this.chartData.compare.subscribe(res => {
+            //console.log(res);
+            console.log('3');
+            if (res !== '') {
+              res.chart.forEach((element, i) => {
+                element.regionId = '2';
+                element.date = new Date(element.date);
+                this.data.push(res.chart[i]);
+              });
+              //this.data.push(res.chart);
+              //
+              //console.log(this.data);
+            }
+            this.buildAxis();
+            this.divideByRegions();
+            this.buildChart();
+            this.buildLegend();
+            this.handleZoom();
+            this.handleVoronoi();
+            //this.drawRectangle();
+          });
         });
       });
     });
     this.buildExtraOption();
-  }
-
-  //Обрабатывает данные
-  processData() {
-    // this.data = d3.csvParse(dataAsString, d => d);
-    // this.data.forEach(function(d) {
-    //   d.date = new Date(d.date);
-    //   d.percent = +d.percent;
-    // });
-    //console.log(this.data);
-  }
-
-  cleanAll() {
-    //this.x = null;
-    //this.y = null;
-    //this.rescaledX = this.x;
-    //this.rescaledY = this.y;
-
-    this.xAxis = null;
-    this.yAxis = null;
-    this.xAxisElement = null;
-    this.yAxisElement = null;
   }
 
   buildAxis() {
@@ -167,7 +167,7 @@ export class D3ChartComponent implements OnInit {
     this.x.domain(d3.extent(this.data, d => d.date));
     this.y.domain([d3.min(this.data, d => d.close) - 50, d3.max(this.data, d => d.close) + 10]);
     this.colorScale.domain(d3.map(this.data, d => d.regionId).keys());
-
+    this.chartSvg.selectAll('*').remove();
     //Ось х
     this.xAxis = d3
       .axisBottom(this.x)
@@ -292,7 +292,7 @@ export class D3ChartComponent implements OnInit {
   buildLegend() {
     //Разбивает легенду на 3 наиболее полные части
     const chunkedRegionsIds = chunkHelper(this.regionsIds, 1);
-
+    this.legendContainer.selectAll('*').remove();
     //Строит легенду и вешает обработчик
     const legends = this.legendContainer
       .selectAll('div.legend-column')

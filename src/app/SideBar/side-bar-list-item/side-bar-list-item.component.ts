@@ -19,15 +19,16 @@ export class SideBarListItemComponent implements OnInit {
     private iexFetchingService: IexFetchingService,
     private dbUserWatchlist: DbUserWatchlistService
   ) {}
-  onSelect(stock: Stock, $event): void {
+ /* onSelect(stock: Stock, $event): void {
     this.sb.onSelect(stock.symbol, $event);
     this.iexFetchingService
       .getSymbolMonthStats(this.sb.selectedStock, 'dynamic')
       .subscribe(data => {
         this.iexFetchingService.symbolMonthStats.next(data);
       });
+  }*/
   getCompanyInfo() {
-    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe(data => {
+    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock, 'dynamic').subscribe(data => {
       this.iexFetchingService.symbolMonthStats.next(data);
     });
     this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe(data => {
@@ -37,6 +38,7 @@ export class SideBarListItemComponent implements OnInit {
       this.iexFetchingService.symbolNews.next(data);
     });
   }
+
   onSelect(stock: Stock, $event): void {
     this.sb.onSelect(stock.symbol, $event);
     this.getCompanyInfo();

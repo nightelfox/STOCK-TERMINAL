@@ -71,6 +71,9 @@ export class D3ChartComponent implements OnInit {
   //dateTootip
   dateTooltip;
   dateTooltipText;
+  //MainTooltip
+  mainTooltip;
+  mainTooltipText;
   //Значения для легенды
   legendsValues;
   //Даты для легенды
@@ -100,6 +103,7 @@ export class D3ChartComponent implements OnInit {
 
   symbol;
   timeScale;
+  currentValue;
 
   rectData = [{ id: 1, x: -75, y: -75, width: 150, height: 150 }];
 
@@ -142,6 +146,7 @@ export class D3ChartComponent implements OnInit {
         this.chartSvg.selectAll('*').remove();
         this.legendContainer.selectAll('*').remove();
         this.symbol = res.symbol;
+
         this.chartData.getChart(this.symbol, this.timeScale).subscribe(res => {
           res.chart.forEach(element => {
             element.regionId = '1';
@@ -447,7 +452,7 @@ export class D3ChartComponent implements OnInit {
       .attr('class', 'toooltip')
       .attr('width', 50)
       .attr('height', 20)
-      .attr('fill', 'rgb(31, 119, 180)')
+      .attr('fill', '#646464')
       .style('visibility', 'hidden');
 
     this.tooltipText = this.chartSvg
@@ -461,7 +466,7 @@ export class D3ChartComponent implements OnInit {
       .attr('class', 'toooltip')
       .attr('width', 100)
       .attr('height', 20)
-      .attr('fill', 'lightgrey')
+      .attr('fill', '#2F2F2F')
       .attr('rx', 10)
       .attr('ry', 10)
       .style('visibility', 'hidden');
@@ -471,6 +476,25 @@ export class D3ChartComponent implements OnInit {
       .attr('fill', 'white')
       .attr('font-size', '0.8em')
       .text('');
+
+    this.mainTooltip = this.chartSvg
+      .append('rect')
+      .attr('width', 50)
+      .attr('height', 20)
+      .attr('fill', '#1F77B4');
+
+    const lastValue = this.data[this.data.length - 1].close;
+
+    console.log(lastValue);
+    this.mainTooltip.attr('x', -50).attr('y', this.rescaledY(lastValue) - 10);
+
+    this.mainTooltipText = this.chartSvg
+      .append('text')
+      .attr('fill', 'white')
+      .attr('font-size', '0.8em')
+      .text(lastValue);
+
+    this.mainTooltipText.attr('x', -48).attr('y', this.rescaledY(lastValue) + 5);
     //this.tooltip
     //.append('div')
     //.attr('class', 'legend-item-text')

@@ -21,6 +21,8 @@ export class D3ChartComponent implements OnInit {
   //DOM-элемент доп.опций
   @ViewChild('extraOptions')
   extraElement: ElementRef;
+  @ViewChild('testChart')
+  testChart: ElementRef;
   //Отступ
   margin = { top: 0, right: 20, bottom: 50, left: 50 };
   //Размеры холста
@@ -48,6 +50,7 @@ export class D3ChartComponent implements OnInit {
 
   //SVG c графиком
   chartSvg;
+  testSvg;
   //DOM-элемент с легендой
   legendContainer;
   //SVG c линиями
@@ -58,7 +61,7 @@ export class D3ChartComponent implements OnInit {
 
   //Группа графика Вороного
   voronoiGroup;
-
+  testGroup;
   //Точка на графике
   hoverDot;
 
@@ -86,6 +89,9 @@ export class D3ChartComponent implements OnInit {
   //Сама ось Y
   yAxisElement;
 
+  testXAxisElement;
+  testYAxisElement;
+
   symbol;
   timeScale;
 
@@ -108,7 +114,17 @@ export class D3ChartComponent implements OnInit {
       .append('g')
       .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
 
+    this.testSvg = d3
+      .select(this.chartElement.nativeElement)
+      .append('svg')
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', 100 + this.margin.top + this.margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
+
     this.legendContainer = d3.select(this.legendElement.nativeElement);
+
+    this.chartData.monthScale.pipe();
 
     this.chartData.monthScale.subscribe(res => {
       if (res) {
@@ -214,6 +230,33 @@ export class D3ChartComponent implements OnInit {
       .attr('width', this.width)
       .attr('height', this.height);
 
+    this.testXAxisElement = this.testSvg
+      .append('g')
+      .attr('class', 'axis x-axis')
+      .attr('transform', `translate(0,${this.height + 6})`)
+      .call(this.xAxis);
+
+    this.testYAxisElement = this.testSvg
+      .append('g')
+      .attr('transform', 'translate(-7, 0)')
+      .attr('class', 'axis y-axis')
+      .call(this.yAxis);
+
+    this.testSvg
+      .append('g')
+      .attr('transform', `translate(0,${this.height})`)
+      .call(d3.axisBottom(this.x).ticks(0));
+
+    this.testSvg.append('g').call(d3.axisLeft(this.y).ticks(0));
+
+    this.testSvg
+      .append('defs')
+      .append('clipPath')
+      .attr('id', 'clip')
+      .append('rect')
+      .attr('width', this.width)
+      .attr('height', 100);
+
     this.linesContainer = this.chartSvg.append('g').attr('clip-path', 'url(#clip)');
   }
 
@@ -280,7 +323,7 @@ export class D3ChartComponent implements OnInit {
       .attr('d', regionId => lineGenerator(this.regions[regionId].data))
       .style('stroke', regionId => this.colorScale(regionId));
 
-    let _this = this;
+    const _this = this;
     //Управляет отображением на легенде
     this.legendContainer.each(function(regionId) {
       const isEnabledRegion = _this.enabledRegionsIds.indexOf(regionId) >= 0;
@@ -408,7 +451,24 @@ export class D3ChartComponent implements OnInit {
         this.hoverDot.style('visibility', 'hidden');
       });
 
+    this.testGroup = this.testSvg
+      .append('g')
+      .attr('class', 'voronoi-parent')
+      .attr('clip-path', 'url(#clip)')
+      .append('g')
+      .attr('class', 'voronoi')
+      .on('mouseover', () => {
+        //this.legendsDate.style('visibility', 'visible');
+        this.hoverDot.style('visibility', 'visible');
+      })
+      .on('mouseout', () => {
+        this.legendsValues.text('');
+        //this.legendsDate.style('visibility', 'hidden');
+        this.hoverDot.style('visibility', 'hidden');
+      });
+
     d3.select('.voronoi-parent').call(this.zoom);
+
     d3.select('.reset-zoom-button').on('click', () => {
       this.rescaledX = this.x;
       this.rescaledY = this.y;
@@ -469,7 +529,7 @@ export class D3ChartComponent implements OnInit {
   handleZoom() {
     this.zoom = d3
       .zoom()
-      .scaleExtent([1, 10])
+      .scaleExtent([0.5, 10])
       .translateExtent([[-100000, -100000], [100000, 100000]])
       .on('start', () => {
         this.hoverDot.attr('cx', -5).attr('cy', 0);
@@ -482,6 +542,9 @@ export class D3ChartComponent implements OnInit {
 
         this.xAxisElement.call(this.xAxis.scale(this.rescaledX));
         this.yAxisElement.call(this.yAxis.scale(this.rescaledY));
+
+        this.testXAxisElement.call(this.xAxis.scale(this.rescaledX));
+        this.testYAxisElement.call(this.yAxis.scale(this.rescaledY));
 
         this.linesContainer.selectAll('path').attr('d', regionId => {
           return d3
@@ -500,6 +563,7 @@ export class D3ChartComponent implements OnInit {
         //     .y(d => this.rescaledY(d.close));
         // });
         this.voronoiGroup.attr('transform', transformation);
+        this.testGroup.attr('transform', transformation);
       });
   }
 

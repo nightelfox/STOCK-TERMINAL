@@ -64,7 +64,13 @@ export class D3ChartComponent implements OnInit {
   testGroup;
   //Точка на графике
   hoverDot;
-
+  hoverDot2;
+  //Tooltip
+  tooltip;
+  tooltipText;
+  //dateTootip
+  dateTooltip;
+  dateTooltipText;
   //Значения для легенды
   legendsValues;
   //Даты для легенды
@@ -118,7 +124,7 @@ export class D3ChartComponent implements OnInit {
       .select(this.chartElement.nativeElement)
       .append('svg')
       .attr('width', this.width + this.margin.left + this.margin.right)
-      .attr('height', 100 + this.margin.top + this.margin.bottom)
+      .attr('height', 100)
       .append('g')
       .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
 
@@ -135,10 +141,8 @@ export class D3ChartComponent implements OnInit {
       this.chartData.symbolMonthStats.subscribe(res => {
         this.chartSvg.selectAll('*').remove();
         this.legendContainer.selectAll('*').remove();
-        console.log('1');
         this.symbol = res.symbol;
         this.chartData.getChart(this.symbol, this.timeScale).subscribe(res => {
-          console.log('2');
           res.chart.forEach(element => {
             element.regionId = '1';
             element.date = new Date(element.date);
@@ -149,7 +153,6 @@ export class D3ChartComponent implements OnInit {
           //console.log(this.data);
           this.chartData.compare.subscribe(res => {
             //console.log(res);
-            console.log('3');
             if (res !== '') {
               res.chart.forEach((element, i) => {
                 element.regionId = '2';
@@ -189,7 +192,8 @@ export class D3ChartComponent implements OnInit {
       .axisBottom(this.x)
       .ticks(((this.width + 2) / (this.height + 2)) * 5)
       .tickSize(-this.height - 6)
-      .tickPadding(10);
+      .tickPadding(10)
+      .tickFormat('');
     //Ось Y
     this.yAxis = d3
       .axisRight(this.y)
@@ -295,10 +299,10 @@ export class D3ChartComponent implements OnInit {
 
     //Функция для отрисовки одной единицы графика
     const lineGenerator = d3
-      .line()
+      .area()
       .x(d => this.rescaledX(d.date))
-      .y(d => this.rescaledY(d.close))
-      .curve(d3.curveCardinal);
+      .y(d => this.rescaledY(d.close));
+    // .curve(d3.curveCardinal);
 
     const nestByDate = d3
       .nest()
@@ -423,11 +427,54 @@ export class D3ChartComponent implements OnInit {
 
     //Индикатор на графике
     this.hoverDot = this.chartSvg
-      .append('circle')
-      .attr('class', 'dot')
-      .attr('r', 3)
+      .append('rect')
+      .attr('class', 'cross')
+      .attr('width', 1)
+      .attr('height', this.height)
       .attr('clip-path', 'url(#clip)')
       .style('visibility', 'hidden');
+
+    this.hoverDot2 = this.chartSvg
+      .append('rect')
+      .attr('class', 'cross')
+      .attr('width', this.width)
+      .attr('height', 1)
+      .attr('clip-path', 'url(#clip)')
+      .style('visibility', 'hidden');
+
+    this.tooltip = this.chartSvg
+      .append('rect')
+      .attr('class', 'toooltip')
+      .attr('width', 50)
+      .attr('height', 20)
+      .attr('fill', 'rgb(31, 119, 180)')
+      .style('visibility', 'hidden');
+
+    this.tooltipText = this.chartSvg
+      .append('text')
+      .attr('fill', 'white')
+      .attr('font-size', '0.8em')
+      .text('');
+
+    this.dateTooltip = this.chartSvg
+      .append('rect')
+      .attr('class', 'toooltip')
+      .attr('width', 100)
+      .attr('height', 20)
+      .attr('fill', 'lightgrey')
+      .attr('rx', 10)
+      .attr('ry', 10)
+      .style('visibility', 'hidden');
+
+    this.dateTooltipText = this.chartSvg
+      .append('text')
+      .attr('fill', 'white')
+      .attr('font-size', '0.8em')
+      .text('');
+    //this.tooltip
+    //.append('div')
+    //.attr('class', 'legend-item-text')
+    //.text('aaa');
 
     //Фильтрует только открытые графики
     const filteredData = this.data.filter(
@@ -444,11 +491,17 @@ export class D3ChartComponent implements OnInit {
       .on('mouseover', () => {
         //this.legendsDate.style('visibility', 'visible');
         this.hoverDot.style('visibility', 'visible');
+        this.hoverDot2.style('visibility', 'visible');
+        this.tooltip.style('visibility', 'visible');
+        this.dateTooltip.style('visibility', 'visible');
       })
       .on('mouseout', () => {
         this.legendsValues.text('');
         //this.legendsDate.style('visibility', 'hidden');
         this.hoverDot.style('visibility', 'hidden');
+        this.hoverDot2.style('visibility', 'hidden');
+        this.tooltip.style('visibility', 'hidden');
+        this.dateTooltip.style('visibility', 'hidden');
       });
 
     this.testGroup = this.testSvg
@@ -460,11 +513,17 @@ export class D3ChartComponent implements OnInit {
       .on('mouseover', () => {
         //this.legendsDate.style('visibility', 'visible');
         this.hoverDot.style('visibility', 'visible');
+        this.hoverDot2.style('visibility', 'visible');
+        this.tooltip.style('visibility', 'visible');
+        this.dateTooltip.style('visibility', 'visible');
       })
       .on('mouseout', () => {
         this.legendsValues.text('');
         //this.legendsDate.style('visibility', 'hidden');
         this.hoverDot.style('visibility', 'hidden');
+        this.hoverDot2.style('visibility', 'hidden');
+        this.tooltip.style('visibility', 'hidden');
+        this.dateTooltip.style('visibility', 'hidden');
       });
 
     d3.select('.voronoi-parent').call(this.zoom);
@@ -496,14 +555,24 @@ export class D3ChartComponent implements OnInit {
         this.legendsValues.text(dataItem => {
           const value = this.percentsByDate[d.data.date][dataItem];
 
-          return value ? value + '%' : 'Н/Д';
+          return value ? value : 'Н/Д';
         });
 
         d3.select(`#region-${d.data.regionId}`).classed('region-hover', true);
 
-        this.hoverDot
-          .attr('cx', () => this.rescaledX(d.data.date))
-          .attr('cy', () => this.rescaledY(d.data.close));
+        this.hoverDot.attr('x', () => this.rescaledX(d.data.date)).attr('y', 0);
+        this.hoverDot2.attr('x', 0).attr('y', this.rescaledY(d.data.close));
+
+        if (d.data.regionId === '1') {
+          this.tooltip.attr('x', -50).attr('y', this.rescaledY(d.data.close) - 10);
+          this.tooltipText.attr('x', -48).attr('y', this.rescaledY(d.data.close) + 5);
+          this.tooltipText.text(d.data.close);
+          this.dateTooltip.attr('x', this.rescaledX(d.data.date) - 50).attr('y', this.height + 3);
+          this.dateTooltipText
+            .attr('x', this.rescaledX(d.data.date) - 25)
+            .attr('y', this.height + 18);
+          this.dateTooltipText.text(d.data.label);
+        }
       })
       .on('mouseout', d => {
         if (d) {
@@ -527,15 +596,34 @@ export class D3ChartComponent implements OnInit {
 
   //Управление зумом
   handleZoom() {
+    const chartAreaWidth = this.width + this.margin.left + this.margin.right;
+    const chartAreaHeight = this.height + this.margin.top + this.margin.bottom;
+
     this.zoom = d3
       .zoom()
-      .scaleExtent([0.5, 10])
-      .translateExtent([[-100000, -100000], [100000, 100000]])
+      .scaleExtent([1, 10])
+      .translateExtent([[0, 0], [chartAreaWidth, chartAreaHeight]])
       .on('start', () => {
-        this.hoverDot.attr('cx', -5).attr('cy', 0);
+        this.hoverDot.attr('x', -5).attr('y', 0);
+        this.hoverDot2.attr('x', -5).attr('y', 0);
       })
       .on('zoom', () => {
         const transformation = d3.event.transform;
+
+        const rightEdge =
+          Math.abs(transformation.x) / transformation.k + this.width / transformation.k;
+        const bottomEdge =
+          Math.abs(transformation.y) / transformation.k + this.height / transformation.k;
+
+        //console.log('правый ', rightEdge);
+        //console.log('нижний ', bottomEdge);
+        if (rightEdge > this.width) {
+          transformation.x = -(this.width * transformation.k - this.width);
+        }
+
+        if (bottomEdge > this.height) {
+          transformation.y = -(this.height * transformation.k - this.height);
+        }
 
         this.rescaledX = transformation.rescaleX(this.x);
         this.rescaledY = transformation.rescaleY(this.y);
@@ -551,8 +639,7 @@ export class D3ChartComponent implements OnInit {
             .line()
             .defined(d => d.close !== 0)
             .x(d => this.rescaledX(d.date))
-            .y(d => this.rescaledY(d.close))
-            .curve(d3.curveCardinal)(this.regions[regionId].data);
+            .y(d => this.rescaledY(d.close))(this.regions[regionId].data);
         });
 
         // this.newRects.selectAll('path').attr('d', regionId => {

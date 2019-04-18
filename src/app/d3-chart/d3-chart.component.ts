@@ -47,7 +47,8 @@ export class D3ChartComponent implements OnInit {
   regionsIds;
   //ID включенных графиков
   enabledRegionsIds;
-
+  //Даты
+  chartDates = [];
   //SVG c графиком
   chartSvg;
   testSvg;
@@ -104,7 +105,7 @@ export class D3ChartComponent implements OnInit {
   symbol;
   timeScale;
   currentValue;
-
+  lastValue;
   rectData = [{ id: 1, x: -75, y: -75, width: 150, height: 150 }];
 
   newRects;
@@ -148,9 +149,11 @@ export class D3ChartComponent implements OnInit {
         this.symbol = res.symbol;
 
         this.chartData.getChart(this.symbol, this.timeScale).subscribe(res => {
+          this.chartDates = [];
           res.chart.forEach(element => {
             element.regionId = '1';
             element.date = new Date(element.date);
+            this.chartDates.push(element.date.toString().slice(0, 15));
           });
           //console.log(res.chart);
           //console.log(this.regionsIds);
@@ -483,18 +486,17 @@ export class D3ChartComponent implements OnInit {
       .attr('height', 20)
       .attr('fill', '#1F77B4');
 
-    const lastValue = this.data[this.data.length - 1].close;
+    this.lastValue = this.data[this.data.length - 1].close;
 
-    console.log(lastValue);
-    this.mainTooltip.attr('x', -50).attr('y', this.rescaledY(lastValue) - 10);
+    this.mainTooltip.attr('x', -50).attr('y', this.rescaledY(this.lastValue) - 10);
 
     this.mainTooltipText = this.chartSvg
       .append('text')
       .attr('fill', 'white')
       .attr('font-size', '0.8em')
-      .text(lastValue);
+      .text(this.lastValue);
 
-    this.mainTooltipText.attr('x', -48).attr('y', this.rescaledY(lastValue) + 5);
+    this.mainTooltipText.attr('x', -48).attr('y', this.rescaledY(this.lastValue) + 5);
     //this.tooltip
     //.append('div')
     //.attr('class', 'legend-item-text')
@@ -520,7 +522,6 @@ export class D3ChartComponent implements OnInit {
         this.dateTooltip.style('visibility', 'visible');
       })
       .on('mouseout', () => {
-        this.legendsValues.text('');
         //this.legendsDate.style('visibility', 'hidden');
         this.hoverDot.style('visibility', 'hidden');
         this.hoverDot2.style('visibility', 'hidden');
@@ -665,6 +666,20 @@ export class D3ChartComponent implements OnInit {
             .x(d => this.rescaledX(d.date))
             .y(d => this.rescaledY(d.close))(this.regions[regionId].data);
         });
+
+        const zoomDomain = this.rescaledX.domain();
+        const firstDate = zoomDomain[0].toString().slice(0, 15);
+        const secondDate = zoomDomain[1].toString().slice(0, 15);
+        console.log(firstDate, secondDate);
+        console.log(this.data);
+        //const first = this.data[this.chartDates.indexOf(firstDate)].close;
+        const second = this.data[this.chartDates.indexOf(secondDate)].close;
+        //console.log(first, second);
+        this.mainTooltip.attr('x', -50).attr('y', this.rescaledY(second) - 10);
+
+        this.mainTooltipText.attr('x', -48).attr('y', this.rescaledY(second) + 5);
+        this.mainTooltipText.text(second);
+        //console.log(this.data[indexD].close);
 
         // this.newRects.selectAll('path').attr('d', regionId => {
         //   return d3

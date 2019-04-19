@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, timer } from 'rxjs';
 import { initialIndecies } from './initialConfig';
-import { map } from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import { Stock } from '../stock';
 
 @Injectable({
@@ -25,6 +25,12 @@ export class IexFetchingService {
   }
 
   constructor(private http: HttpClient) {}
+
+  timerData(func, time): Observable<any> {
+    return timer(0, time).pipe(
+      switchMap(() => func)
+    );
+  }
 
   getDataForSideBar(): Observable<any> {
     const apiRequest = `https://api.iextrading.com/1.0/stock/market/batch?symbols=${initialIndecies.join(

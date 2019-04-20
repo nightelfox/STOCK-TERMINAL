@@ -18,7 +18,7 @@ export class SideBarListBtnComponent implements OnInit {
     return this.dbUserWatchlist.userWatchlist.indexOf(stock.symbol) !== -1;
   }
   addToFavorites(stock: Stock): void {
-    this.dbUserWatchlist.addToFavorites(stock.symbol);
+    this.dbUserWatchlist.authorizationCheck(stock.symbol);
   }
   ngOnInit() {
   }

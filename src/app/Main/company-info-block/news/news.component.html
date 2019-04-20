@@ -2,11 +2,12 @@
   <div class="wrap-news">
     <ul>
       <li *ngFor="let item of news">
-        <img [src]="item.image" alt="">
-        <div>
-          <p>{{item.datetime}} | {{item.source}}</p>
-          <h4>{{item.headline}}</h4>
-          <a [href]="item.url">{{item.summary}}</a>
+        <div class="img-wrap" [ngStyle]="{'background-image': 'url('+item.image +')'}">
+        </div>
+        <div class="news-content">
+          <p  class="datetime">{{item.datetime}} | {{item.source}}</p>
+          <a [href]="item.url" class="headline">{{item.headline}}</a>
+          <p class="summary">{{item.summary}}</p>
         </div>
       </li>
     </ul>

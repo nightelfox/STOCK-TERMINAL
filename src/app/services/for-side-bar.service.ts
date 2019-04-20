@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { Stock } from '../stock';
+import { Subject } from 'rxjs';
 
 const STORAGE_KEY_SELECT = 'local_selected';
 const STORAGE_KEY_STOCKS = 'local_stocks';
@@ -10,7 +11,7 @@ const STORAGE_KEY_STOCKS = 'local_stocks';
 })
 export class ForSideBarService {
   selectedStock: string = 'GOOGL';
-  searchSymbol: string;
+  searchSymbol: Subject<any> = new Subject;
   focused: boolean;
   constructor(@Inject(LOCAL_STORAGE) private storage: StorageService) {}
   getLocalStocks() {

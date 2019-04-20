@@ -15,7 +15,6 @@ const STORAGE_KEY_WATCH = 'local_userWatchList';
 export class DbUserWatchlistService {
   userWatchlist = this.getLocalData() || [];
   user$: Observable<any>;
-  symbolsFromDb;
   constructor(
     @Inject(LOCAL_STORAGE) private storage: StorageService,
     private afs: AngularFirestore,

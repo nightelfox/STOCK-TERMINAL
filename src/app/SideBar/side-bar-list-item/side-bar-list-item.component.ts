@@ -4,8 +4,7 @@ import { ForSideBarService } from '../../services/for-side-bar.service';
 import { AuthService } from '../../services/auth.service';
 import { IexFetchingService } from '../../services/iex-fetching.service';
 import { DbUserWatchlistService } from '../../services/db-user-watchlist.service';
-import { Observable, timer } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-side-bar-list-item',
@@ -19,17 +18,16 @@ export class SideBarListItemComponent implements OnInit {
     private sb: ForSideBarService,
     public auth: AuthService,
     private iexFetchingService: IexFetchingService,
-    private dbUserWatchlist: DbUserWatchlistService
-  ) {}
+    private dbUserWatchlist: DbUserWatchlistService) {}
 
   getCompanyInfo() {
-    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe(data => {
+    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe((data) => {
       this.iexFetchingService.symbolMonthStats.next(data);
     });
-    this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe(data => {
+    this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe((data) => {
       this.iexFetchingService.symbolInfo.next(data);
     });
-    this.iexFetchingService.getSymbolNews(this.sb.selectedStock).subscribe(data => {
+    this.iexFetchingService.getSymbolNews(this.sb.selectedStock).subscribe((data) => {
       this.iexFetchingService.symbolNews.next(data);
     });
   }
@@ -52,11 +50,23 @@ export class SideBarListItemComponent implements OnInit {
     if (this.sb.getLocalStocks()) {
       this.stocks = this.sb.getLocalStocks();
     }
-
-    this.iexFetchingService.timerData(this.iexFetchingService.getDataForSideBar(), 60000).subscribe(data => {
-     this.stocks = data;
-     this.sb.setLocalStocks(data);
-   });
+    if (this.dbUserWatchlist.userWatchlist.length === 0) {
+      this.dbUserWatchlist.getDBWatchlist().pipe(first()).subscribe((res) => {
+        res
+          .collection('watchlist')
+          .doc('savedSymbols')
+          .get()
+          .subscribe((data) => {
+            Object.keys(data.data()).forEach((item) => {
+              this.dbUserWatchlist.userWatchlist.push(item);
+            });
+          });
+      });
+    }
+    this.iexFetchingService.timerData(this.iexFetchingService.getDataForSideBar(), 60000).subscribe((data) => {
+      this.stocks = data;
+      this.sb.setLocalStocks(data);
+    });
     this.getCompanyInfo();
   }
 }

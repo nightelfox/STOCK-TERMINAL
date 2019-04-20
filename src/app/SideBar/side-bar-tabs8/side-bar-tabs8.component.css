@@ -21,15 +21,6 @@
 .selected {
   background-color: #7fcfff;
   border-color: #7fcfff;
+  outline: none;
 }
-/*::-webkit-scrollbar {
-  width: 7px;
-}
-::-webkit-scrollbar-track {
-  border-radius: 5px;
-  margin: 5px 0;
-}
-::-webkit-scrollbar-thumb {
-  background-color: gray;
-  border-radius: 5px;
-}*/
+

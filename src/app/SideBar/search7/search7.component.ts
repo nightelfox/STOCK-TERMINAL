@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { DbUserWatchlistService } from '../../services/db-user-watchlist.service';
-import { BehaviorSubject } from 'rxjs';
 import { ForSideBarService } from '../../services/for-side-bar.service';
 
 @Component({
@@ -11,17 +9,16 @@ import { ForSideBarService } from '../../services/for-side-bar.service';
 })
 export class Search7Component implements OnInit {
   control: FormControl = new FormControl('');
-  constructor(private sb: ForSideBarService) {}
+  constructor(private sideBarService: ForSideBarService) {}
   searchStock() {
-    this.sb.searchSymbol = this.control.value.toString().toUpperCase();
+    this.sideBarService.searchSymbol.next(this.control.value.toString().toUpperCase());
   }
   focusState(event) {
     if (event.type === 'input' && this.control.value.toString().length !== 0) {
-      this.sb.focused = true;
+      this.sideBarService.focused = true;
     } else if (this.control.value.toString().length === 0) {
-      this.sb.focused = false;
+      this.sideBarService.focused = false;
     }
-    console.log(this.sb.focused);
   }
   ngOnInit() {}
 }

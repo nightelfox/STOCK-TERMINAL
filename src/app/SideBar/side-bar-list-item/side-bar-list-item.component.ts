@@ -5,6 +5,8 @@ import { AuthService } from '../../services/auth.service';
 import { IexFetchingService } from '../../services/iex-fetching.service';
 import { DbUserWatchlistService } from '../../services/db-user-watchlist.service';
 import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-side-bar-list-item',
@@ -14,11 +16,18 @@ import { first } from 'rxjs/operators';
 export class SideBarListItemComponent implements OnInit {
   @Input() listState: string;
   stocks: Stock[];
+  search: string;
+  private id: string;
+  private subscription: Subscription;
+
   constructor(
     private sb: ForSideBarService,
     public auth: AuthService,
     private iexFetchingService: IexFetchingService,
-    private dbUserWatchlist: DbUserWatchlistService) {}
+    private dbUserWatchlist: DbUserWatchlistService,
+    private activateRoute: ActivatedRoute) {
+    this.subscription = activateRoute.params.subscribe(params => this.id = params['id']);
+  }
 
   getCompanyInfo() {
     this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe((data) => {
@@ -40,7 +49,7 @@ export class SideBarListItemComponent implements OnInit {
     return stock.symbol === this.sb.selectedStock;
   }
   hiddenLst(stock) {
-    const hiddenCondition = this.sb.focused && stock.symbol.indexOf(this.sb.searchSymbol) === -1;
+    const hiddenCondition = this.sb.focused && stock.symbol.indexOf(this.search) === -1;
     if (this.listState === 'all') {
       return hiddenCondition ;
     }
@@ -63,10 +72,12 @@ export class SideBarListItemComponent implements OnInit {
           });
       });
     }
-    this.iexFetchingService.timerData(this.iexFetchingService.getDataForSideBar(), 60000).subscribe((data) => {
-      this.stocks = data;
-      this.sb.setLocalStocks(data);
-    });
+    this.iexFetchingService.timerData(this.iexFetchingService.getDataForSideBar(), 60000)
+      .subscribe((data) => {
+        this.stocks = data;
+        this.sb.setLocalStocks(data);
+      });
     this.getCompanyInfo();
+    this.sb.searchSymbol.subscribe(res => this.search = res);
   }
 }

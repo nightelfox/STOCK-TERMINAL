@@ -14,7 +14,6 @@ export class IndexCardMain1Component implements OnInit {
   ngOnInit() {
     this.chartData.symbolMonthStats.subscribe(res => {
       this.symbol = res;
-      console.log(this.symbol);
     });
   }
 }

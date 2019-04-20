@@ -25,13 +25,12 @@ export class AuthService {
     private db: DbUserWatchlistService
   ) {
     this.user$ = this.afAuth.authState.pipe(
-      switchMap(user => {
+      switchMap((user) => {
         if (user) {
           return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
         }
         return of(null);
-      })
-    );
+      }));
   }
 
   async googleSignIn() {

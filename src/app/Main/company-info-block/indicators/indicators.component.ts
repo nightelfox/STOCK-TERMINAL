@@ -9,20 +9,13 @@ import { DbUserWatchlistService } from '../../../services/db-user-watchlist.serv
   styleUrls: ['./indicators.component.css'],
 })
 export class IndicatorsComponent implements OnInit {
-  constructor(
-    private iexFetchingService: IexFetchingService,
-    private dbUserWatchlist: DbUserWatchlistService
-  ) {}
 
-  selectedSymbol: string;
   monthIndicator = {} as Indicators;
+  constructor(
+    private iexFetchingService: IexFetchingService) {}
 
   ngOnInit() {
-    /*this.iexFetchingService.symbolSource$.subscribe((symbol) => {
-      this.iexFetchingService.getSymbolMonthStats(symbol).subscribe(data => this.monthIndicator = data);
-      console.log(symbol);
-    });*/
-    this.iexFetchingService.symbolMonthStats.subscribe(data => {
+    this.iexFetchingService.symbolMonthStats.subscribe((data) => {
       this.monthIndicator = data;
     });
   }

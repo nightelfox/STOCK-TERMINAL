@@ -1,13 +1,11 @@
 import { Injectable, Inject } from '@angular/core';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, first } from 'rxjs/operators';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
-import { Stock } from '../stock';
 import { firestore } from 'firebase/app';
 import { Router } from '@angular/router';
-import { AuthService } from './auth.service';
 
 const STORAGE_KEY_WATCH = 'local_userWatchList';
 
@@ -17,10 +15,7 @@ const STORAGE_KEY_WATCH = 'local_userWatchList';
 export class DbUserWatchlistService {
   userWatchlist = this.getLocalData() || [];
   user$: Observable<any>;
-  symbols = [];
   symbolsFromDb;
-  /*userSymbols: BehaviorSubject<any> = new BehaviorSubject([]);
-  selected: BehaviorSubject<any> = new BehaviorSubject('');*/
   constructor(
     @Inject(LOCAL_STORAGE) private storage: StorageService,
     private afs: AngularFirestore,
@@ -34,11 +29,12 @@ export class DbUserWatchlistService {
     return this.storage.get(STORAGE_KEY_WATCH);
   }
   authorizationCheck(symbol: string): void {
-    this.afAuth.authState.subscribe(res => {
+    this.afAuth.authState.pipe(first()).subscribe(res => {
       if (res == null) {
-        return this.router.navigate(['/']);
+        this.router.navigate(['/']);
+      } else {
+        this.addToFavorites(symbol);
       }
-      this.addToFavorites(symbol);
     });
   }
   addToFavorites(symbol: string): void {
@@ -66,7 +62,6 @@ export class DbUserWatchlistService {
       this.removeSymbolFromDBWatchlist(symbol);
       this.userWatchlist.splice(this.userWatchlist.indexOf(symbol), 1);
     }
-    /*this.userSymbols.next(this.userWatchlist);*/
     this.storage.set(STORAGE_KEY_WATCH, this.userWatchlist);
   }
   getAuthUser(): Observable<any> {

@@ -6,8 +6,8 @@ import { AuthService } from '../../../services/auth.service';
 @Component({
   selector: 'app-side-bar-list-btn',
   templateUrl: './side-bar-list-btn.component.html',
-  styleUrls: ['./side-bar-list-btn.component.css']
-})
+  styleUrls: ['./side-bar-list-btn.component.css']})
+
 export class SideBarListBtnComponent implements OnInit {
   @Input() stock: Stock;
   constructor(

@@ -58,6 +58,3 @@ export const initialIndecies = [
   'MUFG',
   'SNE',
 ];
-export const initialRange = '1d';
-export const colorTheme = 'white';
-export const language = 'ru';

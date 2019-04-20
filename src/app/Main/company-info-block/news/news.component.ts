@@ -12,9 +12,8 @@ export class NewsComponent implements OnInit {
   constructor(private iexFetchingService: IexFetchingService) { }
 
   ngOnInit() {
-    this.iexFetchingService.symbolNews.subscribe(res =>{
+    this.iexFetchingService.symbolNews.subscribe((res) => {
       this.news = res;
-      console.log(res);
     });
   }
 

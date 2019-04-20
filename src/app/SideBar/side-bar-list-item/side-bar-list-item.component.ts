@@ -21,16 +21,9 @@ export class SideBarListItemComponent implements OnInit {
     private iexFetchingService: IexFetchingService,
     private dbUserWatchlist: DbUserWatchlistService
   ) {}
- /* onSelect(stock: Stock, $event): void {
-    this.sb.onSelect(stock.symbol, $event);
-    this.iexFetchingService
-      .getSymbolMonthStats(this.sb.selectedStock, 'dynamic')
-      .subscribe(data => {
-        this.iexFetchingService.symbolMonthStats.next(data);
-      });
-  }*/
+
   getCompanyInfo() {
-    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock, 'dynamic').subscribe(data => {
+    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe(data => {
       this.iexFetchingService.symbolMonthStats.next(data);
     });
     this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe(data => {
@@ -49,11 +42,11 @@ export class SideBarListItemComponent implements OnInit {
     return stock.symbol === this.sb.selectedStock;
   }
   hiddenLst(stock) {
-    const HIDDEN_CONDITION = this.sb.focused && stock.symbol.indexOf(this.sb.searchSymbol) === -1;
+    const hiddenCondition = this.sb.focused && stock.symbol.indexOf(this.sb.searchSymbol) === -1;
     if (this.listState === 'all') {
-      return HIDDEN_CONDITION;
+      return hiddenCondition ;
     }
-    return this.dbUserWatchlist.userWatchlist.indexOf(stock.symbol) === -1 || HIDDEN_CONDITION;
+    return this.dbUserWatchlist.userWatchlist.indexOf(stock.symbol) === -1 || hiddenCondition ;
   }
   ngOnInit() {
     if (this.sb.getLocalStocks()) {

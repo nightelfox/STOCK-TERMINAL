@@ -20,8 +20,7 @@ export class MainAppComponent implements OnInit {
     public auth: AuthService,
     public configService: IexFetchingService,
     public db: DbUserWatchlistService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute) {}
 
   ngOnInit() {
     // if(this.auth.user$){

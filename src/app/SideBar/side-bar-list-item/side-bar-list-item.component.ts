@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { IexFetchingService } from '../../services/iex-fetching.service';
 import { DbUserWatchlistService } from '../../services/db-user-watchlist.service';
 import { Observable, timer } from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-side-bar-list-item',
@@ -52,6 +52,7 @@ export class SideBarListItemComponent implements OnInit {
     if (this.sb.getLocalStocks()) {
       this.stocks = this.sb.getLocalStocks();
     }
+
     this.iexFetchingService.timerData(this.iexFetchingService.getDataForSideBar(), 60000).subscribe(data => {
      this.stocks = data;
      this.sb.setLocalStocks(data);

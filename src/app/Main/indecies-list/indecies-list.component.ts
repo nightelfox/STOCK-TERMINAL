@@ -11,9 +11,9 @@ export class IndeciesListComponent implements OnInit {
 
   ngOnInit() {}
 
-  sendToCompare() {
+  sendToCompare(symbol) {
     this.chartData.monthScale.subscribe(res => {
-      this.chartData.getChart('aapl', res).subscribe(res => {
+      this.chartData.getChart(symbol, res).subscribe(res => {
         this.chartData.compare.next(res);
       });
     });

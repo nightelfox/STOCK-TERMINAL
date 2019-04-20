@@ -25,7 +25,7 @@ export class DbUserWatchlistService {
     @Inject(LOCAL_STORAGE) private storage: StorageService,
     private afs: AngularFirestore,
     private afAuth: AngularFireAuth,
-    private router: Router,
+    private router: Router
   ) {}
   clearLocal() {
     this.storage.remove(STORAGE_KEY_WATCH);
@@ -33,8 +33,8 @@ export class DbUserWatchlistService {
   getLocalData() {
     return this.storage.get(STORAGE_KEY_WATCH);
   }
-  authorizationCheck(symbol: string): void  {
-    this.afAuth.authState.subscribe( res => {
+  authorizationCheck(symbol: string): void {
+    this.afAuth.authState.subscribe(res => {
       if (res == null) {
         return this.router.navigate(['/']);
       }
@@ -50,13 +50,13 @@ export class DbUserWatchlistService {
       // })
 
       this.getDBWatchlist().subscribe(res => {
-        const USER_REF: AngularFirestoreDocument = this.afs.doc(`users/${res.uid}`);
-        USER_REF
+        res
           .collection('watchlist')
           .doc('savedSymbols')
           .get()
           .subscribe(data => {
             this.symbolsFromDb = data.data();
+            console.log(this.symbolsFromDb);
           });
       });
 
@@ -81,8 +81,7 @@ export class DbUserWatchlistService {
   addSymbolToDBWatchlist(symbol) {
     return this.afAuth.user.subscribe(res => {
       const USER_REF: AngularFirestoreDocument = this.afs.doc(`users/${res.uid}`);
-      return USER_REF
-        .collection('watchlist')
+      return USER_REF.collection('watchlist')
         .doc('savedSymbols')
         .set({ [symbol]: Math.random() }, { merge: true });
     });

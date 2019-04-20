@@ -4,7 +4,8 @@ import * as d3 from 'd3';
 import { chartLocale } from './chart-config';
 import { IexFetchingService } from '../services/iex-fetching.service';
 import { chunkHelper } from './utils/d3-chart-utils';
-
+import { map, merge, tap } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-d3-chart',
   encapsulation: ViewEncapsulation.None,
@@ -102,8 +103,8 @@ export class D3ChartComponent implements OnInit {
   testXAxisElement;
   testYAxisElement;
 
-  symbol;
-  timeScale;
+  symbol = 'googl';
+  timeScale = '1m';
   currentValue;
   lastValue;
   rectData = [{ id: 1, x: -75, y: -75, width: 150, height: 150 }];
@@ -135,54 +136,70 @@ export class D3ChartComponent implements OnInit {
 
     this.legendContainer = d3.select(this.legendElement.nativeElement);
 
-    this.chartData.monthScale.pipe();
+    const month$ = this.chartData.monthScale.pipe(
+      tap(d => {
+        if (d) {
+          this.timeScale = d;
+        }
+      })
+    );
 
-    this.chartData.monthScale.subscribe(res => {
-      if (res) {
-        this.timeScale = res;
-      } else {
-        this.timeScale = '1m';
-      }
-      this.chartData.symbolMonthStats.subscribe(res => {
+    const symbol$ = this.chartData.symbolMonthStats.pipe(
+      tap(d => {
+        if (d) {
+          this.symbol = d.symbol;
+        }
         this.chartSvg.selectAll('*').remove();
         this.legendContainer.selectAll('*').remove();
-        this.symbol = res.symbol;
+        this.testSvg.selectAll('*').remove();
+      })
+    );
 
-        this.chartData.getChart(this.symbol, this.timeScale).subscribe(res => {
-          this.chartDates = [];
-          res.chart.forEach(element => {
-            element.regionId = '1';
-            element.date = new Date(element.date);
-            this.chartDates.push(element.date.toString().slice(0, 15));
-          });
-          //console.log(res.chart);
-          //console.log(this.regionsIds);
-          this.data = res.chart;
-          //console.log(this.data);
-          this.chartData.compare.subscribe(res => {
-            //console.log(res);
-            if (res !== '') {
-              res.chart.forEach((element, i) => {
-                element.regionId = '2';
-                element.date = new Date(element.date);
-                this.data.push(res.chart[i]);
-              });
-              //this.data.push(res.chart);
-              //
-              //console.log(this.data);
-            }
-            this.buildAxis();
-            this.divideByRegions();
-            this.buildChart();
-            this.buildLegend();
-            this.handleZoom();
-            this.handleVoronoi();
-            //this.drawRectangle();
-          });
+    const chartSettings$ = month$.pipe(merge(symbol$));
+
+    chartSettings$.subscribe(d =>
+      this.chartData
+        .getChart(this.symbol, this.timeScale)
+        .pipe(
+          tap(d => {
+            this.setMainChartData(d);
+          })
+        )
+        .subscribe()
+    );
+
+    this.chartData.compare.subscribe(res => {
+      if (res !== '') {
+        const chartId = +this.data[this.data.length - 1].regionId + 1;
+        res.chart.forEach((element, i) => {
+          element.regionId = chartId;
+          element.date = new Date(element.date);
+          this.data.push(res.chart[i]);
         });
-      });
+        console.log(this.data);
+        this.createChart();
+      }
     });
+
     this.buildExtraOption();
+  }
+  setMainChartData(d) {
+    this.chartDates = [];
+    d.chart.forEach(element => {
+      element.regionId = '1';
+      element.date = new Date(element.date);
+      this.chartDates.push(element.date.toString().slice(0, 15));
+    });
+    this.data = d.chart;
+    this.createChart();
+  }
+  createChart() {
+    this.buildAxis();
+    this.divideByRegions();
+    this.buildChart();
+    this.buildLegend();
+    this.handleZoom();
+    this.handleVoronoi();
   }
 
   buildAxis() {
@@ -326,6 +343,7 @@ export class D3ChartComponent implements OnInit {
     });
 
     //Рисует все включенные графики
+    console.log(this.regions);
     paths
       .enter()
       .append('path')
@@ -670,15 +688,25 @@ export class D3ChartComponent implements OnInit {
         const zoomDomain = this.rescaledX.domain();
         const firstDate = zoomDomain[0].toString().slice(0, 15);
         const secondDate = zoomDomain[1].toString().slice(0, 15);
-        console.log(firstDate, secondDate);
-        console.log(this.data);
-        //const first = this.data[this.chartDates.indexOf(firstDate)].close;
-        const second = this.data[this.chartDates.indexOf(secondDate)].close;
-        //console.log(first, second);
-        this.mainTooltip.attr('x', -50).attr('y', this.rescaledY(second) - 10);
+        //console.log(firstDate, secondDate);
+        //console.log(this.data);
+        const index1 = this.chartDates.indexOf(firstDate);
+        const index2 = this.chartDates.indexOf(secondDate);
+        const yDomain = this.rescaledY.domain();
+        console.log(yDomain);
+        const range = this.data.slice(index1, index2);
 
-        this.mainTooltipText.attr('x', -48).attr('y', this.rescaledY(second) + 5);
-        this.mainTooltipText.text(second);
+        if (index1 !== -1 && index2 !== -1) {
+          const first = this.data[index1].close;
+          const second = this.data[index2].close;
+          //console.log(first, second);
+          const percent = 100 - (first / second) * 100;
+          //console.log(percent);
+          this.mainTooltip.attr('x', -50).attr('y', this.rescaledY(second) - 10);
+          this.mainTooltipText.attr('x', -48).attr('y', this.rescaledY(second) + 5);
+          this.mainTooltipText.text(second);
+        }
+        //console.log(first, second);
         //console.log(this.data[indexD].close);
 
         // this.newRects.selectAll('path').attr('d', regionId => {

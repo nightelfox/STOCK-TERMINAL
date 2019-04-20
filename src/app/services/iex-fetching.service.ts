@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, timer } from 'rxjs';
 import { initialIndecies } from './initialConfig';
-import {map, switchMap} from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { Stock } from '../stock';
 
 @Injectable({
@@ -27,9 +27,9 @@ export class IexFetchingService {
   constructor(private http: HttpClient) {}
 
   timerData(func, time): Observable<any> {
-    return timer(0, time).pipe(
-      switchMap(() => func)
-    );
+    return timer(0, time).pipe(switchMap(() => func));
+    //ПОКА БИРЖА НЕ РАБОТАЕТ НАДО ЗАКОМНЕНИТЬЬ
+    //return time;
   }
 
   getDataForSideBar(): Observable<any> {

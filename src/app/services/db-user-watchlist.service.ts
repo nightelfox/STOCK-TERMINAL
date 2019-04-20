@@ -6,6 +6,8 @@ import { map } from 'rxjs/operators';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { Stock } from '../stock';
 import { firestore } from 'firebase/app';
+import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
 
 const STORAGE_KEY_WATCH = 'local_userWatchList';
 
@@ -22,13 +24,22 @@ export class DbUserWatchlistService {
   constructor(
     @Inject(LOCAL_STORAGE) private storage: StorageService,
     private afs: AngularFirestore,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private router: Router,
   ) {}
   clearLocal() {
     this.storage.remove(STORAGE_KEY_WATCH);
   }
   getLocalData() {
     return this.storage.get(STORAGE_KEY_WATCH);
+  }
+  authorizationCheck(symbol: string): void  {
+    this.afAuth.authState.subscribe( res => {
+      if (res == null) {
+        return this.router.navigate(['/']);
+      }
+      this.addToFavorites(symbol);
+    });
   }
   addToFavorites(symbol: string): void {
     if (this.userWatchlist.indexOf(symbol) === -1) {

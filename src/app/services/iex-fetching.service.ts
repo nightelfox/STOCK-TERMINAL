@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, timer } from 'rxjs';
 import { initialIndecies } from './initialConfig';
-import {map, switchMap} from 'rxjs/operators';
+import {map, switchMap, take} from 'rxjs/operators';
 import { Stock } from '../stock';
 
 @Injectable({
@@ -28,6 +28,7 @@ export class IexFetchingService {
 
   timerData(func, time): Observable<any> {
     return timer(0, time).pipe(
+      take(10),
       switchMap(() => func)
     );
   }
@@ -123,7 +124,7 @@ export class IexFetchingService {
   getSymbolInfo(selectedSymbol: string) {
     return this.http
       .get(
-        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=company,quote,news&range=dynamic&last=5`
+        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=company,quote`
       )
       .pipe(
         map(data => {
@@ -142,17 +143,17 @@ export class IexFetchingService {
   getSymbolNews(selectedSymbol: string) {
     return this.http
       .get(
-        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=news&range=dynamic&last=5`
+        `https://cloud.iexapis.com/beta/stock/market/batch?token=pk_1794c193ca8f48c2977eca28e92a9023&symbols=${selectedSymbol}&types=news`
       )
       .pipe(
         map(data => {
           const NEWS = [];
           data[selectedSymbol].news.forEach((item, index) => {
             NEWS[index] = {
-              datetime: item.datetime,
+              datetime: new Date(item.datetime).toLocaleString('ru'),
               headline: item.headline,
               url: item.url,
-              summary: item.summary,
+              summary: item.summary.substr(0, 300) + '...',
               image: item.image,
               source: item.source,
             };

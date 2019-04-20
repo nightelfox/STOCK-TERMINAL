@@ -59,7 +59,7 @@ export class SideBarListItemComponent implements OnInit {
     if (this.sb.getLocalStocks()) {
       this.stocks = this.sb.getLocalStocks();
     }
-    this.iexFetchingService.timerData(this.iexFetchingService.getDataForSideBar(), 9000).subscribe(data => {
+    this.iexFetchingService.timerData(this.iexFetchingService.getDataForSideBar(), 60000).subscribe(data => {
      this.stocks = data;
      this.sb.setLocalStocks(data);
    });

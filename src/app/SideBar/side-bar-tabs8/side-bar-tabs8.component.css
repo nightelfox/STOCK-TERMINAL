@@ -1,5 +1,5 @@
 .side-bar {
-  max-height: 78vh;
+  height: 85%;
   grid-area: side-bar;
   overflow-y: scroll;
 }
@@ -21,6 +21,4 @@
 .selected {
   background-color: #7fcfff;
   border-color: #7fcfff;
-  outline: none;
 }
-

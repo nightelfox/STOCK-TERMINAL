@@ -10,10 +10,8 @@ export class BlackoutDirective {
     this.renderer.setStyle(this.element.nativeElement, 'cursor', 'pointer');
   }
 
-  @HostListener('click', ['$event']) onMouseClick(event) {
-    if (event.target.tagName !== 'path' && event.target.tagName !== 'svg') {
-      this.setBgColor('#ace7ff');
-    }
+  @HostListener('click') onMouseClick() {
+    this.setBgColor('#ace7ff');
   }
 
   @HostListener('mouseenter') onMouseEnter() {

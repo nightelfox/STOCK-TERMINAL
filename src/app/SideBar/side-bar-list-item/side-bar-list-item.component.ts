@@ -48,8 +48,8 @@ export class SideBarListItemComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSelect(stock: Stock, $event): void {
-    this.sb.onSelect(stock.symbol, $event);
+  onSelect(stock: Stock): void {
+    this.sb.onSelect(stock.symbol);
     this.getCompanyInfo();
   }
   lstClass(stock: Stock) {

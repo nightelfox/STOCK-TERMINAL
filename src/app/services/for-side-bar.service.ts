@@ -21,10 +21,8 @@ export class ForSideBarService {
   setLocalStocks(stocks: Stock[]) {
     this.storage.set(STORAGE_KEY_STOCKS, stocks);
   }
-  onSelect(stock: string, event): void {
-    if (event.target.tagName !== 'path' && event.target.tagName !== 'svg') {
-      this.selectedStock = stock;;
-    }
+  onSelect(stock: string): void {
+    this.selectedStock = stock;
     // this.storage.set(STORAGE_KEY_SELECT, this.selectedStock);
   }
 }

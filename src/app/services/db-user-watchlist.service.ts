@@ -27,6 +27,22 @@ export class DbUserWatchlistService {
 
   addToFavorites(symbol: string): void {
     if (this.userWatchlist.indexOf(symbol) === -1) {
+      // this.getDBWatchlist().subscribe( res => {
+      //   for(let i in res){
+      //     console.log(i);
+      //   }
+      // })
+
+      // this.getDBWatchlist().subscribe(res => {
+      //   res
+      //     .collection('watchlist')
+      //     .doc('savedSymbols')
+      //     .get()
+      //     .subscribe(data => {
+      //       this.symbolsFromDb = data.data();
+      //       console.log(this.symbolsFromDb);
+      //     });
+      // });
       this.addSymbolToDBWatchlist(symbol);
       this.userWatchlist.push(symbol);
     } else {

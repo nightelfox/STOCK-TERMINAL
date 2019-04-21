@@ -9,8 +9,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-side-bar-list-btn',
   templateUrl: './side-bar-list-btn.component.html',
-  styleUrls: ['./side-bar-list-btn.component.css']})
-
+  styleUrls: ['./side-bar-list-btn.component.css'],
+})
 export class SideBarListBtnComponent implements OnInit {
   @Input() stock: Stock;
   constructor(
@@ -32,7 +32,5 @@ export class SideBarListBtnComponent implements OnInit {
       this.dbUserWatchlist.addToFavorites(symbol);
     }
   }
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

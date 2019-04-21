@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Stock } from '../../stock';
 import { ForSideBarService } from '../../services/for-side-bar.service';
 import { AuthService } from '../../services/auth.service';
@@ -13,12 +13,12 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './side-bar-list-item.component.html',
   styleUrls: ['./side-bar-list-item.component.css'],
 })
-export class SideBarListItemComponent implements OnInit {
+export class SideBarListItemComponent implements OnInit, OnDestroy {
   @Input() listState: string;
   stocks: Stock[];
   search: string;
   private id: string;
-  private subscription: Subscription;
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private sb: ForSideBarService,
@@ -26,19 +26,20 @@ export class SideBarListItemComponent implements OnInit {
     private iexFetchingService: IexFetchingService,
     private dbUserWatchlist: DbUserWatchlistService,
     private activateRoute: ActivatedRoute) {
-    this.subscription = activateRoute.params.subscribe(params => this.id = params['id']);
+    this.subscription.add(activateRoute.params.subscribe(params => this.id = params['id']));
   }
 
   getCompanyInfo() {
-    this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe((data) => {
-      this.iexFetchingService.symbolMonthStats.next(data);
-    });
-    this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe((data) => {
-      this.iexFetchingService.symbolInfo.next(data);
-    });
-    this.iexFetchingService.getSymbolNews(this.sb.selectedStock).subscribe((data) => {
-      this.iexFetchingService.symbolNews.next(data);
-    });
+    this.subscription
+      .add(this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe((data) => {
+        this.iexFetchingService.symbolMonthStats.next(data);
+      }))
+      .add(this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe((data) => {
+        this.iexFetchingService.symbolInfo.next(data);
+      }))
+      .add(this.iexFetchingService.getSymbolNews(this.sb.selectedStock).subscribe((data) => {
+        this.iexFetchingService.symbolNews.next(data);
+      }));
   }
 
   onSelect(stock: Stock, $event): void {
@@ -60,8 +61,9 @@ export class SideBarListItemComponent implements OnInit {
       this.stocks = this.sb.getLocalStocks();
     }
     if (this.dbUserWatchlist.userWatchlist.length === 0) {
-      this.dbUserWatchlist.getDBWatchlist().pipe(first()).subscribe((res) => {
-        res
+      this.subscription
+        .add(this.dbUserWatchlist.getDBWatchlist().pipe(first()).subscribe((res) => {
+          res
           .collection('watchlist')
           .doc('savedSymbols')
           .get()
@@ -70,14 +72,20 @@ export class SideBarListItemComponent implements OnInit {
               this.dbUserWatchlist.userWatchlist.push(item);
             });
           });
-      });
+        }));
     }
-    this.iexFetchingService.timerData(this.iexFetchingService.getDataForSideBar(), 60000)
+    this.subscription
+      .add(this.iexFetchingService.timerData(this.iexFetchingService.getDataForSideBar(), 30000)
       .subscribe((data) => {
         this.stocks = data;
         this.sb.setLocalStocks(data);
-      });
+      }));
     this.getCompanyInfo();
-    this.sb.searchSymbol.subscribe(res => this.search = res);
+    this.subscription.add(this.sb.searchSymbol.subscribe(res => this.search = res));
   }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
 }

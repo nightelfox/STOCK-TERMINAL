@@ -7,6 +7,7 @@ import { MainAppComponent } from './Screens/main-app/main-app.component';
 import { SideBarList9Component } from './SideBar/side-bar-list9/side-bar-list9.component';
 import { SideBarWatchlistComponent } from './SideBar/side-bar-watchlist/side-bar-watchlist.component';
 import {SideBarListItemComponent} from './SideBar/side-bar-list-item/side-bar-list-item.component';
+import {WatchlistGuard} from './services/watchlist.guard';
 
 const routes: Routes = [
   {
@@ -26,6 +27,7 @@ const routes: Routes = [
       {
         path: 'my-stocks',
         component: SideBarWatchlistComponent,
+        canActivate: [WatchlistGuard],
         children: [
           {
             path: 'stock/:id',

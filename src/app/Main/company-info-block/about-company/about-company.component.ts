@@ -6,19 +6,17 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-about-company',
   templateUrl: './about-company.component.html',
-  styleUrls: ['./about-company.component.css']})
-
-export class AboutCompanyComponent implements OnInit, OnDestroy {
+  styleUrls: ['./about-company.component.css'],
+})
+export class AboutCompanyComponent implements OnInit {
   info: CompanyInfo;
   private subscription: Subscription = new Subscription();
-  constructor(private iexFetchingService: IexFetchingService) { }
+  constructor(private iexFetchingService: IexFetchingService) {}
 
   ngOnInit() {
-    this.subscription = this.iexFetchingService.symbolInfo.subscribe(res =>
-    this.info = res);
+    this.subscription = this.iexFetchingService.symbolInfo.subscribe(res => (this.info = res));
   }
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-
+  // ngOnDestroy() {
+  //   this.subscription.unsubscribe();
+  // }
 }

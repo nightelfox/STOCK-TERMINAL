@@ -115,6 +115,9 @@ export class D3ChartComponent implements OnInit {
   newRects;
 
   SCALE_MODE = 'LINEAR';
+  regionMode;
+  dataMode;
+  yFormat;
 
   w = window;
   d = document;
@@ -179,25 +182,43 @@ export class D3ChartComponent implements OnInit {
 
     this.chartData.compare.subscribe(res => {
       if (res !== '') {
-        if(Object.values(this.regionsNamesById).indexOf(res.symbol) === -1) {
-        const chartId = +this.data[this.data.length - 1].regionId + 1;
-        res.data.chart.forEach((element, i) => {
-          element.regionId = chartId;
-          element.date = new Date(element.date);
-          this.data.push(res.data.chart[i]);
-          //console.log(this.data[i]);
-        });
-        this.regionsNamesById[chartId] = res.symbol;
+        if (Object.values(this.regionsNamesById).indexOf(res.symbol) === -1) {
+          const chartId = +this.data[this.data.length - 1].regionId + 1;
+          res.data.chart.forEach((element, i) => {
+            element.regionId = chartId;
+            element.date = new Date(element.date);
+            this.data.push(res.data.chart[i]);
+            //console.log(this.data[i]);
+          });
+          this.regionsNamesById[chartId] = res.symbol;
 
-        this.SCALE_MODE = 'PERCENTAGE';
-        //console.log(this.data);
-        this.createChart();
+          this.SCALE_MODE = 'PERCENTAGE';
+          //console.log(this.data);
+          this.createChart();
+        }
       }
-    }
     });
 
     this.buildExtraOption();
   }
+
+  setScalingMode() {
+    switch (this.SCALE_MODE) {
+      case 'LINEAR':
+        this.SCALE_MODE = 'LINEAR';
+        this.regionMode = this.regions;
+        this.dataMode = this.data;
+        this.yFormat = '';
+        break;
+      case 'PERCENTAGE':
+        this.SCALE_MODE = 'PERCENTAGE';
+        this.regionMode = this.percentRegions;
+        this.dataMode = this.percentData;
+        this.yFormat = '%';
+        break;
+    }
+  }
+
   setMainChartData(d) {
     this.chartDates = [];
     d.chart.forEach(element => {
@@ -211,6 +232,7 @@ export class D3ChartComponent implements OnInit {
     this.createChart();
   }
   createChart() {
+    this.setScalingMode();
     this.divideByRegions();
     this.buildAxis();
     this.buildChart();
@@ -226,14 +248,12 @@ export class D3ChartComponent implements OnInit {
 
     //console.log(d3.extent(this.data, d => d.date));
     // console.log(d3.extent(this.time, d => d));
-    let yFormat = '';
     this.x.domain(d3.extent(this.data, d => d.date));
     switch (this.SCALE_MODE) {
       case 'LINEAR':
         this.y.domain([d3.min(this.data, d => d.close) - 50, d3.max(this.data, d => d.close) + 10]);
         break;
       case 'PERCENTAGE':
-        yFormat = '%';
         this.y.domain([
           d3.min(this.percentData, d => +d.close) - 2,
           d3.max(this.percentData, d => +d.close) + 2,
@@ -256,7 +276,7 @@ export class D3ChartComponent implements OnInit {
       .ticks(5)
       .tickSize(7 + this.width)
       .tickPadding(-15 - this.width)
-      .tickFormat(d => d + yFormat);
+      .tickFormat(d => d + this.yFormat);
 
     //Рисует значения оси X
     this.xAxisElement = this.chartSvg
@@ -353,25 +373,14 @@ export class D3ChartComponent implements OnInit {
 
   //Строит графики
   buildChart(showingRegionsIds?) {
-    let regionMode;
-    let dataMode;
     console.log(this.percentData);
     console.log(this.data);
     console.log(this.regions);
     console.log(this.percentRegions);
-    switch (this.SCALE_MODE) {
-      case 'LINEAR':
-        regionMode = this.regions;
-        dataMode = this.data;
-        break;
-      case 'PERCENTAGE':
-        regionMode = this.percentRegions;
-        dataMode = this.percentData;
-        break;
-    }
+
     //Ищет включенные графики
     this.enabledRegionsIds =
-      showingRegionsIds || this.regionsIds.filter(regionId => regionMode[regionId].enabled);
+      showingRegionsIds || this.regionsIds.filter(regionId => this.regionMode[regionId].enabled);
 
     //Выбирает все включенные графики
     const paths = this.linesContainer.selectAll('.line').data(this.enabledRegionsIds);
@@ -389,7 +398,7 @@ export class D3ChartComponent implements OnInit {
     const nestByDate = d3
       .nest()
       .key(d => d.date)
-      .entries(dataMode);
+      .entries(this.dataMode);
 
     nestByDate.forEach(dateItem => {
       this.percentsByDate[dateItem.key] = {};
@@ -407,8 +416,68 @@ export class D3ChartComponent implements OnInit {
       .merge(paths)
       .attr('class', 'line')
       .attr('id', regionId => `region-${regionId}`)
-      .attr('d', regionId => lineGenerator(regionMode[regionId].data))
-      .style('stroke', regionId => this.colorScale(regionId));
+      .attr('d', regionId => lineGenerator(this.regionMode[regionId].data))
+      // .style('stroke', regionId => this.colorScale(regionId));
+      .style('stroke', 'transparent');
+
+    var ymin = d3.min(this.data.map(r => r.low));
+    var ymax = d3.max(this.data.map(r => r.high));
+    console.log(ymin);
+    var yScale = d3
+      .scaleLinear()
+      .domain([ymin, ymax])
+      .range([this.height, 0])
+      .nice();
+    var yAxis = d3.axisLeft().scale(yScale);
+
+    var xScale = d3
+      .scaleLinear()
+      .domain([-1, this.chartDates.length])
+      .range([0, this.width]);
+    var xDateScale = d3
+      .scaleQuantize()
+      .domain([0, this.chartDates.length])
+      .range(this.chartDates);
+    let xBand = d3
+      .scaleBand()
+      .domain(d3.range(-1, this.chartDates.length))
+      .range([0, this.width])
+      .padding(0.3);
+
+    var chartBody = this.chartSvg
+      .append('g')
+      .attr('class', 'chartBody')
+      .attr('clip-path', 'url(#clip)');
+
+    // draw rectangles
+    let candles = chartBody
+      .selectAll('.candle')
+      .data(this.data)
+      .enter()
+      .append('rect')
+      .attr('x', (d, i) => xScale(i) - xBand.bandwidth())
+      .attr('class', 'candle')
+      .attr('y', d => yScale(Math.max(d.open, d.close)))
+      .attr('width', xBand.bandwidth())
+      .attr('height', d =>
+        d.open === d.close
+          ? 1
+          : yScale(Math.min(d.open, d.close)) - yScale(Math.max(d.open, d.close))
+      )
+      .attr('fill', d => (d.open === d.close ? 'silver' : d.open > d.close ? 'red' : 'green'));
+
+    // draw high and low
+    let stems = chartBody
+      .selectAll('g.line')
+      .data(this.data)
+      .enter()
+      .append('line')
+      .attr('class', 'stem')
+      .attr('x1', (d, i) => xScale(i) - xBand.bandwidth() / 2)
+      .attr('x2', (d, i) => xScale(i) - xBand.bandwidth() / 2)
+      .attr('y1', d => yScale(d.high))
+      .attr('y2', d => yScale(d.low))
+      .attr('stroke', d => (d.open === d.close ? 'white' : d.open > d.close ? 'red' : 'green'));
 
     const _this = this;
     //Управляет отображением на легенде
@@ -420,16 +489,6 @@ export class D3ChartComponent implements OnInit {
   }
 
   buildLegend() {
-    let regionMode;
-    switch (this.SCALE_MODE) {
-      case 'LINEAR':
-        regionMode = this.regions;
-        break;
-      case 'PERCENTAGE':
-        regionMode = this.percentRegions;
-        break;
-    }
-
     //Разбивает легенду на 3 наиболее полные части
     const chunkedRegionsIds = chunkHelper(this.regionsIds, 1);
     this.legendContainer.selectAll('*').remove();
@@ -450,10 +509,11 @@ export class D3ChartComponent implements OnInit {
           const newEnabledRegions =
             this.singleLineSelected === regionId ? [] : [this.singleLineSelected, regionId];
           this.regionsIds.forEach(currentRegionId => {
-            regionMode[currentRegionId].enabled = newEnabledRegions.indexOf(currentRegionId) >= 0;
+            this.regionMode[currentRegionId].enabled =
+              newEnabledRegions.indexOf(currentRegionId) >= 0;
           });
         } else {
-          regionMode[regionId].enabled = !regionMode[regionId].enabled;
+          this.regionMode[regionId].enabled = !this.regionMode[regionId].enabled;
         }
         this.singleLineSelected = false;
         this.buildChart();
@@ -732,19 +792,6 @@ export class D3ChartComponent implements OnInit {
 
   //Управление зумом
   handleZoom() {
-    let regionMode;
-    let dataMode;
-    switch (this.SCALE_MODE) {
-      case 'LINEAR':
-        regionMode = this.regions;
-        dataMode = this.data;
-        break;
-      case 'PERCENTAGE':
-        regionMode = this.percentRegions;
-        dataMode = this.percentData;
-        break;
-    }
-
     const chartAreaWidth = this.width + this.margin.left + this.margin.right;
     const chartAreaHeight = this.height + this.margin.top + this.margin.bottom;
 
@@ -788,7 +835,7 @@ export class D3ChartComponent implements OnInit {
             .line()
             .defined(d => d.close !== 0)
             .x(d => this.rescaledX(d.date))
-            .y(d => this.rescaledY(d.close))(regionMode[regionId].data);
+            .y(d => this.rescaledY(d.close))(this.regionMode[regionId].data);
         });
 
         const zoomDomain = this.rescaledX.domain();
@@ -800,11 +847,11 @@ export class D3ChartComponent implements OnInit {
         const index2 = this.chartDates.indexOf(secondDate);
         const yDomain = this.rescaledY.domain();
         console.log(yDomain);
-        const range = dataMode.slice(index1, index2);
+        const range = this.dataMode.slice(index1, index2);
 
         if (index1 !== -1 && index2 !== -1) {
-          const first = dataMode[index1].close;
-          const second = dataMode[index2].close;
+          const first = this.dataMode[index1].close;
+          const second = this.dataMode[index2].close;
           //console.log(first, second);
           const percent = 100 - (first / second) * 100;
           //console.log(percent);

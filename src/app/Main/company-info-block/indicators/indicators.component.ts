@@ -1,22 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { IexFetchingService } from '../../../services/iex-fetching.service';
 import { Indicators } from './indicatorObject';
 import { DbUserWatchlistService } from '../../../services/db-user-watchlist.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-indicators',
   templateUrl: './indicators.component.html',
   styleUrls: ['./indicators.component.css'],
 })
-export class IndicatorsComponent implements OnInit {
+export class IndicatorsComponent implements OnInit, OnDestroy {
 
   monthIndicator = {} as Indicators;
-  constructor(
-    private iexFetchingService: IexFetchingService) {}
+  private subscription: Subscription = new Subscription();
+  constructor(private iexFetchingService: IexFetchingService) {}
 
   ngOnInit() {
-    this.iexFetchingService.symbolMonthStats.subscribe((data) => {
+    this.subscription = this.iexFetchingService.symbolMonthStats.subscribe((data) => {
       this.monthIndicator = data;
     });
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

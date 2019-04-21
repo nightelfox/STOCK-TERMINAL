@@ -45,16 +45,16 @@ export class DbUserWatchlistService {
       //   }
       // })
 
-      this.getDBWatchlist().subscribe(res => {
-        res
-          .collection('watchlist')
-          .doc('savedSymbols')
-          .get()
-          .subscribe(data => {
-            this.symbolsFromDb = data.data();
-            console.log(this.symbolsFromDb);
-          });
-      });
+      // this.getDBWatchlist().subscribe(res => {
+      //   res
+      //     .collection('watchlist')
+      //     .doc('savedSymbols')
+      //     .get()
+      //     .subscribe(data => {
+      //       this.symbolsFromDb = data.data();
+      //       console.log(this.symbolsFromDb);
+      //     });
+      // });
 
       this.addSymbolToDBWatchlist(symbol);
       this.userWatchlist.push(symbol);

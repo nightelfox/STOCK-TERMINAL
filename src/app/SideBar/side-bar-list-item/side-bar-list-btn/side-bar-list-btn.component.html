@@ -6,7 +6,10 @@
 >
   В портфель
 </button>-->
-<svg width="25px" height="25px" (click)="addToFavorites(stock)" >
-  <path [class.btn-selected]="btnClass(stock)" d="M12.5,0 L15.5,10 L24,10 L17,15 L21,24 L12.5,17.5
-         L4,24 L8,15 L1,10 L9.5,10 z "></path>
+<svg width="25px" height="25px" (click)="addToFavorites(stock); $event.stopPropagation()">
+  <path
+    [class.btn-selected]="btnClass(stock)"
+    d="M12.5,0 L15.5,10 L24,10 L17,15 L21,24 L12.5,17.5
+         L4,24 L8,15 L1,10 L9.5,10 z "
+  ></path>
 </svg>

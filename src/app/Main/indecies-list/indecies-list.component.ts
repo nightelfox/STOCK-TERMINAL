@@ -14,7 +14,7 @@ export class IndeciesListComponent implements OnInit {
   sendToCompare(symbol) {
     this.chartData.monthScale.subscribe(res => {
       this.chartData.getChart(symbol, res).subscribe(res => {
-        this.chartData.compare.next(res);
+        this.chartData.compare.next({ data: res, symbol: symbol });
       });
     });
   }

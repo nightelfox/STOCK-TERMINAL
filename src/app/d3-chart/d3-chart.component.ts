@@ -165,7 +165,7 @@ export class D3ChartComponent implements OnInit {
         .getChart(this.symbol, this.timeScale)
         .pipe(
           tap(d => {
-            console.log('меняю гарфик');
+            this.regionsNamesById[1] = this.symbol;
             this.regions = {};
             this.percentRegions = {};
             this.chartSvg.selectAll('*').remove();
@@ -179,18 +179,21 @@ export class D3ChartComponent implements OnInit {
 
     this.chartData.compare.subscribe(res => {
       if (res !== '') {
+        if(Object.values(this.regionsNamesById).indexOf(res.symbol) === -1) {
         const chartId = +this.data[this.data.length - 1].regionId + 1;
-        res.chart.forEach((element, i) => {
+        res.data.chart.forEach((element, i) => {
           element.regionId = chartId;
           element.date = new Date(element.date);
-          this.data.push(res.chart[i]);
+          this.data.push(res.data.chart[i]);
           //console.log(this.data[i]);
         });
-        console.log('data from compare', this.data);
+        this.regionsNamesById[chartId] = res.symbol;
+
         this.SCALE_MODE = 'PERCENTAGE';
         //console.log(this.data);
         this.createChart();
       }
+    }
     });
 
     this.buildExtraOption();
@@ -223,13 +226,14 @@ export class D3ChartComponent implements OnInit {
 
     //console.log(d3.extent(this.data, d => d.date));
     // console.log(d3.extent(this.time, d => d));
-
+    let yFormat = '';
     this.x.domain(d3.extent(this.data, d => d.date));
     switch (this.SCALE_MODE) {
       case 'LINEAR':
         this.y.domain([d3.min(this.data, d => d.close) - 50, d3.max(this.data, d => d.close) + 10]);
         break;
       case 'PERCENTAGE':
+        yFormat = '%';
         this.y.domain([
           d3.min(this.percentData, d => +d.close) - 2,
           d3.max(this.percentData, d => +d.close) + 2,
@@ -252,7 +256,7 @@ export class D3ChartComponent implements OnInit {
       .ticks(5)
       .tickSize(7 + this.width)
       .tickPadding(-15 - this.width)
-      .tickFormat(d => d);
+      .tickFormat(d => d + yFormat);
 
     //Рисует значения оси X
     this.xAxisElement = this.chartSvg
@@ -324,9 +328,7 @@ export class D3ChartComponent implements OnInit {
       .sortKeys((v1, v2) => (parseInt(v1, 10) > parseInt(v2, 10) ? 1 : -1))
       .entries(this.data);
 
-    nestByRegionId.forEach(item => {
-      this.regionsNamesById[item.key] = item.values[0].regionName;
-    });
+    console.log(this.regionsNamesById);
 
     d3.map(this.data, d => d.regionId)
       .keys()

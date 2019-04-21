@@ -25,4 +25,7 @@
   background-color: #ace7ff;
   border-color: #ace7ff;
 }
+li:active, li:focus {
+  outline: none !important;
+}
 

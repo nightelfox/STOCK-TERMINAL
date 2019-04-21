@@ -2,10 +2,9 @@ import { Injectable, Inject } from '@angular/core';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
-import { map, first } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { firestore } from 'firebase/app';
-import { Router } from '@angular/router';
 
 const STORAGE_KEY_WATCH = 'local_userWatchList';
 
@@ -18,23 +17,14 @@ export class DbUserWatchlistService {
   constructor(
     @Inject(LOCAL_STORAGE) private storage: StorageService,
     private afs: AngularFirestore,
-    private afAuth: AngularFireAuth,
-    private router: Router) {}
+    private afAuth: AngularFireAuth) {}
   clearLocal() {
     this.storage.remove(STORAGE_KEY_WATCH);
   }
   getLocalData() {
     return this.storage.get(STORAGE_KEY_WATCH);
   }
-  authorizationCheck(symbol: string): void {
-    this.afAuth.authState.pipe(first()).subscribe((res) => {
-      if (res == null) {
-        this.router.navigate(['/']);
-      } else {
-        this.addToFavorites(symbol);
-      }
-    });
-  }
+
   addToFavorites(symbol: string): void {
     if (this.userWatchlist.indexOf(symbol) === -1) {
       this.addSymbolToDBWatchlist(symbol);

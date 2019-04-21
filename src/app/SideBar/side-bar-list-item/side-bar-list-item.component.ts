@@ -30,16 +30,15 @@ export class SideBarListItemComponent implements OnInit, OnDestroy {
   }
 
   getCompanyInfo() {
-    this.subscription
-      .add(this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe((data) => {
-        this.iexFetchingService.symbolMonthStats.next(data);
-      }))
-      .add(this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe((data) => {
-        this.iexFetchingService.symbolInfo.next(data);
-      }))
-      .add(this.iexFetchingService.getSymbolNews(this.sb.selectedStock).subscribe((data) => {
-        this.iexFetchingService.symbolNews.next(data);
-      }));
+    this.subscription.add(this.iexFetchingService.getSymbolMonthStats(this.sb.selectedStock).subscribe((data) => {
+      this.iexFetchingService.symbolMonthStats.next(data);
+    }));
+    this.subscription.add(this.iexFetchingService.getSymbolInfo(this.sb.selectedStock).subscribe((data) => {
+      this.iexFetchingService.symbolInfo.next(data);
+    }));
+    this.subscription.add(this.iexFetchingService.getSymbolNews(this.sb.selectedStock).subscribe((data) => {
+      this.iexFetchingService.symbolNews.next(data);
+    }));
   }
 
   onSelect(stock: Stock, $event): void {

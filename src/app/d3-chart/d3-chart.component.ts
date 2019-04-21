@@ -398,7 +398,7 @@ export class D3ChartComponent implements OnInit {
     });
 
     //Рисует все включенные графики
-    //console.log(this.regions);
+    // console.log(this.regions);
     paths
       .enter()
       .append('path')

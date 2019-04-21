@@ -18,7 +18,6 @@ export class IexFetchingService {
 
   timerData(func, time): Observable<any> {
     return timer(0, time).pipe(
-      take(10),
       switchMap(() => func));
   }
 

@@ -1,6 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { Stock } from '../stock';
+import { Subject } from 'rxjs';
+import {Router} from '@angular/router';
 
 const STORAGE_KEY_SELECT = 'local_selected';
 const STORAGE_KEY_STOCKS = 'local_stocks';
@@ -10,9 +12,9 @@ const STORAGE_KEY_STOCKS = 'local_stocks';
 })
 export class ForSideBarService {
   selectedStock: string = 'GOOGL';
-  searchSymbol: string;
+  searchSymbol: Subject<any> = new Subject;
   focused: boolean;
-  constructor(@Inject(LOCAL_STORAGE) private storage: StorageService) {}
+  constructor(@Inject(LOCAL_STORAGE) private storage: StorageService, private router: Router) {}
   getLocalStocks() {
     return this.storage.get(STORAGE_KEY_STOCKS);
   }
@@ -21,8 +23,8 @@ export class ForSideBarService {
   }
   onSelect(stock: string, event): void {
     if (event.target.tagName !== 'path' && event.target.tagName !== 'svg') {
-      this.selectedStock = stock;
+      this.selectedStock = stock;;
     }
-    this.storage.set(STORAGE_KEY_SELECT, this.selectedStock);
+    // this.storage.set(STORAGE_KEY_SELECT, this.selectedStock);
   }
 }

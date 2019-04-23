@@ -86,7 +86,7 @@ export class SideBarListItemComponent implements OnInit, OnDestroy {
     }
     this.subscription.add(
       this.iexFetchingService
-        .timerData(this.iexFetchingService.getDataForSideBar(), 30000)
+        .timerData(this.iexFetchingService.getDataForSideBar(), 10000)
         .subscribe(data => {
           this.stocks = data;
           this.sb.setLocalStocks(data);

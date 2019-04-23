@@ -3,9 +3,10 @@ import { dataAsString } from './dataAsStringRu';
 import * as d3 from 'd3';
 import { chartLocale } from './chart-config';
 import { IexFetchingService } from '../services/iex-fetching.service';
-import { chunkHelper } from './utils/d3-chart-utils';
+import { chunkHelper, clone } from './utils/d3-chart-utils';
 import { map, merge, tap } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
+import { ChartTypeService } from '../services/chart-type.service';
 @Component({
   selector: 'app-d3-chart',
   encapsulation: ViewEncapsulation.None,
@@ -38,6 +39,10 @@ export class D3ChartComponent implements OnInit {
   x = d3.scaleTime().range([0, this.width]);
   //Размер оси Y
   y = d3.scaleLinear().range([this.height, 0]);
+  //Размер оси Х
+  xTest = d3.scaleTime().range([0, this.width]);
+  //Размер оси Y
+  yTest = d3.scaleLinear().range([100, 0]);
   //Форматирует время
   timeFormatter = d3.timeFormat('%d-%m-%Y');
 
@@ -60,7 +65,7 @@ export class D3ChartComponent implements OnInit {
   legendContainer;
   //SVG c линиями
   linesContainer;
-
+  testLinesConstainer;
   //Флаг выбрана ли линия
   singleLineSelected = false;
 
@@ -119,11 +124,17 @@ export class D3ChartComponent implements OnInit {
   dataMode;
   yFormat;
 
+  CHART_MODE = 'LINE';
+
+  candles;
+  stems;
+  xBand;
+
   w = window;
   d = document;
   e = this.d.documentElement;
   g = this.d.getElementsByTagName('body')[0];
-  constructor(private chartData: IexFetchingService) {}
+  constructor(private chartData: IexFetchingService, private chartType: ChartTypeService) {}
 
   ngOnInit() {
     //Выделяет график
@@ -145,6 +156,14 @@ export class D3ChartComponent implements OnInit {
 
     this.legendContainer = d3.select(this.legendElement.nativeElement);
 
+    const chartType$ = this.chartType.chartType.pipe(
+      tap(d => {
+        if (d) {
+          this.CHART_MODE = d;
+        }
+      })
+    );
+
     const month$ = this.chartData.monthScale.pipe(
       tap(d => {
         if (d) {
@@ -161,19 +180,21 @@ export class D3ChartComponent implements OnInit {
       })
     );
 
-    const chartSettings$ = month$.pipe(merge(symbol$));
+    const chartSettings$ = month$.pipe(
+      merge(symbol$),
+      merge(chartType$)
+    );
 
     chartSettings$.subscribe(d =>
       this.chartData
         .getChart(this.symbol, this.timeScale)
         .pipe(
           tap(d => {
+            console.log(d);
             this.regionsNamesById[1] = this.symbol;
             this.regions = {};
             this.percentRegions = {};
-            this.chartSvg.selectAll('*').remove();
-            this.legendContainer.selectAll('*').remove();
-            this.testSvg.selectAll('*').remove();
+            this.clearSvgs();
             this.setMainChartData(d);
           })
         )
@@ -184,16 +205,27 @@ export class D3ChartComponent implements OnInit {
       if (res !== '') {
         if (Object.values(this.regionsNamesById).indexOf(res.symbol) === -1) {
           const chartId = +this.data[this.data.length - 1].regionId + 1;
-          res.data.chart.forEach((element, i) => {
-            element.regionId = chartId;
-            element.date = new Date(element.date);
-            this.data.push(res.data.chart[i]);
-            //console.log(this.data[i]);
-          });
+          if (this.timeScale === '1d') {
+            res.data = this.processData(res.data);
+            res.data.chart.forEach((element, i) => {
+              element.regionId = chartId;
+              element.date = new Date(`2019-04-24T${element.minute}:00.000Z`);
+              this.data.push(res.data.chart[i]);
+              //console.log(this.data[i]);
+            });
+          } else {
+            res.data.chart.forEach((element, i) => {
+              element.regionId = chartId;
+              element.date = new Date(element.date);
+              this.data.push(res.data.chart[i]);
+              //console.log(this.data[i]);
+            });
+          }
           this.regionsNamesById[chartId] = res.symbol;
 
           this.SCALE_MODE = 'PERCENTAGE';
           //console.log(this.data);
+          this.testSvg.selectAll('*').remove();
           this.createChart();
         }
       }
@@ -202,7 +234,13 @@ export class D3ChartComponent implements OnInit {
     this.buildExtraOption();
   }
 
-  setScalingMode() {
+  clearSvgs() {
+    this.chartSvg.selectAll('*').remove();
+    this.legendContainer.selectAll('*').remove();
+    this.testSvg.selectAll('*').remove();
+  }
+
+  setChartMode() {
     switch (this.SCALE_MODE) {
       case 'LINEAR':
         this.SCALE_MODE = 'LINEAR';
@@ -221,18 +259,28 @@ export class D3ChartComponent implements OnInit {
 
   setMainChartData(d) {
     this.chartDates = [];
-    d.chart.forEach(element => {
-      element.regionId = '1';
-      element.date = new Date(element.date);
-      this.chartDates.push(element.date.toString().slice(0, 15));
-    });
+    if (this.timeScale === '1d') {
+      d = this.processData(d);
+      d.chart.forEach(element => {
+        element.regionId = '1';
+        element.date = new Date(`2019-04-24T${element.minute}:00.000Z`);
+        this.chartDates.push(element.date.toString().slice(0, 15));
+      });
+    } else {
+      d.chart.forEach(element => {
+        element.regionId = '1';
+        element.date = new Date(element.date);
+        this.chartDates.push(element.date.toString().slice(0, 15));
+      });
+    }
+
     this.data = d.chart;
     this.percentData = [];
     //console.log(this.data);
     this.createChart();
   }
   createChart() {
-    this.setScalingMode();
+    this.setChartMode();
     this.divideByRegions();
     this.buildAxis();
     this.buildChart();
@@ -241,6 +289,32 @@ export class D3ChartComponent implements OnInit {
     this.handleVoronoi();
   }
 
+  processData(data) {
+    let lastValues = [0, 0, 0, 0];
+    data.chart.forEach(element => {
+      if (element.close === null || element.close === -1) {
+        element.close = lastValues[3];
+      } else {
+        lastValues[3] = element.close;
+      }
+      if (element.open === null || element.open === -1) {
+        element.open = lastValues[0];
+      } else {
+        lastValues[0] = element.open;
+      }
+      if (element.high === null || element.high === -1) {
+        element.high = lastValues[1];
+      } else {
+        lastValues[1] = element.high;
+      }
+      if (element.low === null || element.low === -1) {
+        element.low = lastValues[2];
+      } else {
+        lastValues[2] = element.low;
+      }
+    });
+    return data;
+  }
   addToRegions() {}
 
   buildAxis() {
@@ -270,9 +344,23 @@ export class D3ChartComponent implements OnInit {
       .tickSize(-this.height - 6)
       .tickPadding(10)
       .tickFormat('');
+
+    const testXAxis = d3
+      .axisBottom(this.xTest)
+      .ticks(((this.width + 2) / (100 + 2)) * 5)
+      .tickSize(-100 - 6)
+      .tickPadding(10)
+      .tickFormat('');
     //Ось Y
     this.yAxis = d3
       .axisRight(this.y)
+      .ticks(5)
+      .tickSize(7 + this.width)
+      .tickPadding(-15 - this.width)
+      .tickFormat(d => d + this.yFormat);
+
+    const testYAxis = d3
+      .axisRight(this.yTest)
       .ticks(5)
       .tickSize(7 + this.width)
       .tickPadding(-15 - this.width)
@@ -313,21 +401,21 @@ export class D3ChartComponent implements OnInit {
     this.testXAxisElement = this.testSvg
       .append('g')
       .attr('class', 'axis x-axis')
-      .attr('transform', `translate(0,${this.height + 6})`)
-      .call(this.xAxis);
+      .attr('transform', `translate(0,100)`)
+      .call(testXAxis);
 
     this.testYAxisElement = this.testSvg
       .append('g')
       .attr('transform', 'translate(-7, 0)')
       .attr('class', 'axis y-axis')
-      .call(this.yAxis);
+      .call(testYAxis);
 
     this.testSvg
       .append('g')
-      .attr('transform', `translate(0,${this.height})`)
-      .call(d3.axisBottom(this.x).ticks(0));
+      .attr('transform', `translate(0,100)`)
+      .call(d3.axisBottom(this.xTest).ticks(0));
 
-    this.testSvg.append('g').call(d3.axisLeft(this.y).ticks(0));
+    this.testSvg.append('g').call(d3.axisLeft(this.yTest).ticks(0));
 
     this.testSvg
       .append('defs')
@@ -338,6 +426,7 @@ export class D3ChartComponent implements OnInit {
       .attr('height', 100);
 
     this.linesContainer = this.chartSvg.append('g').attr('clip-path', 'url(#clip)');
+    this.testLinesConstainer = this.testSvg.append('g').attr('clip-path', 'url(#clip)');
   }
 
   //Разделяет на регионы
@@ -348,7 +437,7 @@ export class D3ChartComponent implements OnInit {
       .sortKeys((v1, v2) => (parseInt(v1, 10) > parseInt(v2, 10) ? 1 : -1))
       .entries(this.data);
 
-    console.log(this.regionsNamesById);
+    //console.log(this.regionsNamesById);
 
     d3.map(this.data, d => d.regionId)
       .keys()
@@ -357,7 +446,7 @@ export class D3ChartComponent implements OnInit {
       });
 
     this.regionsIds = Object.keys(this.regions);
-    const tempRegion = JSON.parse(JSON.stringify(this.regions[this.regionsIds.length]));
+    const tempRegion = clone(this.regions[this.regionsIds.length]);
 
     const zero = tempRegion.data[0].close - 0.001;
     tempRegion.data.forEach(element => {
@@ -367,16 +456,16 @@ export class D3ChartComponent implements OnInit {
     });
 
     this.percentRegions[this.regionsIds.length] = tempRegion;
-    console.log('linearRegions', this.regions);
-    console.log('percentRegions', this.percentRegions);
+    //console.log('linearRegions', this.regions);
+    //console.log('percentRegions', this.percentRegions);
   }
 
   //Строит графики
   buildChart(showingRegionsIds?) {
-    console.log(this.percentData);
-    console.log(this.data);
-    console.log(this.regions);
-    console.log(this.percentRegions);
+    //console.log(this.percentData);
+    //console.log(this.data);
+    //console.log(this.regions);
+    //console.log(this.percentRegions);
 
     //Ищет включенные графики
     this.enabledRegionsIds =
@@ -384,11 +473,14 @@ export class D3ChartComponent implements OnInit {
 
     //Выбирает все включенные графики
     const paths = this.linesContainer.selectAll('.line').data(this.enabledRegionsIds);
+    const testPaths = this.testLinesConstainer.selectAll('.line').data(this.enabledRegionsIds);
 
     //Удаляет страые графики
     paths.exit().remove();
+    testPaths.exit().remove();
 
     //Функция для отрисовки одной единицы графика
+    let lastValue;
     const lineGenerator = d3
       .area()
       .x(d => this.rescaledX(d.date))
@@ -410,74 +502,37 @@ export class D3ChartComponent implements OnInit {
 
     //Рисует все включенные графики
     // console.log(this.regions);
-    paths
-      .enter()
-      .append('path')
-      .merge(paths)
-      .attr('class', 'line')
-      .attr('id', regionId => `region-${regionId}`)
-      .attr('d', regionId => lineGenerator(this.regionMode[regionId].data))
-      // .style('stroke', regionId => this.colorScale(regionId));
-      .style('stroke', 'transparent');
-
-    var ymin = d3.min(this.data.map(r => r.low));
-    var ymax = d3.max(this.data.map(r => r.high));
-    console.log(ymin);
-    var yScale = d3
-      .scaleLinear()
-      .domain([ymin, ymax])
-      .range([this.height, 0])
-      .nice();
-    var yAxis = d3.axisLeft().scale(yScale);
-
-    var xScale = d3
-      .scaleLinear()
-      .domain([-1, this.chartDates.length])
-      .range([0, this.width]);
-    var xDateScale = d3
-      .scaleQuantize()
-      .domain([0, this.chartDates.length])
-      .range(this.chartDates);
-    let xBand = d3
-      .scaleBand()
-      .domain(d3.range(-1, this.chartDates.length))
-      .range([0, this.width])
-      .padding(0.3);
-
-    var chartBody = this.chartSvg
-      .append('g')
-      .attr('class', 'chartBody')
-      .attr('clip-path', 'url(#clip)');
-
-    // draw rectangles
-    let candles = chartBody
-      .selectAll('.candle')
-      .data(this.data)
-      .enter()
-      .append('rect')
-      .attr('x', (d, i) => xScale(i) - xBand.bandwidth())
-      .attr('class', 'candle')
-      .attr('y', d => yScale(Math.max(d.open, d.close)))
-      .attr('width', xBand.bandwidth())
-      .attr('height', d =>
-        d.open === d.close
-          ? 1
-          : yScale(Math.min(d.open, d.close)) - yScale(Math.max(d.open, d.close))
-      )
-      .attr('fill', d => (d.open === d.close ? 'silver' : d.open > d.close ? 'red' : 'green'));
-
-    // draw high and low
-    let stems = chartBody
-      .selectAll('g.line')
-      .data(this.data)
-      .enter()
-      .append('line')
-      .attr('class', 'stem')
-      .attr('x1', (d, i) => xScale(i) - xBand.bandwidth() / 2)
-      .attr('x2', (d, i) => xScale(i) - xBand.bandwidth() / 2)
-      .attr('y1', d => yScale(d.high))
-      .attr('y2', d => yScale(d.low))
-      .attr('stroke', d => (d.open === d.close ? 'white' : d.open > d.close ? 'red' : 'green'));
+    switch (this.CHART_MODE) {
+      case 'LINE':
+        paths
+          .enter()
+          .append('path')
+          .merge(paths)
+          .attr('class', 'line')
+          .attr('id', regionId => `region-${regionId}`)
+          .attr('d', regionId => lineGenerator(this.regionMode[regionId].data))
+          .style('stroke', regionId => this.colorScale(regionId));
+        testPaths
+          .enter()
+          .append('path')
+          .merge(testPaths)
+          .attr('class', 'line')
+          .attr('id', regionId => `region-${regionId}`)
+          .attr('d', regionId => lineGenerator(this.regionMode[regionId].data))
+          .style('stroke', regionId => this.colorScale(regionId));
+        break;
+      case 'CANDLE':
+        paths
+          .enter()
+          .append('path')
+          .merge(paths)
+          .attr('class', 'line')
+          .attr('id', regionId => `region-${regionId}`)
+          .attr('d', regionId => lineGenerator(this.regionMode[regionId].data))
+          .style('stroke', 'transparent');
+        this.buildCandles();
+        break;
+    }
 
     const _this = this;
     //Управляет отображением на легенде
@@ -486,6 +541,75 @@ export class D3ChartComponent implements OnInit {
 
       d3.select(this).classed('disabled', !isEnabledRegion);
     });
+  }
+
+  buildCandles() {
+    console.log(this.data);
+    var ymin = d3.min(this.data.map(r => r.low));
+    var ymax = d3.max(this.data.map(r => r.high));
+    console.log(ymin, ymax);
+    var yScale = d3
+      .scaleLinear()
+      .domain([ymin, ymax])
+      .range([this.height, 0])
+      .nice();
+    var yAxis = d3.axisLeft().scale(yScale);
+
+    var xScale = d3
+      .scaleTime()
+      .domain([0, this.chartDates.length])
+      .range([0, this.width]);
+    var xDateScale = d3
+      .scaleQuantize()
+      .domain([0, this.chartDates.length])
+      .range(this.chartDates);
+    this.xBand = d3
+      .scaleBand()
+      .domain(d3.range(0, this.chartDates.length))
+      .range([0, this.width])
+      .padding(0.5);
+
+    var chartBody = this.chartSvg
+      .append('g')
+      .attr('class', 'chartBody')
+      .attr('clip-path', 'url(#clip)');
+
+    // draw rectangles
+    this.candles = chartBody
+      .selectAll('.candle')
+      .data(this.data)
+      .enter()
+      .append('rect')
+      .attr('x', (d, i) => this.rescaledX(d.date) - this.xBand.bandwidth() / 2)
+      .attr('class', 'candle')
+      .attr('y', d => yScale(Math.max(d.open, d.close)))
+      .attr('width', this.xBand.bandwidth())
+      .attr('height', d =>
+        d.open === d.close
+          ? 1
+          : yScale(Math.min(d.open, d.close)) - yScale(Math.max(d.open, d.close))
+      )
+      .attr('fill', d =>
+        d.open === d.close ? 'silver' : d.open > d.close ? '#FF4D4D' : '#33FF77'
+      );
+
+    console.log('xband', this.xBand.bandwidth());
+    const half = this.xBand.bandwidth() / 2;
+    console.log('half', half);
+    // draw high and low
+    this.stems = chartBody
+      .selectAll('g.line')
+      .data(this.data)
+      .enter()
+      .append('line')
+      .attr('class', 'stem')
+      .attr('x1', (d, i) => this.rescaledX(d.date))
+      .attr('x2', (d, i) => this.rescaledX(d.date))
+      .attr('y1', d => yScale(d.high))
+      .attr('y2', d => yScale(d.low))
+      .attr('stroke', d =>
+        d.open === d.close ? 'white' : d.open > d.close ? '#FF4D4D' : '#33FF77'
+      );
   }
 
   buildLegend() {
@@ -794,16 +918,72 @@ export class D3ChartComponent implements OnInit {
   handleZoom() {
     const chartAreaWidth = this.width + this.margin.left + this.margin.right;
     const chartAreaHeight = this.height + this.margin.top + this.margin.bottom;
-
     this.zoom = d3
       .zoom()
       .scaleExtent([1, 10])
       .translateExtent([[0, 0], [chartAreaWidth, chartAreaHeight]])
+      .extent([[0, 0], [chartAreaWidth, chartAreaHeight]])
       .on('start', () => {
         this.hoverDot.attr('x', -5).attr('y', 0);
         this.hoverDot2.attr('x', -5).attr('y', 0);
       })
+      .on('zoom.end', () => {
+        if (this.CHART_MODE === 'CANDLE') {
+          var t = d3.event.transform;
+          var ymin = d3.min(this.data.map(r => r.low));
+          var ymax = d3.max(this.data.map(r => r.high));
+          var xDateScale = d3
+            .scaleQuantize()
+            .domain([0, this.chartDates.length])
+            .range(this.chartDates);
+          var yScale = d3
+            .scaleLinear()
+            .domain([ymin, ymax])
+            .range([this.height, 0])
+            .nice();
+          var xScale = d3
+            .scaleTime()
+            .domain([0, this.chartDates.length])
+            .range([0, this.width]);
+          let xScaleZ = t.rescaleX(xScale);
+          const _this = this;
+
+          var xmin = new Date(xDateScale(Math.floor(xScaleZ.domain()[0])));
+          var xmax = new Date(xDateScale(Math.floor(xScaleZ.domain()[1])));
+          const aa = [];
+          _this.data.forEach(element => {
+            if (element.date >= xmin && element.date <= xmax) aa.push(element);
+          });
+          var filtered = aa;
+          var minP = +d3.min(filtered, d => d.low);
+          var maxP = +d3.max(filtered, d => d.high);
+          var buffer = Math.floor((maxP - minP) * 0.1);
+
+          yScale.domain([minP - buffer, maxP + buffer]);
+          _this.candles
+            .transition()
+            .duration(200)
+            .attr('y', d => yScale(Math.max(d.open, d.close)))
+            .attr('height', d =>
+              d.open === d.close
+                ? 1
+                : yScale(Math.min(d.open, d.close)) - yScale(Math.max(d.open, d.close))
+            );
+
+          _this.stems
+            .transition()
+            .duration(200)
+            .attr('y1', d => yScale(d.high))
+            .attr('y2', d => yScale(d.low));
+        }
+      })
       .on('zoom', () => {
+        // var xScale = d3
+        //   .scaleTime()
+        //   .domain([0, this.chartDates.length])
+        //   .range([0, this.width]);
+        // var t = d3.event.transform;
+
         const transformation = d3.event.transform;
 
         const rightEdge =
@@ -822,10 +1002,30 @@ export class D3ChartComponent implements OnInit {
         }
 
         this.rescaledX = transformation.rescaleX(this.x);
-        this.rescaledY = transformation.rescaleY(this.y);
+        //this.rescaledY = transformation.rescaleY(this.y);
+
+        //let xScaleZ = transformation.rescaleX(xScale);
+        if (this.CHART_MODE === 'CANDLE') {
+          this.candles
+            .attr(
+              'x',
+              (d, i) => this.rescaledX(d.date) - (this.xBand.bandwidth() * transformation.k) / 2
+            )
+            .attr('width', this.xBand.bandwidth() * transformation.k);
+          this.stems.attr(
+            'x1',
+            (d, i) =>
+              this.rescaledX(d.date) - this.xBand.bandwidth() / 2 + this.xBand.bandwidth() * 0.5
+          );
+          this.stems.attr(
+            'x2',
+            (d, i) =>
+              this.rescaledX(d.date) - this.xBand.bandwidth() / 2 + this.xBand.bandwidth() * 0.5
+          );
+        }
 
         this.xAxisElement.call(this.xAxis.scale(this.rescaledX));
-        this.yAxisElement.call(this.yAxis.scale(this.rescaledY));
+        //this.yAxisElement.call(this.yAxis.scale(this.rescaledY));
 
         this.testXAxisElement.call(this.xAxis.scale(this.rescaledX));
         this.testYAxisElement.call(this.yAxis.scale(this.rescaledY));
@@ -846,7 +1046,7 @@ export class D3ChartComponent implements OnInit {
         const index1 = this.chartDates.indexOf(firstDate);
         const index2 = this.chartDates.indexOf(secondDate);
         const yDomain = this.rescaledY.domain();
-        console.log(yDomain);
+        //console.log(yDomain);
         const range = this.dataMode.slice(index1, index2);
 
         if (index1 !== -1 && index2 !== -1) {

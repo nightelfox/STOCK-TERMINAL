@@ -9,7 +9,7 @@
 .stock-percent {
   min-width: 20%;
   font-weight: 600;
-  text-align: center;
+  text-align: right;
 }
 .list-group-item {
   display: flex;
@@ -25,7 +25,7 @@
   background-color: #ace7ff;
   border-color: #ace7ff;
 }
-li:active, li:focus {
+li:active,
+li:focus {
   outline: none !important;
 }
-

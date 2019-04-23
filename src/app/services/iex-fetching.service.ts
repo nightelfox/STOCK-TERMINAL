@@ -17,14 +17,15 @@ export class IexFetchingService {
   constructor(private http: HttpClient) {}
 
   timerData(func, time): Observable<any> {
-    return timer(0, time).pipe(
-      switchMap(() => func));
+    return timer(0, time).pipe(switchMap(() => func));
   }
 
   getDataForSideBar(): Observable<any> {
-    const apiRequest = `https://api.iextrading.com/1.0/stock/market/batch?symbols=${initialIndecies.join(',')}&types=quote&range=dynamic&last=5`;
+    const apiRequest = `https://api.iextrading.com/1.0/stock/market/batch?symbols=${initialIndecies.join(
+      ','
+    )}&types=quote&range=dynamic&last=5`;
     return this.http.get(apiRequest).pipe(
-      map((data) => {
+      map(data => {
         const stocks = [];
         Object.keys(data).forEach((key, index) => {
           stocks[index] = {
@@ -34,24 +35,27 @@ export class IexFetchingService {
           };
         });
         return stocks;
-      }));
+      })
+    );
   }
 
   getChart(symbol: string, range: string): Observable<any> {
     return this.http
       .get(`https://api.iextrading.com/1.0/stock/${symbol}/batch?types=chart&range=${range}`)
       .pipe(
-        map((data) => {
+        map(data => {
           return data;
-        }));
+        })
+      );
   }
 
   getSymbolMonthStats(selectedSymbol: string) {
     return this.http
       .get(
-        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=chart&range=dynamic&last=5`)
+        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=chart&range=dynamic&last=5`
+      )
       .pipe(
-        map((symbolData) => {
+        map(symbolData => {
           const newSymbolData = symbolData[selectedSymbol].chart.data;
           const indexLastElement = newSymbolData.length - 1;
           return {
@@ -66,15 +70,17 @@ export class IexFetchingService {
             minMonth: Math.min.apply(Math, newSymbolData.map(obj => obj.low)),
             changePercent: `${newSymbolData[indexLastElement].changePercent}%`,
           };
-        }));
+        })
+      );
   }
 
   getSymbolInfo(selectedSymbol: string) {
     return this.http
       .get(
-        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=company,quote`)
+        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${selectedSymbol}&types=company,quote`
+      )
       .pipe(
-        map((data) => {
+        map(data => {
           const NEW_SYMBOL_DATA = data[selectedSymbol].company;
           return {
             description: NEW_SYMBOL_DATA.description,
@@ -84,14 +90,16 @@ export class IexFetchingService {
             sector: NEW_SYMBOL_DATA.sector,
             industry: NEW_SYMBOL_DATA.industry,
           };
-        }));
+        })
+      );
   }
   getSymbolNews(selectedSymbol: string) {
     return this.http
       .get(
-        `https://cloud.iexapis.com/beta/stock/market/batch?token=pk_1794c193ca8f48c2977eca28e92a9023&symbols=${selectedSymbol}&types=news`)
+        `https://cloud.iexapis.com/beta/stock/market/batch?token=pk_1794c193ca8f48c2977eca28e92a9023&symbols=${selectedSymbol}&types=news`
+      )
       .pipe(
-        map((data) => {
+        map(data => {
           const NEWS = [];
           data[selectedSymbol].news.forEach((item, index) => {
             NEWS[index] = {
@@ -104,7 +112,8 @@ export class IexFetchingService {
             };
           });
           return NEWS;
-        }));
+        })
+      );
   }
   // getDefaultYAxis(symbol: string): Observable<any> {
   //   return this.http.get(`https://api.iextrading.com/1.0/stock/${symbol}/chart/date/20190129`).pipe(
@@ -129,5 +138,3 @@ export class IexFetchingService {
   //     }));
   // }
 }
-
-

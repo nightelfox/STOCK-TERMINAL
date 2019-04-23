@@ -19,3 +19,8 @@ export function chunkHelper(data, numberOfChunks) {
 
   return result;
 }
+
+//Осознаю, что плохо влияет на производительность
+export function clone(object) {
+  return JSON.parse(JSON.stringify(object));
+}

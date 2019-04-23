@@ -1,5 +1,5 @@
 .side-bar {
-  height: 85%;
+  height: 100%;
   grid-area: side-bar;
   overflow-y: scroll;
 }

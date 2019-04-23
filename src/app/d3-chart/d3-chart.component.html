@@ -3,6 +3,28 @@
     <div #legend></div>
   </div>
   <div #chart></div>
-  <div #extraOptions></div>
+  <div class="extra-options">
+    <h4
+      (click)="
+        this.SCALE_MODE = 'PERCENTAGE';
+        this.setChartMode();
+        this.testSvg.selectAll('*').remove();
+        this.createChart()
+      "
+    >
+      %
+    </h4>
+    <h4
+      (click)="
+        this.SCALE_MODE = 'LINEAR';
+        this.setChartMode();
+        this.testSvg.selectAll('*').remove();
+        this.createChart()
+      "
+    >
+      log
+    </h4>
+    <div #extraOptions></div>
+  </div>
   <div #testChart></div>
 </div>

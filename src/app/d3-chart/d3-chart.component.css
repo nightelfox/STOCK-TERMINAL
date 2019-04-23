@@ -217,6 +217,24 @@ button {
   /* margin-top: 30px; */
   margin-left: 50px;
 }
+
+.extra-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.extra-options h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 1em;
+  margin-right: 20px;
+}
+
+.extra-options h4:hover {
+  cursor: pointer;
+}
+
 .extra-options-container {
   font-size: 12px;
   letter-spacing: 0.3px;

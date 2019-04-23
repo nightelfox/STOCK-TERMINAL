@@ -1,5 +1,5 @@
 .wrap-news {
-  max-height: 25vh;
+  max-height: 20vh;
   overflow: scroll;
   margin: 0 20px 0 10px;
 }

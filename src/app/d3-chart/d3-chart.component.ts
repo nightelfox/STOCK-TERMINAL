@@ -929,35 +929,35 @@ export class D3ChartComponent implements OnInit {
       })
       .on('zoom.end', () => {
         if (this.CHART_MODE === 'CANDLE') {
-          var t = d3.event.transform;
-          var ymin = d3.min(this.data.map(r => r.low));
-          var ymax = d3.max(this.data.map(r => r.high));
-          var xDateScale = d3
+          const t = d3.event.transform;
+          const ymin = d3.min(this.data.map(r => r.low));
+          const ymax = d3.max(this.data.map(r => r.high));
+          const xDateScale = d3
             .scaleQuantize()
             .domain([0, this.chartDates.length])
             .range(this.chartDates);
-          var yScale = d3
+          const yScale = d3
             .scaleLinear()
             .domain([ymin, ymax])
             .range([this.height, 0])
             .nice();
-          var xScale = d3
+          const xScale = d3
             .scaleTime()
             .domain([0, this.chartDates.length])
             .range([0, this.width]);
           let xScaleZ = t.rescaleX(xScale);
           const _this = this;
 
-          var xmin = new Date(xDateScale(Math.floor(xScaleZ.domain()[0])));
-          var xmax = new Date(xDateScale(Math.floor(xScaleZ.domain()[1])));
+          const xmin = new Date(xDateScale(Math.floor(xScaleZ.domain()[0])));
+          const xmax = new Date(xDateScale(Math.floor(xScaleZ.domain()[1])));
           const aa = [];
           _this.data.forEach(element => {
             if (element.date >= xmin && element.date <= xmax) aa.push(element);
           });
-          var filtered = aa;
-          var minP = +d3.min(filtered, d => d.low);
-          var maxP = +d3.max(filtered, d => d.high);
-          var buffer = Math.floor((maxP - minP) * 0.1);
+          const filtered = aa;
+          const minP = +d3.min(filtered, d => d.low);
+          const maxP = +d3.max(filtered, d => d.high);
+          const buffer = Math.floor((maxP - minP) * 0.1);
 
           yScale.domain([minP - buffer, maxP + buffer]);
           _this.candles

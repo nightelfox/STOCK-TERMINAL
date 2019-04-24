@@ -5,7 +5,6 @@
   [hidden]="hiddenLst(stock)"
   (click)="onSelect(stock)"
   [class.selected]="lstClass(stock)"
-  [routerLink]="['stock', stock.symbol]"
 >
   <div class="stock-name">{{ stock.symbol }}</div>
   <div class="stock-price">{{ stock.latestPrice }}</div>

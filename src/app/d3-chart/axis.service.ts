@@ -7,11 +7,13 @@ import { CHART_HEIGHT, CHART_WIDTH, colorScale } from './chart-config';
 })
 export class AxisService {
   linesContainer;
+  //testLinesContainer;
   xAxis;
   yAxis;
   xAxisElement;
   yAxisElement;
   chartSvg;
+  testSvg;
   x;
   y;
   constructor() {}
@@ -44,12 +46,13 @@ export class AxisService {
       .tickPadding(10)
       .tickFormat('');
 
-    // const testXAxis = d3
-    //   .axisBottom(elements.xTest)
-    //   .ticks(((CHART_WIDTH + 2) / (100 + 2)) * 5)
-    //   .tickSize(-100 - 6)
-    //   .tickPadding(10)
-    //   .tickFormat('');
+    const testXAxis = d3
+      .axisBottom(coords.x)
+      .ticks(((CHART_WIDTH + 2) / (100 + 2)) * 5)
+      .tickSize(-100 - 6)
+      .tickPadding(10)
+      .tickFormat('');
+
     //Ось Y
     elements.yAxis = d3
       .axisRight(coords.y)
@@ -59,7 +62,7 @@ export class AxisService {
       .tickFormat(d => d + coords.yFormat);
 
     // const testYAxis = d3
-    //   .axisRight(elements.yTest)
+    //   .axisRight(coords.y)
     //   .ticks(5)
     //   .tickSize(7 + CHART_WIDTH)
     //   .tickPadding(-15 - CHART_WIDTH)
@@ -114,7 +117,7 @@ export class AxisService {
     //   .attr('transform', `translate(0,100)`)
     //   .call(d3.axisBottom(elements.xTest).ticks(0));
 
-    // elements.testSvg.append('g').call(d3.axisLeft(elements.yTest).ticks(0));
+    // elements.testSvg.append('g').call(d3.axisLeft(coords.y).ticks(0));
 
     // elements.testSvg
     //   .append('defs')
@@ -125,15 +128,17 @@ export class AxisService {
     //   .attr('height', 100);
 
     elements.linesContainer = elements.chartSvg.append('g').attr('clip-path', 'url(#clip)');
+    //elements.testLinesContainer = elements.testSvg.append('g').attr('clip-path', 'url(#clip)');
 
     this.linesContainer = elements.linesContainer;
+    //this.testLinesContainer = elements.testLinesContainer;
     this.xAxis = elements.xAxis;
     this.yAxis = elements.yAxis;
     this.xAxisElement = elements.xAxisElement;
     this.yAxisElement = elements.yAxisElement;
     this.chartSvg = elements.chartSvg;
+    this.testSvg = elements.testSvg;
     this.x = coords.x;
     this.y = coords.y;
-    //elements.testLinesConstainer = elements.testSvg.append('g').attr('clip-path', 'url(#clip)');
   }
 }

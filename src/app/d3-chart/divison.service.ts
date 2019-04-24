@@ -32,6 +32,7 @@ export class DivisonService {
 
     const zero = tempRegion.data[0].close - 0.001;
     tempRegion.data.forEach(element => {
+      element.closeConst = element.close;
       element.close = 100 - (zero / element.close) * 100;
       element.date = new Date(element.date);
       data.percentData.push(element);

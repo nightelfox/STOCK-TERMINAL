@@ -68,7 +68,7 @@ export class D3ChartComponent implements OnInit {
   legendContainer;
   //SVG c линиями
   linesContainer;
-  testLinesConstainer;
+  testLinesContainer;
   //Флаг выбрана ли линия
   singleLineSelected = false;
 
@@ -146,7 +146,7 @@ export class D3ChartComponent implements OnInit {
     //Выделяет график
     this.chartSvg = this.initial.initialChart(this.chartElement.nativeElement);
 
-    this.testSvg = this.initial.initialTestChart(this.chartElement.nativeElement);
+    //this.testSvg = this.initial.initialTestChart(this.chartElement.nativeElement);
 
     this.legendContainer = d3.select(this.legendElement.nativeElement);
 
@@ -184,6 +184,7 @@ export class D3ChartComponent implements OnInit {
         .getChart(this.symbol, this.timeScale)
         .pipe(
           tap(d => {
+            this.regionsNamesById = {};
             this.regionsNamesById[1] = this.symbol;
             this.regions = {};
             this.percentRegions = {};
@@ -211,14 +212,12 @@ export class D3ChartComponent implements OnInit {
         }
       }
     });
-
-    this.buildExtraOption();
   }
 
   clearSvgs() {
     this.chartSvg.selectAll('*').remove();
     this.legendContainer.selectAll('*').remove();
-    this.testSvg.selectAll('*').remove();
+    //this.testSvg.selectAll('*').remove();
   }
 
   setChartMode() {
@@ -279,6 +278,7 @@ export class D3ChartComponent implements OnInit {
     this.axisService.buildAxis(coords, elements, data, this.SCALE_MODE);
 
     this.linesContainer = this.axisService.linesContainer;
+    //this.testLinesContainer = this.axisService.testLinesContainer;
     this.xAxis = this.axisService.xAxis;
     this.yAxis = this.axisService.yAxis;
     this.xAxisElement = this.axisService.xAxisElement;
@@ -322,35 +322,6 @@ export class D3ChartComponent implements OnInit {
 
     this.legendContainer = this.legendService.legendContainer;
     this.legendsValues = this.legendService.legendsValues;
-  }
-
-  //Функция для доп.опций (Показать все, Скрыть все)
-  buildExtraOption() {
-    const extraOptionsContainer = d3.select(this.extraElement.nativeElement);
-    //Cтроит опцию и вешает обработчик
-    extraOptionsContainer
-      .append('span')
-      .attr('class', 'hide-all-option')
-      .text('Скрыть все')
-      .on('click', () => {
-        this.regionsIds.forEach(regionId => {
-          this.regionMode[regionId].enabled = false;
-        });
-
-        this.buildChart();
-      });
-    //Cтроит опцию и вешает обработчик
-    extraOptionsContainer
-      .append('span')
-      .attr('class', 'show-all-option')
-      .text('Показать все')
-      .on('click', () => {
-        this.regionsIds.forEach(regionId => {
-          this.regionMode[regionId].enabled = true;
-        });
-
-        this.buildChart();
-      });
   }
 
   //Вороной - алгоритм, который расчитывает ближайшую к точке линию
@@ -422,7 +393,7 @@ export class D3ChartComponent implements OnInit {
       testYAxisElement: this.testYAxisElement,
       linesContainer: this.linesContainer,
       legendContainer: this.legendContainer,
-      testLinesConstainer: this.testLinesConstainer,
+      testLinesContainer: this.testLinesContainer,
       regionMode: this.regionMode,
       dataMode: this.dataMode,
       mainTooltip: this.mainTooltip,

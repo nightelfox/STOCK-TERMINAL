@@ -135,27 +135,27 @@ export class VoronoiService {
         elements.dateTooltip.style('visibility', 'hidden');
       });
 
-    elements.testGroup = elements.testSvg
-      .append('g')
-      .attr('class', 'voronoi-parent')
-      .attr('clip-path', 'url(#clip)')
-      .append('g')
-      .attr('class', 'voronoi')
-      .on('mouseover', () => {
-        //this.legendsDate.style('visibility', 'visible');
-        elements.hoverDot.style('visibility', 'visible');
-        elements.hoverDot2.style('visibility', 'visible');
-        elements.tooltip.style('visibility', 'visible');
-        elements.dateTooltip.style('visibility', 'visible');
-      })
-      .on('mouseout', () => {
-        elements.legendsValues.text('');
-        //this.legendsDate.style('visibility', 'hidden');
-        elements.hoverDot.style('visibility', 'hidden');
-        elements.hoverDot2.style('visibility', 'hidden');
-        elements.tooltip.style('visibility', 'hidden');
-        elements.dateTooltip.style('visibility', 'hidden');
-      });
+    // elements.testGroup = elements.testSvg
+    //   .append('g')
+    //   .attr('class', 'voronoi-parent')
+    //   .attr('clip-path', 'url(#clip)')
+    //   .append('g')
+    //   .attr('class', 'voronoi')
+    //   .on('mouseover', () => {
+    //     //this.legendsDate.style('visibility', 'visible');
+    //     elements.hoverDot.style('visibility', 'visible');
+    //     elements.hoverDot2.style('visibility', 'visible');
+    //     elements.tooltip.style('visibility', 'visible');
+    //     elements.dateTooltip.style('visibility', 'visible');
+    //   })
+    //   .on('mouseout', () => {
+    //     elements.legendsValues.text('');
+    //     //this.legendsDate.style('visibility', 'hidden');
+    //     elements.hoverDot.style('visibility', 'hidden');
+    //     elements.hoverDot2.style('visibility', 'hidden');
+    //     elements.tooltip.style('visibility', 'hidden');
+    //     elements.dateTooltip.style('visibility', 'hidden');
+    //   });
 
     d3.select('.voronoi-parent').call(elements.zoom);
 
@@ -186,9 +186,18 @@ export class VoronoiService {
         //this.legendsDate.text(this.timeFormatter(d.data.date));
 
         elements.legendsValues.text(dataItem => {
+          console.log(data);
+          let close;
           const value = data.percentsByDate[d.data.date][dataItem];
-
-          return value ? value.toFixed(2) : '-';
+          if (value.closeConst) {
+            close = value.closeConst;
+          } else {
+            close = value.close;
+          }
+          const ohlc = `O:${value.open.toFixed(2)}\nH:${value.high.toFixed(
+            2
+          )}\nL:${value.low.toFixed(2)}\nC:${close.toFixed(2)}`;
+          return ohlc;
         });
 
         d3.select(`#region-${d.data.regionId}`).classed('region-hover', true);

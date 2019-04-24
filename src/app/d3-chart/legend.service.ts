@@ -44,16 +44,11 @@ export class LegendService {
         buildChart();
       });
 
-    //Строит кружки
-    legends
-      .append('div')
-      .attr('class', 'legend-item-color')
-      .style('background-color', regionId => colorScale(regionId));
-
     //Строит названия
     legends
       .append('div')
       .attr('class', 'legend-item-text')
+      .style('color', regionId => colorScale(regionId))
       .text(regionId => data.regionsNamesById[regionId]);
 
     //Добавляет у элемента в легенде информацию

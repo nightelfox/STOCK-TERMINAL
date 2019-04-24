@@ -48,7 +48,7 @@ export class ZoomService {
 
     elements.xAxisElement.call(elements.xAxis.scale(coords.rescaledX));
 
-    // elements.testXAxisElement.call(elements.xAxis.scale(coords.rescaledX));
+    //elements.testXAxisElement.call(elements.xAxis.scale(coords.rescaledX));
     // elements.testYAxisElement.call(elements.yAxis.scale(coords.rescaledY));
 
     elements.linesContainer.selectAll('path').attr('d', regionId => {
@@ -80,8 +80,8 @@ export class ZoomService {
   zoomEnd(elements, chartMode, data) {
     if (chartMode === 'CANDLE') {
       const t = d3.event.transform;
-      const ymin = d3.min(data.data.map(r => r.low));
-      const ymax = d3.max(data.data.map(r => r.high));
+      const ymin = d3.min(data.regions['1'].data.map(r => r.low));
+      const ymax = d3.max(data.regions['1'].data.map(r => r.high));
       const xDateScale = d3
         .scaleQuantize()
         .domain([0, elements.chartDates.length])
@@ -100,7 +100,7 @@ export class ZoomService {
       const xmin = new Date(xDateScale(Math.floor(xScaleZ.domain()[0])));
       const xmax = new Date(xDateScale(Math.floor(xScaleZ.domain()[1])));
       const temp = [];
-      data.data.forEach(element => {
+      data.regions['1'].data.forEach(element => {
         if (element.date >= xmin && element.date <= xmax) temp.push(element);
       });
       const filtered = temp;

@@ -26,9 +26,7 @@ export class SideBarListItemComponent implements OnInit, OnDestroy {
     private iexFetchingService: IexFetchingService,
     private dbUserWatchlist: DbUserWatchlistService,
     private activateRoute: ActivatedRoute
-  ) {
-    this.subscription.add(activateRoute.params.subscribe(params => (this.id = params['id'])));
-  }
+  ) {}
 
   getCompanyInfo() {
     this.subscription.add(

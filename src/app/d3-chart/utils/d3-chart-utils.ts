@@ -75,20 +75,20 @@ export function processData(data) {
 
 export function process1Day(data, id) {
   const temp = [];
-  data.data.chart.forEach((element, i) => {
+    data.chart.forEach((element, i) => {
     element.regionId = id;
     element.date = new Date(`2019-04-24T${element.minute}:00.000Z`);
-    temp.push(data.data.chart[i]);
+    temp.push(data.chart[i]);
   });
   return temp;
 }
 
-export function processMonth(data,id){
+export function processMonth(data, id) {
   const temp = [];
-  data.data.chart.forEach((element, i) => {
+  data.chart.forEach((element, i) => {
     element.regionId = id;
     element.date = new Date(element.date);
-    temp.push(data.data.chart[i]);
+    temp.push(data.chart[i]);
   });
   return temp;
 }

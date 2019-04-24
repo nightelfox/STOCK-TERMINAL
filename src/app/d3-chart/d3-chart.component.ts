@@ -200,9 +200,9 @@ export class D3ChartComponent implements OnInit {
           const chartId = +this.data[this.data.length - 1].regionId + 1;
           if (this.timeScale === '1d') {
             res.data = processData(res.data);
-            this.data = process1Day(res.data, chartId);
+            this.data = this.data.concat(process1Day(res.data, chartId));
           } else {
-            this.data = processMonth(res.data, chartId);
+            this.data = this.data.concat(processMonth(res.data, chartId));
           }
           this.regionsNamesById[chartId] = res.symbol;
 
